@@ -3,460 +3,376 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Live 4 Anos STLFLIX — Pesquisa de Público</title>
+<title>STLFLIX — Central de Pesquisas</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #f4f4f4;
+  --bg2: #fefefe;
+  --bg3: #e8e8e8;
+  --border: #e8e8e8;
+  --border2: #d1d1d2;
+  --primary: #5166e6;
+  --primary-hover: #3d4ad4;
+  --primary-active: #2d35b3;
+  --text: #0e0e0f;
+  --muted: #5d5d60;
+  --muted2: #8b8b8d;
+  --meta: #2a44c8;
+  --tf: #0a7a56;
+  --r1: 12px;
+  --r2: 16px;
+  --shadow-s: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-m: 0 8px 16px rgba(0,0,0,0.12);
+}
+body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sans-serif; font-size: 14px; line-height: 1.6; min-height: 100vh; }
 
-  :root {
-    --bg: #f4f4f4;
-    --bg2: #fefefe;
-    --bg3: #e8e8e8;
-    --border: #e8e8e8;
-    --border2: #d1d1d2;
-    --primary: #5166e6;
-    --primary-glow: rgba(81,102,230,0.12);
-    --accent: #5166e6;
-    --text: #0e0e0f;
-    --muted: #5d5d60;
-    --muted2: #8b8b8d;
-    --meta: #2a44c8;
-    --tf: #0a7a56;
-    --r1: 12px;
-    --r2: 16px;
-  }
+/* Top nav */
+.topnav {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.topnav-logo { padding: 16px 20px 16px 0; border-right: 1px solid var(--border); margin-right: 24px; }
+.topnav-logo img { height: 18px; width: auto; filter: brightness(0); opacity: 0.75; display: block; }
+.nav-tab {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 18px 16px;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  white-space: nowrap;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  font-family: 'Inter Tight', sans-serif;
+}
+.nav-tab:hover { color: var(--text); }
+.nav-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+.nav-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 999px;
+  margin-left: 6px;
+  background: rgba(81,102,230,0.1);
+  color: var(--primary-active);
+  vertical-align: middle;
+}
+.nav-badge.new { background: rgba(10,122,86,0.1); color: #065c3f; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Inter Tight', sans-serif;
-    font-size: 14px;
-    line-height: 1.6;
-    min-height: 100vh;
-  }
+/* Shell */
+.shell { max-width: 1100px; margin: 0 auto; padding: 36px 24px 80px; }
 
-  /* Layout */
-  .shell {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 40px 24px 80px;
-  }
+/* Page header */
+.page-header { margin-bottom: 28px; }
+.page-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--primary-active); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+.page-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(20px, 2.5vw, 26px); font-weight: 800; letter-spacing: -0.04em; line-height: 1.15; }
+.page-sub { font-size: 13px; color: var(--muted); margin-top: 5px; }
+.source-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 999px; }
+.badge-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.badge-meta { background: rgba(42,68,200,0.08); color: var(--meta); }
+.badge-tf { background: rgba(10,122,86,0.08); color: var(--tf); }
 
-  /* Header */
-  .header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 36px;
-    flex-wrap: wrap;
-  }
-  .header-left {}
-  .header-eyebrow {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #2d35b3;
-    margin-bottom: 6px;
-  }
-  .header-title {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: clamp(22px, 3vw, 30px);
-    font-weight: 800;
-    letter-spacing: -0.04em;
-    color: var(--text);
-    line-height: 1.15;
-  }
-  .header-sub {
-    font-size: 13px;
-    color: var(--muted);
-    margin-top: 6px;
-  }
-  .source-badges {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    align-items: center;
-    margin-top: 4px;
-  }
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 999px;
-  }
-  .badge-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .badge-meta { background: rgba(45,53,179,0.08); color: #2a44c8; }
-  .badge-tf { background: rgba(7,105,74,0.08); color: #0a7a56; }
+/* Metrics */
+.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.metric { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r1); padding: 18px 16px; border-top: 2px solid var(--primary); }
+.metric-label { font-size: 11px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.metric-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; color: var(--primary); }
+.metric-value.neutral { color: var(--text); }
+.metric-sub { font-size: 11px; color: var(--muted2); margin-top: 4px; }
 
-  /* Metrics row */
-  .metrics {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 12px;
-    margin-bottom: 28px;
-  }
-  .metric {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: var(--r1);
-    padding: 18px 16px;
-    position: relative;
-    overflow: hidden;
-  }
-  .metric::before {
-    content: '';
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: 2px;
-    background: linear-gradient(90deg, #5166e6, transparent);
-  }
-  .metric-label {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
-  .metric-value {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 28px;
-    font-weight: 800;
-    letter-spacing: -0.04em;
-    color: var(--text);
-    line-height: 1;
-  }
-  .metric-sub {
-    font-size: 11px;
-    color: var(--muted2);
-    margin-top: 4px;
-  }
-  .metric-value.accent { color: #5166e6; }
+/* Insight */
+.insight { background: rgba(81,102,230,0.05); border: 1px solid rgba(81,102,230,0.18); border-radius: var(--r1); padding: 14px 16px; display: flex; gap: 12px; margin-bottom: 24px; }
+.insight-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; color: var(--primary); }
+.insight-text { font-size: 13px; color: #454549; line-height: 1.6; }
+.insight-text strong { color: var(--text); }
 
-  /* Insight */
-  .insight {
-    background: rgba(81,102,230,0.06);
-    border: 1px solid rgba(81,102,230,0.2);
-    border-radius: var(--r1);
-    padding: 14px 16px;
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-    margin-bottom: 28px;
-  }
-  .insight-icon {
-    font-size: 18px;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-  .insight-text {
-    font-size: 13px;
-    color: #454549;
-    line-height: 1.6;
-  }
-  .insight-text strong { color: #0e0e0f; }
+/* Section tabs */
+.section-tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+.stab { font-size: 12px; font-weight: 500; padding: 6px 16px; border-radius: 999px; border: 1px solid var(--border2); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.15s; font-family: 'Inter Tight', sans-serif; }
+.stab:hover { border-color: var(--primary); color: var(--text); }
+.stab.active { background: rgba(81,102,230,0.08); border-color: var(--primary); color: var(--primary-active); }
 
-  /* Tabs */
-  .tabs {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-  }
-  .tab {
-    font-size: 12px;
-    font-weight: 500;
-    padding: 6px 16px;
-    border-radius: 999px;
-    border: 1px solid var(--border2);
-    background: transparent;
-    color: var(--muted);
-    cursor: pointer;
-    transition: all 0.15s;
-    font-family: 'Inter Tight', sans-serif;
-  }
-  .tab:hover { border-color: var(--primary); color: #0e0e0f; }
-  .tab.active {
-    background: rgba(81,102,230,0.2);
-    border-color: var(--primary);
-    color: var(--primary);
-  }
+/* Chart cards */
+.chart-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r2); padding: 20px; margin-bottom: 14px; box-shadow: var(--shadow-s); }
+.chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; gap: 12px; flex-wrap: wrap; }
+.chart-title { font-size: 13px; font-weight: 500; color: var(--muted); }
+.chart-pill { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: rgba(81,102,230,0.08); color: var(--primary-active); }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); }
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+.legend-item strong { color: var(--text); }
+.chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
-  /* Chart cards */
-  .chart-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--r2);
-    padding: 22px 20px;
-    margin-bottom: 14px;
-  }
-  .chart-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  .chart-title {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 7px;
-  }
-  .chart-title svg { opacity: 0.6; }
-  .chart-total {
-    font-size: 11px;
-    font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 999px;
-    background: rgba(81,102,230,0.15);
-    color: var(--primary);
-  }
-  .legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    color: var(--muted);
-  }
-  .legend-dot {
-    width: 8px; height: 8px;
-    border-radius: 2px;
-    flex-shrink: 0;
-  }
-  .legend-item strong { color: #0e0e0f; }
+/* Tab panels */
+.survey-panel { display: none; }
+.survey-panel.active { display: block; }
+.section-panel { display: none; }
+.section-panel.active { display: block; }
 
-  /* Chart grid */
-  .chart-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-  }
-  @media (max-width: 640px) {
-    .chart-grid { grid-template-columns: 1fr; }
-    .header { flex-direction: column; }
-  }
+/* Upload zone */
+.upload-zone { border: 2px dashed var(--border2); border-radius: var(--r2); padding: 48px 24px; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--bg2); }
+.upload-zone:hover, .upload-zone.dragover { border-color: var(--primary); background: rgba(81,102,230,0.04); }
+.upload-zone input { display: none; }
+.upload-icon { font-size: 32px; margin-bottom: 12px; display: block; color: var(--muted2); }
+.upload-title { font-weight: 500; font-size: 15px; margin-bottom: 4px; }
+.upload-sub { font-size: 12px; color: var(--muted); }
+.upload-privacy { font-size: 11px; color: var(--muted2); margin-top: 12px; }
 
-  /* Tab panels */
-  .tab-panel { display: none; }
-  .tab-panel.active { display: block; }
+/* Empty state */
+.empty-state { text-align: center; padding: 60px 24px; color: var(--muted); }
+.empty-icon { font-size: 36px; display: block; margin-bottom: 12px; color: var(--muted2); }
 
-  /* Footer */
-  .footer {
-    margin-top: 48px;
-    padding-top: 24px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  .footer-logo img {
-    height: 22px;
-    width: auto;
-    opacity: 0.5;
-    filter: brightness(0); opacity: 0.55;
-  }
-  .footer-date { font-size: 11px; color: var(--muted2); }
+/* Footer */
+.footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.footer img { height: 16px; width: auto; filter: brightness(0); opacity: 0.4; }
+.footer-date { font-size: 11px; color: var(--muted2); }
+
+@media (max-width: 640px) {
+  .chart-grid { grid-template-columns: 1fr; }
+  .topnav { overflow-x: auto; }
+}
 </style>
 </head>
 <body>
 
-<div class="shell">
-
-  <!-- Header -->
-  <div class="header">
-    <div class="header-left">
-      <div class="header-eyebrow"><img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX" style="height:16px; width:auto; filter:brightness(0); opacity:0.75; vertical-align:middle; margin-right:8px;">Pesquisa de público · live aniversário</div>
-      <h1 class="header-title">4 anos STLFLIX<br>Perfil dos interessados</h1>
-      <p class="header-sub">Coleta em 28/05/2026 · dados unificados de Meta Ads e Typeform</p>
-    </div>
-    <div class="source-badges">
-      <span class="badge badge-meta"><span class="badge-dot" style="background:var(--meta);"></span>Meta Ads · 115</span>
-      <span class="badge badge-tf"><span class="badge-dot" style="background:var(--tf);"></span>Typeform · 97</span>
-    </div>
+<!-- Top navigation -->
+<nav class="topnav">
+  <div class="topnav-logo">
+    <img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX">
   </div>
+  <button class="nav-tab active" onclick="showSurvey('s1', this)">
+    Live 4 anos <span class="nav-badge">212</span>
+  </button>
+  <button class="nav-tab" onclick="showSurvey('s2', this)">
+    Nova pesquisa <span class="nav-badge new">novo</span>
+  </button>
+</nav>
 
-  <!-- Metrics -->
-  <div class="metrics">
-    <div class="metric">
-      <div class="metric-label">Respostas totais</div>
-      <div class="metric-value accent">212</div>
-      <div class="metric-sub">2 fontes unificadas</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Sem impressora</div>
-      <div class="metric-value">50%</div>
-      <div class="metric-sub">106 respondentes</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Superior ou pós</div>
-      <div class="metric-value">57%</div>
-      <div class="metric-sub">120 respondentes</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Renda até R$ 2k</div>
-      <div class="metric-value">40%</div>
-      <div class="metric-sub">84 respondentes</div>
-    </div>
-  </div>
-
-  <!-- Insight -->
-  <div class="insight">
-    <div class="insight-icon">💡</div>
-    <div class="insight-text">
-      <strong>Achado principal:</strong> metade dos interessados ainda não possui impressora — audiência em fase de decisão de compra, não operadores experientes. A concentração de renda baixa (40% até R$ 2k) reforça a necessidade de mostrar ROI claro e acessibilidade na live. Meta atraiu mais leads com renda média (R$ 5k–10k) comparado ao Typeform.
-    </div>
-  </div>
-
-  <!-- Tabs -->
-  <div class="tabs">
-    <button class="tab active" onclick="showTab('impressoras', this)">Impressoras</button>
-    <button class="tab" onclick="showTab('renda', this)">Renda</button>
-    <button class="tab" onclick="showTab('escolaridade', this)">Escolaridade</button>
-    <button class="tab" onclick="showTab('comparativo', this)">Meta vs Typeform</button>
-  </div>
-
-  <!-- Tab: Impressoras -->
-  <div class="tab-panel active" id="panel-impressoras">
-    <div class="chart-card">
-      <div class="chart-header">
-        <div class="chart-title">
-          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="6" y="9" width="12" height="8" rx="1"/><path d="M6 12H4a1 1 0 01-1-1V7a1 1 0 011-1h16a1 1 0 011 1v4a1 1 0 01-1 1h-2"/><rect x="9" y="14" width="6" height="5" rx="1"/></svg>
-          Quantas impressoras 3D você possui?
-        </div>
-        <span class="chart-total">211 respostas</span>
-      </div>
-      <div class="legend" id="leg-imp"></div>
-      <div style="position:relative;width:100%;height:240px;">
-        <canvas id="chart-imp" role="img" aria-label="Impressoras: Nenhuma 106, 1 impressora 83, 2 a 5 impressoras 20, 6 ou mais 3">Nenhuma: 106, 1 impressora: 83, 2 a 5 impressoras: 20, 6 ou mais: 3</canvas>
+<!-- ===================== SURVEY 1 ===================== -->
+<div class="survey-panel active" id="panel-s1">
+  <div class="shell">
+    <div class="page-header">
+      <div class="page-eyebrow">Pesquisa de público · 28/05/2026</div>
+      <h1 class="page-title">Live de 4 anos STLFLIX<br>Perfil dos interessados</h1>
+      <p class="page-sub">212 respostas unificadas — Meta Ads (HubSpot) + Typeform</p>
+      <div class="source-badges">
+        <span class="badge badge-meta"><span class="badge-dot" style="background:#2a44c8;"></span>Meta · 115</span>
+        <span class="badge badge-tf"><span class="badge-dot" style="background:#0a7a56;"></span>Typeform · 97</span>
       </div>
     </div>
-  </div>
 
-  <!-- Tab: Renda -->
-  <div class="tab-panel" id="panel-renda">
-    <div class="chart-card">
-      <div class="chart-header">
-        <div class="chart-title">
-          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v2m0 8v2M9 9h4.5a1.5 1.5 0 010 3h-3a1.5 1.5 0 000 3H15"/></svg>
-          Renda mensal aproximada
-        </div>
-        <span class="chart-total">211 respostas</span>
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">Respostas totais</div>
+        <div class="metric-value">212</div>
+        <div class="metric-sub">2 fontes</div>
       </div>
-      <div class="legend" id="leg-renda"></div>
-      <div style="position:relative;width:100%;height:240px;">
-        <canvas id="chart-renda" role="img" aria-label="Renda: Até R$2.000: 84, R$2-5k: 79, R$5-10k: 27, Acima 20k: 21">Até R$ 2.000: 84, R$ 2.000–5.000: 79, R$ 5.000–10.000: 27, Acima de R$ 20.000: 21</canvas>
+      <div class="metric">
+        <div class="metric-label">Sem impressora</div>
+        <div class="metric-value">50%</div>
+        <div class="metric-sub">106 respondentes</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Superior ou pós</div>
+        <div class="metric-value">57%</div>
+        <div class="metric-sub">120 respondentes</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Renda até R$ 2k</div>
+        <div class="metric-value">40%</div>
+        <div class="metric-sub">84 respondentes</div>
       </div>
     </div>
-  </div>
 
-  <!-- Tab: Escolaridade -->
-  <div class="tab-panel" id="panel-escolaridade">
-    <div class="chart-card">
-      <div class="chart-header">
-        <div class="chart-title">
-          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-          Nível de escolaridade
-        </div>
-        <span class="chart-total">212 respostas</span>
-      </div>
-      <div class="legend" id="leg-esc"></div>
-      <div style="position:relative;width:100%;height:240px;">
-        <canvas id="chart-esc" role="img" aria-label="Escolaridade: Superior 85, Médio 82, Pós-graduação 35, Fundamental 10">Superior: 85, Médio: 82, Pós-graduação: 35, Fundamental: 10</canvas>
-      </div>
+    <div class="insight">
+      <div class="insight-icon">💡</div>
+      <div class="insight-text"><strong>Achado principal:</strong> metade dos interessados ainda não possui impressora — audiência em fase de decisão de compra. A concentração de renda baixa (40% até R$ 2k) reforça a necessidade de mostrar ROI claro e acessibilidade na live. Meta atraiu mais leads com renda média (R$ 5–10k) comparado ao Typeform.</div>
     </div>
-  </div>
 
-  <!-- Tab: Comparativo -->
-  <div class="tab-panel" id="panel-comparativo">
-    <div class="chart-grid">
+    <div class="section-tabs">
+      <button class="stab active" onclick="showSection('s1', 'impressoras', this)">Impressoras</button>
+      <button class="stab" onclick="showSection('s1', 'renda', this)">Renda</button>
+      <button class="stab" onclick="showSection('s1', 'escolaridade', this)">Escolaridade</button>
+      <button class="stab" onclick="showSection('s1', 'comparativo', this)">Meta vs Typeform</button>
+    </div>
+
+    <div class="section-panel active" id="s1-impressoras">
       <div class="chart-card">
-        <div class="chart-header">
-          <div class="chart-title">Impressoras por fonte</div>
+        <div class="chart-header"><div class="chart-title">Quantas impressoras 3D você possui?</div><span class="chart-pill">211 respostas</span></div>
+        <div class="legend" id="s1-leg-imp"></div>
+        <div style="position:relative;width:100%;height:240px;"><canvas id="s1-chart-imp" role="img" aria-label="Impressoras: Nenhuma 106, 1: 83, 2-5: 20, 6+: 3">Nenhuma: 106, 1: 83, 2-5: 20, 6+: 3</canvas></div>
+      </div>
+    </div>
+
+    <div class="section-panel" id="s1-renda">
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Renda mensal aproximada</div><span class="chart-pill">211 respostas</span></div>
+        <div class="legend" id="s1-leg-renda"></div>
+        <div style="position:relative;width:100%;height:240px;"><canvas id="s1-chart-renda" role="img" aria-label="Renda mensal dos respondentes">Até R$2k: 84, R$2-5k: 79, R$5-10k: 27, +R$20k: 21</canvas></div>
+      </div>
+    </div>
+
+    <div class="section-panel" id="s1-escolaridade">
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Nível de escolaridade</div><span class="chart-pill">212 respostas</span></div>
+        <div class="legend" id="s1-leg-esc"></div>
+        <div style="position:relative;width:100%;height:240px;"><canvas id="s1-chart-esc" role="img" aria-label="Escolaridade dos respondentes">Superior: 85, Médio: 82, Pós: 35, Fundamental: 10</canvas></div>
+      </div>
+    </div>
+
+    <div class="section-panel" id="s1-comparativo">
+      <div class="chart-grid">
+        <div class="chart-card">
+          <div class="chart-header"><div class="chart-title">Impressoras por fonte</div></div>
+          <div class="legend">
+            <span class="legend-item"><span class="legend-dot" style="background:#2a44c8;"></span>Meta</span>
+            <span class="legend-item"><span class="legend-dot" style="background:#0a7a56;"></span>Typeform</span>
+          </div>
+          <div style="position:relative;width:100%;height:220px;"><canvas id="s1-chart-cmp-imp" role="img" aria-label="Impressoras por fonte"></canvas></div>
         </div>
-        <div class="legend">
-          <span class="legend-item"><span class="legend-dot" style="background:var(--meta);"></span>Meta</span>
-          <span class="legend-item"><span class="legend-dot" style="background:var(--tf);"></span>Typeform</span>
-        </div>
-        <div style="position:relative;width:100%;height:220px;">
-          <canvas id="chart-cmp-imp" role="img" aria-label="Impressoras por fonte comparado"></canvas>
+        <div class="chart-card">
+          <div class="chart-header"><div class="chart-title">Renda por fonte</div></div>
+          <div class="legend">
+            <span class="legend-item"><span class="legend-dot" style="background:#2a44c8;"></span>Meta</span>
+            <span class="legend-item"><span class="legend-dot" style="background:#0a7a56;"></span>Typeform</span>
+          </div>
+          <div style="position:relative;width:100%;height:220px;"><canvas id="s1-chart-cmp-renda" role="img" aria-label="Renda por fonte"></canvas></div>
         </div>
       </div>
       <div class="chart-card">
-        <div class="chart-header">
-          <div class="chart-title">Renda por fonte</div>
-        </div>
+        <div class="chart-header"><div class="chart-title">Distribuição geral por fonte</div><span class="chart-pill">212 respostas</span></div>
         <div class="legend">
-          <span class="legend-item"><span class="legend-dot" style="background:var(--meta);"></span>Meta</span>
-          <span class="legend-item"><span class="legend-dot" style="background:var(--tf);"></span>Typeform</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#2a44c8;"></span>Meta <strong style="margin-left:4px;">115</strong></span>
+          <span class="legend-item"><span class="legend-dot" style="background:#0a7a56;"></span>Typeform <strong style="margin-left:4px;">97</strong></span>
         </div>
-        <div style="position:relative;width:100%;height:220px;">
-          <canvas id="chart-cmp-renda" role="img" aria-label="Renda por fonte comparado"></canvas>
+        <div style="position:relative;width:100%;height:160px;"><canvas id="s1-chart-fontes" role="img" aria-label="Distribuição por fonte">Meta: 115, Typeform: 97</canvas></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX">
+      <span class="footer-date">28 de maio de 2026 · dados internos</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SURVEY 2 ===================== -->
+<div class="survey-panel" id="panel-s2">
+  <div class="shell">
+    <div class="page-header">
+      <div class="page-eyebrow">Nova pesquisa · em andamento</div>
+      <h1 class="page-title">Perfil de investimento<br>em impressão 3D</h1>
+      <p class="page-sub">4 perguntas · Typeform + Meta Ads · coleta iniciada hoje</p>
+    </div>
+
+    <!-- Upload zone -->
+    <div id="s2-upload-section">
+      <div class="upload-zone" id="s2-drop-zone" onclick="document.getElementById('s2-file-input').click()">
+        <input type="file" id="s2-file-input" accept=".csv,.json" multiple>
+        <span class="upload-icon">↑</span>
+        <div class="upload-title">Importe os dados quando chegarem</div>
+        <div class="upload-sub">Arraste ou clique · CSV ou JSON do Typeform e Meta Ads · múltiplos arquivos</div>
+        <div class="upload-privacy">Processado localmente — nenhum dado enviado a servidores</div>
+      </div>
+
+      <!-- Preview das perguntas -->
+      <div style="margin-top: 24px;">
+        <p style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:12px;">Perguntas desta pesquisa</p>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div class="chart-card" style="padding:14px 16px; display:flex; gap:12px; align-items:flex-start;">
+            <span style="font-size:11px; font-weight:700; color:var(--primary); background:rgba(81,102,230,0.1); padding:2px 8px; border-radius:999px; flex-shrink:0;">Q1</span>
+            <div>
+              <div style="font-weight:500; font-size:13px; margin-bottom:4px;">Quantas impressoras 3D você possui atualmente?</div>
+              <div style="font-size:11px; color:var(--muted);">Nenhuma (não pretendo) · Nenhuma (vou comprar) · 1 · 2–5 · 6–10 · 11 ou mais</div>
+            </div>
+          </div>
+          <div class="chart-card" style="padding:14px 16px; display:flex; gap:12px; align-items:flex-start;">
+            <span style="font-size:11px; font-weight:700; color:var(--primary); background:rgba(81,102,230,0.1); padding:2px 8px; border-radius:999px; flex-shrink:0;">Q2</span>
+            <div>
+              <div style="font-weight:500; font-size:13px; margin-bottom:4px;">Qual sua renda mensal?</div>
+              <div style="font-size:11px; color:var(--muted);">Até R$ 2.000 · R$ 2–5k · R$ 5–10k · Acima de R$ 10.000</div>
+            </div>
+          </div>
+          <div class="chart-card" style="padding:14px 16px; display:flex; gap:12px; align-items:flex-start;">
+            <span style="font-size:11px; font-weight:700; color:var(--primary); background:rgba(81,102,230,0.1); padding:2px 8px; border-radius:999px; flex-shrink:0;">Q3</span>
+            <div>
+              <div style="font-weight:500; font-size:13px; margin-bottom:4px;">Qual valor você considera investir para se desenvolver em impressão 3D?</div>
+              <div style="font-size:11px; color:var(--muted);">Até R$ 1.000 · R$ 2–5k · R$ 10–20k · Acima de R$ 20.000</div>
+            </div>
+          </div>
+          <div class="chart-card" style="padding:14px 16px; display:flex; gap:12px; align-items:flex-start;">
+            <span style="font-size:11px; font-weight:700; color:var(--primary); background:rgba(81,102,230,0.1); padding:2px 8px; border-radius:999px; flex-shrink:0;">Q4</span>
+            <div>
+              <div style="font-weight:500; font-size:13px; margin-bottom:4px;">O que te motiva a participar do evento?</div>
+              <div style="font-size:11px; color:var(--muted);">Pergunta aberta</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="chart-card">
-      <div class="chart-header">
-        <div class="chart-title">Distribuição geral por fonte</div>
-        <span class="chart-total">212 respostas</span>
+
+    <!-- Dashboard section (hidden until upload) -->
+    <div id="s2-dashboard-section" style="display:none;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
+        <div id="s2-source-badges" class="source-badges"></div>
+        <button onclick="resetS2()" style="margin-left:auto; font-size:12px; padding:5px 14px; border-radius:999px; border:1px solid var(--border2); background:transparent; cursor:pointer; color:var(--muted); font-family:'Inter Tight',sans-serif;">↺ Novo upload</button>
       </div>
-      <div class="legend">
-        <span class="legend-item"><span class="legend-dot" style="background:var(--meta);"></span>Meta (HubSpot) <strong style="margin-left:4px;">115</strong></span>
-        <span class="legend-item"><span class="legend-dot" style="background:var(--tf);"></span>Typeform <strong style="margin-left:4px;">97</strong></span>
-      </div>
-      <div style="position:relative;width:100%;height:160px;">
-        <canvas id="chart-fontes" role="img" aria-label="Distribuição por fonte: Meta 115, Typeform 97">Meta: 115, Typeform: 97</canvas>
-      </div>
+      <div id="s2-metrics" class="metrics"></div>
+      <div id="s2-charts"></div>
+    </div>
+
+    <div class="footer">
+      <img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX">
+      <span class="footer-date" id="s2-footer-date">Em andamento · dados internos</span>
     </div>
   </div>
-
-  <!-- Footer -->
-  <div class="footer">
-    <div class="footer-logo"><img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX"></div>
-    <div class="footer-date">28 de maio de 2026 · dados internos</div>
-  </div>
-
 </div>
 
 <script>
-const COLORS_MAIN = ['#5166e6','#10B981','#F59E0B','#EF4444','#8B5CF6'];
-const META_COLOR = '#3B82F6';
-const TF_COLOR = '#10B981';
+// ── Navigation ──────────────────────────────────────
+function showSurvey(id, btn) {
+  document.querySelectorAll('.survey-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  btn.classList.add('active');
+}
 
-const chartDefaults = {
-  responsive: true,
-  maintainAspectRatio: false,
+function showSection(survey, name, btn) {
+  const prefix = survey + '-';
+  document.querySelectorAll('[id^="' + prefix + '"]').forEach(p => {
+    if (p.classList.contains('section-panel')) p.classList.remove('active');
+  });
+  btn.closest('.shell').querySelectorAll('.stab').forEach(t => t.classList.remove('active'));
+  document.getElementById(prefix + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── Chart helpers ────────────────────────────────────
+const COLORS = ['#5166e6','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#14B8A6'];
+const META_C = '#2a44c8';
+const TF_C = '#0a7a56';
+
+const baseOpts = {
+  responsive: true, maintainAspectRatio: false,
   plugins: { legend: { display: false } },
   scales: {
-    x: {
-      grid: { color: 'rgba(255,255,255,0.05)' },
-      ticks: { color: 'rgba(240,240,242,0.5)', font: { size: 11, family: "'Inter Tight', sans-serif" } }
-    },
-    y: {
-      grid: { color: 'rgba(255,255,255,0.05)' },
-      ticks: { color: 'rgba(240,240,242,0.5)', font: { size: 11, family: "'Inter Tight', sans-serif" } }
-    }
+    x: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#8b8b8d', font: { size: 11, family: "'Inter Tight',sans-serif" } } },
+    y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#8b8b8d', font: { size: 11, family: "'Inter Tight',sans-serif" } } }
   }
 };
 
@@ -465,101 +381,258 @@ function makeLegend(elId, labels, values, colors) {
   const el = document.getElementById(elId);
   if (!el) return;
   el.innerHTML = labels.map((l,i) =>
-    `<span class="legend-item"><span class="legend-dot" style="background:${colors[i]};"></span>${l} <strong>${values[i]}</strong> <span style="opacity:.5">(${Math.round(values[i]/total*100)}%)</span></span>`
+    `<span class="legend-item"><span class="legend-dot" style="background:${colors[i]};"></span>${l} <strong>${values[i]}</strong> <span style="opacity:.5;">(${Math.round(values[i]/total*100)}%)</span></span>`
   ).join('');
 }
 
 function barChart(id, labels, values, colors) {
   const ctx = document.getElementById(id);
-  if (!ctx) return;
-  new Chart(ctx.getContext('2d'), {
+  if (!ctx) return null;
+  return new Chart(ctx.getContext('2d'), {
     type: 'bar',
     data: { labels, datasets: [{ data: values, backgroundColor: colors, borderWidth: 0, borderRadius: 6 }] },
-    options: {
-      ...chartDefaults,
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: {
-          label: c => ` ${c.raw} respostas (${Math.round(c.raw/values.reduce((a,b)=>a+b,0)*100)}%)`
-        }}
-      }
-    }
+    options: { ...baseOpts, plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: c => ` ${c.raw} respostas (${Math.round(c.raw/values.reduce((a,b)=>a+b,0)*100)}%)`
+    }}}}
   });
 }
 
-function groupedBar(id, labels, d1, d2, l1, l2, c1, c2) {
+function groupedBar(id, labels, d1, d2, c1, c2) {
   const ctx = document.getElementById(id);
-  if (!ctx) return;
-  new Chart(ctx.getContext('2d'), {
+  if (!ctx) return null;
+  return new Chart(ctx.getContext('2d'), {
     type: 'bar',
-    data: {
-      labels,
-      datasets: [
-        { label: l1, data: d1, backgroundColor: c1, borderWidth: 0, borderRadius: 4 },
-        { label: l2, data: d2, backgroundColor: c2, borderWidth: 0, borderRadius: 4 }
-      ]
-    },
-    options: { ...chartDefaults, plugins: { legend: { display: false } } }
+    data: { labels, datasets: [
+      { data: d1, backgroundColor: c1, borderWidth: 0, borderRadius: 4 },
+      { data: d2, backgroundColor: c2, borderWidth: 0, borderRadius: 4 }
+    ]},
+    options: { ...baseOpts, plugins: { legend: { display: false } } }
   });
 }
 
 function doughnut(id, labels, values, colors) {
   const ctx = document.getElementById(id);
-  if (!ctx) return;
-  new Chart(ctx.getContext('2d'), {
+  if (!ctx) return null;
+  return new Chart(ctx.getContext('2d'), {
     type: 'doughnut',
-    data: { labels, datasets: [{ data: values, backgroundColor: colors, borderWidth: 3, borderColor: '#111114' }] },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { callbacks: {
-        label: c => ` ${c.label}: ${c.raw} respostas`
-      }}}
-    }
+    data: { labels, datasets: [{ data: values, backgroundColor: colors, borderWidth: 3, borderColor: '#fefefe' }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
   });
 }
 
-// Data
-const impLabels = ['Nenhuma','1 impressora','2 a 5 impressoras','6 ou mais'];
-const impVals = [106,83,20,3];
-const rendaLabels = ['Até R$ 2.000','R$ 2–5k','R$ 5–10k','Acima de R$ 20k'];
-const rendaVals = [84,79,27,21];
-const escLabels = ['Ensino Superior','Ensino Médio','Pós-graduação','Ens. Fundamental'];
-const escVals = [85,82,35,10];
+// ── Survey 1 charts ──────────────────────────────────
+makeLegend('s1-leg-imp', ['Nenhuma','1 impressora','2 a 5','6 ou mais'], [106,83,20,3], COLORS);
+barChart('s1-chart-imp', ['Nenhuma','1 impressora','2 a 5','6 ou mais'], [106,83,20,3], COLORS);
 
-// Render
-makeLegend('leg-imp', impLabels, impVals, COLORS_MAIN);
-barChart('chart-imp', impLabels, impVals, COLORS_MAIN);
+makeLegend('s1-leg-renda', ['Até R$ 2.000','R$ 2–5k','R$ 5–10k','Acima de R$ 20k'], [84,79,27,21], COLORS);
+barChart('s1-chart-renda', ['Até R$ 2.000','R$ 2–5k','R$ 5–10k','Acima de R$ 20k'], [84,79,27,21], COLORS);
 
-makeLegend('leg-renda', rendaLabels, rendaVals, COLORS_MAIN);
-barChart('chart-renda', rendaLabels, rendaVals, COLORS_MAIN);
+makeLegend('s1-leg-esc', ['Ensino Superior','Ensino Médio','Pós-graduação','Ens. Fundamental'], [85,82,35,10], COLORS);
+barChart('s1-chart-esc', ['Ensino Superior','Ensino Médio','Pós-graduação','Ens. Fundamental'], [85,82,35,10], COLORS);
 
-makeLegend('leg-esc', escLabels, escVals, COLORS_MAIN);
-barChart('chart-esc', escLabels, escVals, COLORS_MAIN);
+groupedBar('s1-chart-cmp-imp', ['Nenhuma','1','2–5','6+'], [58,45,9,3], [48,38,11,0], META_C, TF_C);
+groupedBar('s1-chart-cmp-renda', ['Até 2k','2–5k','5–10k','+20k'], [40,39,27,9], [44,40,0,12], META_C, TF_C);
+doughnut('s1-chart-fontes', ['Meta','Typeform'], [115,97], [META_C, TF_C]);
 
-groupedBar('chart-cmp-imp',
-  ['Nenhuma','1 impressora','2–5','6+'],
-  [58,45,9,3], [48,38,11,0],
-  'Meta', 'Typeform', META_COLOR, TF_COLOR
-);
-groupedBar('chart-cmp-renda',
-  ['Até 2k','2–5k','5–10k','Acima 20k'],
-  [40,39,27,9], [44,40,0,12],
-  'Meta', 'Typeform', META_COLOR, TF_COLOR
-);
-doughnut('chart-fontes',
-  ['Meta (HubSpot)', 'Typeform'],
-  [115, 97],
-  [META_COLOR, TF_COLOR]
-);
+// ── Survey 2 upload ──────────────────────────────────
+let s2Charts = {};
+let s2Data = [];
+let s2Sources = {};
 
-// Tab switching
-function showTab(name, btn) {
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('panel-' + name).classList.add('active');
-  btn.classList.add('active');
+const dropZone = document.getElementById('s2-drop-zone');
+const fileInput = document.getElementById('s2-file-input');
+
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('dragover'); handleS2Files(e.dataTransfer.files); });
+fileInput.addEventListener('change', e => handleS2Files(e.target.files));
+
+function handleS2Files(files) {
+  const promises = Array.from(files).map(f => readFile(f));
+  Promise.all(promises).then(results => {
+    results.forEach(r => { if(r) mergeS2(r.rows, r.source, r.filename); });
+    renderS2();
+  });
+}
+
+function readFile(file) {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const text = e.target.result;
+      const name = file.name.toLowerCase();
+      let rows = [], source = 'outro';
+      try {
+        if(name.endsWith('.json')) { rows = normalizeJSON(JSON.parse(text)); source = detectSource(name, rows); }
+        else { rows = parseCSV(text); source = detectSource(name, rows); }
+        resolve({ rows, source, filename: file.name });
+      } catch(err) { resolve(null); }
+    };
+    reader.readAsText(file);
+  });
+}
+
+function detectSource(name, rows) {
+  if(name.includes('typeform')) return 'Typeform';
+  if(name.includes('meta') || name.includes('facebook') || name.includes('lead')) return 'Meta';
+  if(rows[0] && rows[0]['Submitted at']) return 'Typeform';
+  return 'Meta';
+}
+
+function parseCSV(text) {
+  const lines = text.split(/\r?\n/).filter(l => l.trim());
+  if(lines.length < 2) return [];
+  const sep = lines[0].includes('\t') ? '\t' : ',';
+  const headers = splitLine(lines[0], sep);
+  return lines.slice(1).map(line => {
+    const vals = splitLine(line, sep);
+    const obj = {};
+    headers.forEach((h,i) => { obj[h.trim()] = (vals[i]||'').trim(); });
+    return obj;
+  }).filter(r => Object.values(r).some(v => v));
+}
+
+function splitLine(line, sep) {
+  const result = []; let cur = ''; let inQ = false;
+  for(let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if(ch === '"') { inQ = !inQ; }
+    else if(ch === sep && !inQ) { result.push(cur); cur = ''; }
+    else { cur += ch; }
+  }
+  result.push(cur);
+  return result;
+}
+
+function normalizeJSON(data) {
+  if(Array.isArray(data)) return data.map(flatObj);
+  if(data.results) return data.results.map(flatObj);
+  return [flatObj(data)];
+}
+
+function flatObj(obj, prefix='') {
+  const flat = {};
+  for(const [k,v] of Object.entries(obj)) {
+    const key = prefix ? `${prefix}.${k}` : k;
+    if(v && typeof v === 'object' && !Array.isArray(v)) Object.assign(flat, flatObj(v, key));
+    else flat[key] = String(v ?? '');
+  }
+  return flat;
+}
+
+function mergeS2(rows, source, filename) {
+  const tagged = rows.map(r => ({ ...r, _source: source, _file: filename }));
+  s2Data = s2Data.concat(tagged);
+  if(!s2Sources[source]) s2Sources[source] = { count: 0 };
+  s2Sources[source].count += rows.length;
+}
+
+function renderS2() {
+  if(!s2Data.length) return;
+  document.getElementById('s2-upload-section').style.display = 'none';
+  document.getElementById('s2-dashboard-section').style.display = 'block';
+
+  // Badges
+  const badgeEl = document.getElementById('s2-source-badges');
+  badgeEl.innerHTML = Object.entries(s2Sources).map(([k,s]) => {
+    const cls = k === 'Typeform' ? 'badge-tf' : 'badge-meta';
+    const col = k === 'Typeform' ? '#0a7a56' : '#2a44c8';
+    return `<span class="badge ${cls}"><span class="badge-dot" style="background:${col};"></span>${k} · ${s.count}</span>`;
+  }).join('');
+
+  // Metrics
+  const metricsEl = document.getElementById('s2-metrics');
+  metricsEl.innerHTML = `
+    <div class="metric"><div class="metric-label">Respostas</div><div class="metric-value">${s2Data.length}</div><div class="metric-sub">total</div></div>
+    <div class="metric"><div class="metric-label">Fontes</div><div class="metric-value neutral">${Object.keys(s2Sources).length}</div><div class="metric-sub">canais</div></div>
+    <div class="metric"><div class="metric-label">Arquivos</div><div class="metric-value neutral">${[...new Set(s2Data.map(r=>r._file))].length}</div><div class="metric-sub">importados</div></div>
+  `;
+
+  // Charts
+  Object.values(s2Charts).forEach(c => { try { c.destroy(); } catch(e){} });
+  s2Charts = {};
+  const container = document.getElementById('s2-charts');
+  container.innerHTML = '';
+
+  const skip = new Set(['_source','_file','#','token','response_id','submitted_at','start_date','date_submitted','network_id','ip_address','user_agent','created_time','id','form_id','landing_page','ending','tags','response type','stage date (utc)','start date (utc)','submit date (utc)']);
+  const cols = Object.keys(s2Data[0] || {}).filter(k => !skip.has(k.toLowerCase()));
+
+  cols.forEach((col, ci) => {
+    const vals = s2Data.map(r => (r[col]||'').trim()).filter(v => v);
+    const unique = [...new Set(vals)];
+    const avgLen = vals.reduce((a,b)=>a+b.length,0)/(vals.length||1);
+    const isCat = unique.length <= 15 && avgLen < 80;
+
+    const card = document.createElement('div');
+    card.className = 'chart-card';
+    const cid = 'S2C' + ci;
+    const short = col.length > 70 ? col.slice(0,67)+'…' : col;
+
+    if(isCat) {
+      const counts = {};
+      vals.forEach(v => { counts[v] = (counts[v]||0)+1; });
+      const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,10);
+      const labels = sorted.map(x=>x[0]);
+      const values = sorted.map(x=>x[1]);
+      const total = values.reduce((a,b)=>a+b,0);
+      const h = labels.length > 5 ? Math.max(260, labels.length*38+60) : 220;
+      const isH = labels.length > 5;
+
+      card.innerHTML = `
+        <div class="chart-header">
+          <div class="chart-title" title="${col}">${short}</div>
+          <span class="chart-pill">${total} respostas</span>
+        </div>
+        <div class="legend">${sorted.map((x,i)=>`<span class="legend-item"><span class="legend-dot" style="background:${COLORS[i%COLORS.length]};"></span>${x[0].slice(0,35)} <strong>${x[1]}</strong> <span style="opacity:.5;">(${Math.round(x[1]/total*100)}%)</span></span>`).join('')}</div>
+        <div style="position:relative;width:100%;height:${h}px;"><canvas id="${cid}" role="img" aria-label="${short}"></canvas></div>
+      `;
+      container.appendChild(card);
+      const ctx = document.getElementById(cid).getContext('2d');
+      s2Charts[cid] = new Chart(ctx, {
+        type: 'bar',
+        data: { labels, datasets: [{ data: values, backgroundColor: labels.map((_,i)=>COLORS[i%COLORS.length]), borderWidth: 0, borderRadius: 6 }] },
+        options: { ...baseOpts, indexAxis: isH ? 'y' : 'x', plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ${c.raw} (${Math.round(c.raw/total*100)}%)` }}}}
+      });
+    } else {
+      // Word frequency for open questions
+      const stop = new Set(['de','a','o','e','da','do','em','que','com','para','por','se','na','no','uma','um','é','não','mas','mais','como','eu','meu','sua','seu','os','as','dos','das']);
+      const freq = {};
+      vals.forEach(v => v.toLowerCase().split(/\W+/).filter(w=>w.length>3&&!stop.has(w)).forEach(w=>{ freq[w]=(freq[w]||0)+1; }));
+      const top = Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,12);
+      if(!top.length) return;
+
+      card.innerHTML = `
+        <div class="chart-header">
+          <div class="chart-title" title="${col}">${short}</div>
+          <span class="chart-pill" style="background:rgba(245,158,11,0.1);color:#92400e;">palavras frequentes</span>
+        </div>
+        <div style="position:relative;width:100%;height:220px;"><canvas id="${cid}" role="img" aria-label="Palavras frequentes: ${short}"></canvas></div>
+      `;
+      container.appendChild(card);
+      const ctx = document.getElementById(cid).getContext('2d');
+      s2Charts[cid] = new Chart(ctx, {
+        type: 'bar',
+        data: { labels: top.map(x=>x[0]), datasets: [{ data: top.map(x=>x[1]), backgroundColor: '#5166e6', borderWidth: 0, borderRadius: 5 }] },
+        options: { ...baseOpts, plugins: { legend: { display: false } } }
+      });
+    }
+  });
+
+  if(!cols.length) {
+    container.innerHTML = '<div class="empty-state"><span class="empty-icon">📋</span>Nenhuma coluna de resposta detectada.</div>';
+  }
+
+  document.getElementById('s2-footer-date').textContent = new Date().toLocaleDateString('pt-BR', { day:'numeric', month:'long', year:'numeric' }) + ' · dados internos';
+}
+
+function resetS2() {
+  s2Data = []; s2Sources = {};
+  Object.values(s2Charts).forEach(c => { try { c.destroy(); } catch(e){} });
+  s2Charts = {};
+  document.getElementById('s2-upload-section').style.display = '';
+  document.getElementById('s2-dashboard-section').style.display = 'none';
+  document.getElementById('s2-file-input').value = '';
 }
 </script>
-
 </body>
 </html>
