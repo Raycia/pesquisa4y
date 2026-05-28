@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live 4 Anos STLFLIX — Pesquisa de Público</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0C0C0D;
+    --bg2: #111114;
+    --bg3: #18181c;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.13);
+    --primary: #5166e6;
+    --primary-glow: rgba(81,102,230,0.25);
+    --accent: #b9ff46;
+    --text: #f0f0f2;
+    --muted: rgba(240,240,242,0.5);
+    --muted2: rgba(240,240,242,0.3);
+    --meta: #3B82F6;
+    --tf: #10B981;
+    --r1: 12px;
+    --r2: 16px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* Layout */
+  .shell {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+  }
+  .header-left {}
+  .header-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .header-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--text);
+    line-height: 1.15;
+  }
+  .header-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+  .source-badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 4px;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+  .badge-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .badge-meta { background: rgba(59,130,246,0.15); color: #93c5fd; }
+  .badge-tf { background: rgba(16,185,129,0.15); color: #6ee7b7; }
+
+  /* Metrics row */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .metric {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--r1);
+    padding: 18px 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .metric::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary), transparent);
+  }
+  .metric-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .metric-value {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--text);
+    line-height: 1;
+  }
+  .metric-sub {
+    font-size: 11px;
+    color: var(--muted2);
+    margin-top: 4px;
+  }
+  .metric-value.accent { color: var(--accent); }
+
+  /* Insight */
+  .insight {
+    background: rgba(81,102,230,0.08);
+    border: 1px solid rgba(81,102,230,0.25);
+    border-radius: var(--r1);
+    padding: 14px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 28px;
+  }
+  .insight-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .insight-text {
+    font-size: 13px;
+    color: rgba(240,240,242,0.8);
+    line-height: 1.6;
+  }
+  .insight-text strong { color: var(--text); }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .tab {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Inter Tight', sans-serif;
+  }
+  .tab:hover { border-color: var(--primary); color: var(--text); }
+  .tab.active {
+    background: rgba(81,102,230,0.2);
+    border-color: var(--primary);
+    color: #a5b4fc;
+  }
+
+  /* Chart cards */
+  .chart-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--r2);
+    padding: 22px 20px;
+    margin-bottom: 14px;
+  }
+  .chart-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .chart-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .chart-title svg { opacity: 0.6; }
+  .chart-total {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: rgba(81,102,230,0.15);
+    color: #a5b4fc;
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .legend-dot {
+    width: 8px; height: 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .legend-item strong { color: var(--text); }
+
+  /* Chart grid */
+  .chart-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 640px) {
+    .chart-grid { grid-template-columns: 1fr; }
+    .header { flex-direction: column; }
+  }
+
+  /* Tab panels */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* Footer */
+  .footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .footer-logo img {
+    height: 22px;
+    width: auto;
+    opacity: 0.5;
+    filter: brightness(0) invert(1);
+  }
+  .footer-date { font-size: 11px; color: var(--muted2); }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="header-eyebrow"><img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX" style="height:16px; width:auto; filter:brightness(0) invert(1); opacity:0.9; vertical-align:middle; margin-right:8px;">Pesquisa de público · live aniversário</div>
+      <h1 class="header-title">4 anos STLFLIX<br>Perfil dos interessados</h1>
+      <p class="header-sub">Coleta em 28/05/2026 · dados unificados de Meta Ads e Typeform</p>
+    </div>
+    <div class="source-badges">
+      <span class="badge badge-meta"><span class="badge-dot" style="background:var(--meta);"></span>Meta Ads · 115</span>
+      <span class="badge badge-tf"><span class="badge-dot" style="background:var(--tf);"></span>Typeform · 97</span>
+    </div>
+  </div>
+
+  <!-- Metrics -->
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-label">Respostas totais</div>
+      <div class="metric-value accent">212</div>
+      <div class="metric-sub">2 fontes unificadas</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Sem impressora</div>
+      <div class="metric-value">50%</div>
+      <div class="metric-sub">106 respondentes</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Superior ou pós</div>
+      <div class="metric-value">57%</div>
+      <div class="metric-sub">120 respondentes</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Renda até R$ 2k</div>
+      <div class="metric-value">40%</div>
+      <div class="metric-sub">84 respondentes</div>
+    </div>
+  </div>
+
+  <!-- Insight -->
+  <div class="insight">
+    <div class="insight-icon">💡</div>
+    <div class="insight-text">
+      <strong>Achado principal:</strong> metade dos interessados ainda não possui impressora — audiência em fase de decisão de compra, não operadores experientes. A concentração de renda baixa (40% até R$ 2k) reforça a necessidade de mostrar ROI claro e acessibilidade na live. Meta atraiu mais leads com renda média (R$ 5k–10k) comparado ao Typeform.
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('impressoras', this)">Impressoras</button>
+    <button class="tab" onclick="showTab('renda', this)">Renda</button>
+    <button class="tab" onclick="showTab('escolaridade', this)">Escolaridade</button>
+    <button class="tab" onclick="showTab('comparativo', this)">Meta vs Typeform</button>
+  </div>
+
+  <!-- Tab: Impressoras -->
+  <div class="tab-panel active" id="panel-impressoras">
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-title">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="6" y="9" width="12" height="8" rx="1"/><path d="M6 12H4a1 1 0 01-1-1V7a1 1 0 011-1h16a1 1 0 011 1v4a1 1 0 01-1 1h-2"/><rect x="9" y="14" width="6" height="5" rx="1"/></svg>
+          Quantas impressoras 3D você possui?
+        </div>
+        <span class="chart-total">211 respostas</span>
+      </div>
+      <div class="legend" id="leg-imp"></div>
+      <div style="position:relative;width:100%;height:240px;">
+        <canvas id="chart-imp" role="img" aria-label="Impressoras: Nenhuma 106, 1 impressora 83, 2 a 5 impressoras 20, 6 ou mais 3">Nenhuma: 106, 1 impressora: 83, 2 a 5 impressoras: 20, 6 ou mais: 3</canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Renda -->
+  <div class="tab-panel" id="panel-renda">
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-title">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v2m0 8v2M9 9h4.5a1.5 1.5 0 010 3h-3a1.5 1.5 0 000 3H15"/></svg>
+          Renda mensal aproximada
+        </div>
+        <span class="chart-total">211 respostas</span>
+      </div>
+      <div class="legend" id="leg-renda"></div>
+      <div style="position:relative;width:100%;height:240px;">
+        <canvas id="chart-renda" role="img" aria-label="Renda: Até R$2.000: 84, R$2-5k: 79, R$5-10k: 27, Acima 20k: 21">Até R$ 2.000: 84, R$ 2.000–5.000: 79, R$ 5.000–10.000: 27, Acima de R$ 20.000: 21</canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Escolaridade -->
+  <div class="tab-panel" id="panel-escolaridade">
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-title">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+          Nível de escolaridade
+        </div>
+        <span class="chart-total">212 respostas</span>
+      </div>
+      <div class="legend" id="leg-esc"></div>
+      <div style="position:relative;width:100%;height:240px;">
+        <canvas id="chart-esc" role="img" aria-label="Escolaridade: Superior 85, Médio 82, Pós-graduação 35, Fundamental 10">Superior: 85, Médio: 82, Pós-graduação: 35, Fundamental: 10</canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Comparativo -->
+  <div class="tab-panel" id="panel-comparativo">
+    <div class="chart-grid">
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title">Impressoras por fonte</div>
+        </div>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-dot" style="background:var(--meta);"></span>Meta</span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--tf);"></span>Typeform</span>
+        </div>
+        <div style="position:relative;width:100%;height:220px;">
+          <canvas id="chart-cmp-imp" role="img" aria-label="Impressoras por fonte comparado"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title">Renda por fonte</div>
+        </div>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-dot" style="background:var(--meta);"></span>Meta</span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--tf);"></span>Typeform</span>
+        </div>
+        <div style="position:relative;width:100%;height:220px;">
+          <canvas id="chart-cmp-renda" role="img" aria-label="Renda por fonte comparado"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-title">Distribuição geral por fonte</div>
+        <span class="chart-total">212 respostas</span>
+      </div>
+      <div class="legend">
+        <span class="legend-item"><span class="legend-dot" style="background:var(--meta);"></span>Meta (HubSpot) <strong style="margin-left:4px;">115</strong></span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--tf);"></span>Typeform <strong style="margin-left:4px;">97</strong></span>
+      </div>
+      <div style="position:relative;width:100%;height:160px;">
+        <canvas id="chart-fontes" role="img" aria-label="Distribuição por fonte: Meta 115, Typeform 97">Meta: 115, Typeform: 97</canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-logo"><img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX"></div>
+    <div class="footer-date">28 de maio de 2026 · dados internos</div>
+  </div>
+
+</div>
+
+<script>
+const COLORS_MAIN = ['#5166e6','#10B981','#F59E0B','#EF4444','#8B5CF6'];
+const META_COLOR = '#3B82F6';
+const TF_COLOR = '#10B981';
+
+const chartDefaults = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: { legend: { display: false } },
+  scales: {
+    x: {
+      grid: { color: 'rgba(255,255,255,0.05)' },
+      ticks: { color: 'rgba(240,240,242,0.5)', font: { size: 11, family: "'Inter Tight', sans-serif" } }
+    },
+    y: {
+      grid: { color: 'rgba(255,255,255,0.05)' },
+      ticks: { color: 'rgba(240,240,242,0.5)', font: { size: 11, family: "'Inter Tight', sans-serif" } }
+    }
+  }
+};
+
+function makeLegend(elId, labels, values, colors) {
+  const total = values.reduce((a,b)=>a+b,0);
+  const el = document.getElementById(elId);
+  if (!el) return;
+  el.innerHTML = labels.map((l,i) =>
+    `<span class="legend-item"><span class="legend-dot" style="background:${colors[i]};"></span>${l} <strong>${values[i]}</strong> <span style="opacity:.5">(${Math.round(values[i]/total*100)}%)</span></span>`
+  ).join('');
+}
+
+function barChart(id, labels, values, colors) {
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  new Chart(ctx.getContext('2d'), {
+    type: 'bar',
+    data: { labels, datasets: [{ data: values, backgroundColor: colors, borderWidth: 0, borderRadius: 6 }] },
+    options: {
+      ...chartDefaults,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: {
+          label: c => ` ${c.raw} respostas (${Math.round(c.raw/values.reduce((a,b)=>a+b,0)*100)}%)`
+        }}
+      }
+    }
+  });
+}
+
+function groupedBar(id, labels, d1, d2, l1, l2, c1, c2) {
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  new Chart(ctx.getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: l1, data: d1, backgroundColor: c1, borderWidth: 0, borderRadius: 4 },
+        { label: l2, data: d2, backgroundColor: c2, borderWidth: 0, borderRadius: 4 }
+      ]
+    },
+    options: { ...chartDefaults, plugins: { legend: { display: false } } }
+  });
+}
+
+function doughnut(id, labels, values, colors) {
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  new Chart(ctx.getContext('2d'), {
+    type: 'doughnut',
+    data: { labels, datasets: [{ data: values, backgroundColor: colors, borderWidth: 3, borderColor: '#111114' }] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: {
+        label: c => ` ${c.label}: ${c.raw} respostas`
+      }}}
+    }
+  });
+}
+
+// Data
+const impLabels = ['Nenhuma','1 impressora','2 a 5 impressoras','6 ou mais'];
+const impVals = [106,83,20,3];
+const rendaLabels = ['Até R$ 2.000','R$ 2–5k','R$ 5–10k','Acima de R$ 20k'];
+const rendaVals = [84,79,27,21];
+const escLabels = ['Ensino Superior','Ensino Médio','Pós-graduação','Ens. Fundamental'];
+const escVals = [85,82,35,10];
+
+// Render
+makeLegend('leg-imp', impLabels, impVals, COLORS_MAIN);
+barChart('chart-imp', impLabels, impVals, COLORS_MAIN);
+
+makeLegend('leg-renda', rendaLabels, rendaVals, COLORS_MAIN);
+barChart('chart-renda', rendaLabels, rendaVals, COLORS_MAIN);
+
+makeLegend('leg-esc', escLabels, escVals, COLORS_MAIN);
+barChart('chart-esc', escLabels, escVals, COLORS_MAIN);
+
+groupedBar('chart-cmp-imp',
+  ['Nenhuma','1 impressora','2–5','6+'],
+  [58,45,9,3], [48,38,11,0],
+  'Meta', 'Typeform', META_COLOR, TF_COLOR
+);
+groupedBar('chart-cmp-renda',
+  ['Até 2k','2–5k','5–10k','Acima 20k'],
+  [40,39,27,9], [44,40,0,12],
+  'Meta', 'Typeform', META_COLOR, TF_COLOR
+);
+doughnut('chart-fontes',
+  ['Meta (HubSpot)', 'Typeform'],
+  [115, 97],
+  [META_COLOR, TF_COLOR]
+);
+
+// Tab switching
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+
+</body>
+</html>
