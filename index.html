@@ -255,13 +255,14 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
         </div>
       </div>
       <div class="chart-card">
-        <div class="chart-header"><div class="chart-title">Distribuição geral por fonte</div><span class="chart-pill">212 respostas</span></div>
+        <div class="chart-header"><div class="chart-title">Escolaridade por fonte</div></div>
         <div class="legend">
-          <span class="legend-item"><span class="legend-dot" style="background:#2a44c8;"></span>Meta <strong style="margin-left:4px;">115</strong></span>
-          <span class="legend-item"><span class="legend-dot" style="background:#0a7a56;"></span>Typeform <strong style="margin-left:4px;">97</strong></span>
+          <span class="legend-item"><span class="legend-dot" style="background:#2a44c8;"></span>Meta</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#0a7a56;"></span>Typeform</span>
         </div>
-        <div style="position:relative;width:100%;height:160px;"><canvas id="s1-chart-fontes" role="img" aria-label="Distribuição por fonte">Meta: 115, Typeform: 97</canvas></div>
+        <div style="position:relative;width:100%;height:220px;"><canvas id="s1-chart-cmp-esc" role="img" aria-label="Escolaridade por fonte"></canvas></div>
       </div>
+
     </div>
 
     <div class="footer">
@@ -280,15 +281,16 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
       <p class="page-sub">4 perguntas · Typeform + Meta Ads · coleta iniciada hoje</p>
     </div>
 
-    <!-- Upload zone -->
+    <!-- Preview das perguntas + waiting state -->
     <div id="s2-upload-section">
-      <div class="upload-zone" id="s2-drop-zone" onclick="document.getElementById('s2-file-input').click()">
-        <input type="file" id="s2-file-input" accept=".csv,.json" multiple>
-        <span class="upload-icon">↑</span>
-        <div class="upload-title">Importe os dados quando chegarem</div>
-        <div class="upload-sub">Arraste ou clique · CSV ou JSON do Typeform e Meta Ads · múltiplos arquivos</div>
-        <div class="upload-privacy">Processado localmente — nenhum dado enviado a servidores</div>
+      <div style="background:rgba(81,102,230,0.05); border:1px solid rgba(81,102,230,0.15); border-radius:var(--r2); padding:20px 24px; margin-bottom:24px; display:flex; align-items:center; gap:12px;">
+        <div style="width:8px; height:8px; border-radius:50%; background:#f59e0b; flex-shrink:0; animation:pulse 2s infinite;"></div>
+        <div>
+          <div style="font-size:13px; font-weight:500; color:var(--text);">Coleta em andamento</div>
+          <div style="font-size:12px; color:var(--muted);">Os dados serão adicionados assim que chegarem dos canais</div>
+        </div>
       </div>
+      <style>@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }</style>
 
       <!-- Preview das perguntas -->
       <div style="margin-top: 24px;">
@@ -324,16 +326,6 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Dashboard section (hidden until upload) -->
-    <div id="s2-dashboard-section" style="display:none;">
-      <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
-        <div id="s2-source-badges" class="source-badges"></div>
-        <button onclick="resetS2()" style="margin-left:auto; font-size:12px; padding:5px 14px; border-radius:999px; border:1px solid var(--border2); background:transparent; cursor:pointer; color:var(--muted); font-family:'Inter Tight',sans-serif;">↺ Novo upload</button>
-      </div>
-      <div id="s2-metrics" class="metrics"></div>
-      <div id="s2-charts"></div>
     </div>
 
     <div class="footer">
@@ -432,7 +424,7 @@ barChart('s1-chart-esc', ['Ensino Superior','Ensino Médio','Pós-graduação','
 
 groupedBar('s1-chart-cmp-imp', ['Nenhuma','1','2–5','6+'], [58,45,9,3], [48,38,11,0], META_C, TF_C);
 groupedBar('s1-chart-cmp-renda', ['Até 2k','2–5k','5–10k','+20k'], [40,39,27,9], [44,40,0,12], META_C, TF_C);
-doughnut('s1-chart-fontes', ['Meta','Typeform'], [115,97], [META_C, TF_C]);
+groupedBar('s1-chart-cmp-esc', ['Superior','Médio','Pós','Fundamental'], [51,44,16,4], [34,38,19,6], META_C, TF_C);
 
 // ── Survey 2 upload ──────────────────────────────────
 let s2Charts = {};
