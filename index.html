@@ -549,6 +549,73 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
       <div style="position:relative;width:100%;height:260px;"><canvas id="s4-c4" role="img" aria-label="Motivação por posse de impressora"></canvas></div>
     </div>
 
+    <!-- ── SEÇÃO: SEGMENTOS & ACHADOS ── -->
+    <div style="margin:40px 0 18px; padding-top:32px; border-top:1px solid var(--border);">
+      <div class="page-eyebrow" style="color:var(--primary-active);">Insights acionáveis</div>
+      <h2 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:20px; font-weight:800; letter-spacing:-0.03em;">Segmentos & oportunidades</h2>
+    </div>
+
+    <!-- Highlight metrics -->
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">🔥 Prontos pra converter</div>
+        <div class="metric-value">51%</div>
+        <div class="metric-sub">201 com intenção + disposição</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">🛒 "Vou comprar"</div>
+        <div class="metric-value">22%</div>
+        <div class="metric-sub">89 com intenção declarada</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">📈 Investe acima da renda</div>
+        <div class="metric-value">19%</div>
+        <div class="metric-sub">74 com disposição agressiva</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">💼 Profissionais</div>
+        <div class="metric-value neutral">5%</div>
+        <div class="metric-sub">20 escalando produção</div>
+      </div>
+    </div>
+
+    <!-- Segmentos chart -->
+    <div class="chart-card">
+      <div class="chart-header"><div class="chart-title">Composição da audiência por segmento</div><span class="chart-pill">397 respostas</span></div>
+      <div class="legend" id="s4-leg-seg"></div>
+      <div style="position:relative;width:100%;height:240px;"><canvas id="s4-seg" role="img" aria-label="Segmentos da audiência"></canvas></div>
+    </div>
+
+    <!-- Qualidade por canal -->
+    <div class="chart-card">
+      <div class="chart-header"><div class="chart-title">Qualidade da base por canal — % que já tem impressora</div></div>
+      <p style="font-size:11px; color:var(--muted); margin:-6px 0 14px;">Typeform atrai público mais avançado; Meta traz mais topo de funil. Orienta a alocação de budget de mídia.</p>
+      <div class="legend">
+        <span class="legend-item"><span class="legend-dot" style="background:#2a44c8;"></span>Meta</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#0a7a56;"></span>Typeform</span>
+      </div>
+      <div style="position:relative;width:100%;height:160px;"><canvas id="s4-canal" role="img" aria-label="Qualidade por canal"></canvas></div>
+    </div>
+
+    <!-- Recomendações -->
+    <div class="chart-card" style="background:rgba(81,102,230,0.04);">
+      <div class="chart-title" style="margin-bottom:14px;">📌 Recomendações de CRO</div>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+          <span style="color:var(--primary); font-weight:700; flex-shrink:0;">1.</span>
+          <span style="font-size:13px; color:#454549;"><strong>Mire os 51% quentes na oferta principal.</strong> Eles têm intenção e disposição de investir 2k+. A motivação deles é "aprender pra vender" — posicione o evento como ponte entre conhecimento e faturamento.</span>
+        </div>
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+          <span style="color:var(--primary); font-weight:700; flex-shrink:0;">2.</span>
+          <span style="font-size:13px; color:#454549;"><strong>Nutra os 7% cautelosos antes de vender.</strong> Não têm impressora e investiriam pouco. Conteúdo educativo primeiro, oferta depois — empurrar venda agora queima o lead.</span>
+        </div>
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+          <span style="color:var(--primary); font-weight:700; flex-shrink:0;">3.</span>
+          <span style="font-size:13px; color:#454549;"><strong>Ajuste o budget de mídia por canal.</strong> Typeform traz público qualificado (75% já tem impressora) e Meta traz volume de topo (45%). Use Meta pra alcance e Typeform/retargeting pra conversão.</span>
+        </div>
+      </div>
+    </div>
+
     <div class="footer">
       <img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX">
       <span class="footer-date">Base Typeform · 397 respostas</span>
@@ -993,6 +1060,50 @@ function initS4() {
     { label: 'Já tem', data: [46, 147, 30, 21, 19], color: '#5166e6' },
     { label: 'Não tem', data: [3, 45, 14, 13, 12], color: '#d1d1d2' }
   ]);
+
+  // Segmentos — barra horizontal simples
+  const segLabels = ['🔥 Prontos pra converter','🌱 Iniciante cauteloso','💼 Profissional','Demais perfis'];
+  const segVals = [201, 27, 20, 149];
+  const segColors = ['#5166e6','#10B981','#F59E0B','#d1d1d2'];
+  makeLegend('s4-leg-seg', segLabels, segVals, segColors);
+  const segCtx = document.getElementById('s4-seg');
+  if (segCtx) {
+    new Chart(segCtx.getContext('2d'), {
+      type: 'bar',
+      data: { labels: segLabels, datasets: [{ data: segVals, backgroundColor: segColors, borderWidth: 0, borderRadius: 5 }] },
+      options: {
+        ...baseOpts, indexAxis: 'y',
+        layout: { padding: { right: 44 } },
+        plugins: {
+          legend: { display: false },
+          datalabels: { display: true, anchor: 'end', align: 'right', offset: 2, clamp: true, color: '#454549', font: { size: 11, weight: '600', family: "'Inter Tight',sans-serif" }, formatter: v => Math.round(v/397*100) + '%' },
+          tooltip: { callbacks: { label: c => ' ' + c.raw + ' pessoas (' + Math.round(c.raw/397*100) + '%)' } }
+        }
+      }
+    });
+  }
+
+  // Qualidade por canal — % já tem impressora
+  const canalCtx = document.getElementById('s4-canal');
+  if (canalCtx) {
+    new Chart(canalCtx.getContext('2d'), {
+      type: 'bar',
+      data: { labels: ['% que já tem impressora'], datasets: [
+        { label: 'Meta', data: [45], backgroundColor: '#2a44c8', borderWidth: 0, borderRadius: 5 },
+        { label: 'Typeform', data: [75], backgroundColor: '#0a7a56', borderWidth: 0, borderRadius: 5 }
+      ]},
+      options: {
+        ...baseOpts, indexAxis: 'y',
+        layout: { padding: { right: 44 } },
+        plugins: {
+          legend: { display: false },
+          datalabels: { display: true, anchor: 'end', align: 'right', offset: 2, color: '#454549', font: { size: 12, weight: '700', family: "'Inter Tight',sans-serif" }, formatter: v => v + '%' },
+          tooltip: { callbacks: { label: c => ' ' + c.dataset.label + ': ' + c.raw + '%' } }
+        },
+        scales: { ...baseOpts.scales, x: { ...baseOpts.scales.x, max: 100, ticks: { ...baseOpts.scales.x.ticks, callback: v => v + '%' } } }
+      }
+    });
+  }
 }
 
 </script>
