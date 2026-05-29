@@ -159,7 +159,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
     Live 4 anos <span class="nav-badge">212</span>
   </button>
   <button class="nav-tab" onclick="showSurvey('s2', this)">
-    Nova pesquisa <span class="nav-badge new">novo</span>
+    Nova pesquisa <span class="nav-badge new">1.259</span>
   </button>
 </nav>
 
@@ -276,72 +276,114 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
 <div class="survey-panel" id="panel-s2">
   <div class="shell">
     <div class="page-header">
-      <div class="page-eyebrow">Nova pesquisa · em andamento</div>
+      <div class="page-eyebrow">Nova pesquisa · 29/05/2026</div>
       <h1 class="page-title">Perfil de investimento<br>em impressão 3D</h1>
-      <p class="page-sub">4 perguntas · Typeform + Meta Ads · coleta iniciada hoje</p>
+      <p class="page-sub">1.259 respostas unificadas — Meta Ads + Typeform</p>
+      <div class="source-badges">
+        <span class="badge badge-meta"><span class="badge-dot" style="background:#2a44c8;"></span>Meta · 862</span>
+        <span class="badge badge-tf"><span class="badge-dot" style="background:#0a7a56;"></span>Typeform · 397</span>
+      </div>
     </div>
 
-    <!-- Preview das perguntas + waiting state -->
-    <div id="s2-upload-section">
-      <div style="background:rgba(81,102,230,0.05); border:1px solid rgba(81,102,230,0.15); border-radius:var(--r2); padding:20px 24px; margin-bottom:24px; display:flex; align-items:center; gap:12px;">
-        <div style="width:8px; height:8px; border-radius:50%; background:#f59e0b; flex-shrink:0; animation:pulse 2s infinite;"></div>
-        <div>
-          <div style="font-size:13px; font-weight:500; color:var(--text);">Coleta em andamento</div>
-          <div style="font-size:12px; color:var(--muted);">Os dados serão adicionados assim que chegarem dos canais</div>
-        </div>
-      </div>
-      <style>@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }</style>
+    <div class="metrics">
+      <div class="metric"><div class="metric-label">Respostas totais</div><div class="metric-value">1.259</div><div class="metric-sub">2 fontes</div></div>
+      <div class="metric"><div class="metric-label">Têm impressora</div><div class="metric-value">54%</div><div class="metric-sub">684 respondentes</div></div>
+      <div class="metric"><div class="metric-label">Renda até R$ 5k</div><div class="metric-value">74%</div><div class="metric-sub">941 respondentes</div></div>
+      <div class="metric"><div class="metric-label">Investiria até 1k</div><div class="metric-value">46%</div><div class="metric-sub">182 do Typeform</div></div>
+    </div>
 
-      <!-- Preview das perguntas -->
-      <div style="margin-top: 24px;">
-        <p style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:12px;">Perguntas desta pesquisa</p>
+    <div class="insight">
+      <div class="insight-icon">💡</div>
+      <div class="insight-text"><strong>Achado principal:</strong> apesar de 54% já ter impressora, 46% investiria até R$ 1.000 — indicando público iniciante mesmo entre os que já têm equipamento. As palavras mais citadas na motivação foram <strong>aprender</strong> e <strong>conhecimento</strong> (51% das respostas), reforçando que o evento deve posicionar aprendizado antes de venda.</div>
+    </div>
+
+    <div class="section-tabs">
+      <button class="stab active" onclick="showSection('s2', 'impressoras', this)">Impressoras</button>
+      <button class="stab" onclick="showSection('s2', 'renda', this)">Renda</button>
+      <button class="stab" onclick="showSection('s2', 'investimento', this)">Investimento</button>
+      <button class="stab" onclick="showSection('s2', 'motivacao', this)">Motivação</button>
+    </div>
+
+    <div class="section-panel active" id="s2-impressoras">
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Quantas impressoras 3D você possui atualmente?</div><span class="chart-pill">1.259 respostas</span></div>
+        <div class="legend" id="s2-leg-imp"></div>
+        <div style="position:relative;width:100%;height:260px;"><canvas id="s2-chart-imp" role="img" aria-label="Impressoras total"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Impressoras por fonte</div></div>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-dot" style="background:#2a44c8;"></span>Meta · 862</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#0a7a56;"></span>Typeform · 397</span>
+        </div>
+        <div style="position:relative;width:100%;height:300px;"><canvas id="s2-chart-imp-src" role="img" aria-label="Impressoras por fonte"></canvas></div>
+      </div>
+    </div>
+
+    <div class="section-panel" id="s2-renda">
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Qual sua renda mensal?</div><span class="chart-pill">1.259 respostas</span></div>
+        <div class="legend" id="s2-leg-renda"></div>
+        <div style="position:relative;width:100%;height:240px;"><canvas id="s2-chart-renda" role="img" aria-label="Renda total"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Renda por fonte</div></div>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-dot" style="background:#2a44c8;"></span>Meta · 862</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#0a7a56;"></span>Typeform · 397</span>
+        </div>
+        <div style="position:relative;width:100%;height:260px;"><canvas id="s2-chart-renda-src" role="img" aria-label="Renda por fonte"></canvas></div>
+      </div>
+    </div>
+
+    <div class="section-panel" id="s2-investimento">
+      <div style="background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.2); border-radius:var(--r1); padding:12px 16px; margin-bottom:14px; display:flex; gap:10px; align-items:flex-start;">
+        <span style="font-size:14px; flex-shrink:0;">ℹ️</span>
+        <span style="font-size:12px; color:#92400e; line-height:1.5;">Pergunta exclusiva do <strong>Typeform</strong> — o formulário do Meta Ads não incluiu esta questão, então não há comparativo por fonte aqui.</span>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Qual valor você considera investir para se desenvolver em impressão 3D?</div><span class="chart-pill">397 respostas · Typeform</span></div>
+        <div class="legend" id="s2-leg-invest"></div>
+        <div style="position:relative;width:100%;height:240px;"><canvas id="s2-chart-invest" role="img" aria-label="Investimento nova pesquisa"></canvas></div>
+      </div>
+    </div>
+
+    <div class="section-panel" id="s2-motivacao">
+      <div style="background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.2); border-radius:var(--r1); padding:12px 16px; margin-bottom:14px; display:flex; gap:10px; align-items:flex-start;">
+        <span style="font-size:14px; flex-shrink:0;">ℹ️</span>
+        <span style="font-size:12px; color:#92400e; line-height:1.5;">Pergunta aberta, exclusiva do <strong>Typeform</strong>. As 397 respostas foram agrupadas por tema — uma resposta pode conter mais de um tema.</span>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">O que te motiva a participar do evento? — principais temas</div><span class="chart-pill">397 respostas · Typeform</span></div>
+        <div class="legend" id="s2-leg-mot"></div>
+        <div style="position:relative;width:100%;height:340px;"><canvas id="s2-chart-mot" role="img" aria-label="Motivação por tema"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Exemplos de respostas</div></div>
         <div style="display:flex; flex-direction:column; gap:8px;">
-          <div class="chart-card" style="padding:14px 16px; display:flex; gap:12px; align-items:flex-start;">
-            <span style="font-size:11px; font-weight:700; color:var(--primary); background:rgba(81,102,230,0.1); padding:2px 8px; border-radius:999px; flex-shrink:0;">Q1</span>
-            <div>
-              <div style="font-weight:500; font-size:13px; margin-bottom:4px;">Quantas impressoras 3D você possui atualmente?</div>
-              <div style="font-size:11px; color:var(--muted);">Nenhuma (não pretendo) · Nenhuma (vou comprar) · 1 · 2–5 · 6–10 · 11 ou mais</div>
-            </div>
-          </div>
-          <div class="chart-card" style="padding:14px 16px; display:flex; gap:12px; align-items:flex-start;">
-            <span style="font-size:11px; font-weight:700; color:var(--primary); background:rgba(81,102,230,0.1); padding:2px 8px; border-radius:999px; flex-shrink:0;">Q2</span>
-            <div>
-              <div style="font-weight:500; font-size:13px; margin-bottom:4px;">Qual sua renda mensal?</div>
-              <div style="font-size:11px; color:var(--muted);">Até R$ 2.000 · R$ 2–5k · R$ 5–10k · Acima de R$ 10.000</div>
-            </div>
-          </div>
-          <div class="chart-card" style="padding:14px 16px; display:flex; gap:12px; align-items:flex-start;">
-            <span style="font-size:11px; font-weight:700; color:var(--primary); background:rgba(81,102,230,0.1); padding:2px 8px; border-radius:999px; flex-shrink:0;">Q3</span>
-            <div>
-              <div style="font-weight:500; font-size:13px; margin-bottom:4px;">Qual valor você considera investir para se desenvolver em impressão 3D?</div>
-              <div style="font-size:11px; color:var(--muted);">Até R$ 1.000 · R$ 2–5k · R$ 10–20k · Acima de R$ 20.000</div>
-            </div>
-          </div>
-          <div class="chart-card" style="padding:14px 16px; display:flex; gap:12px; align-items:flex-start;">
-            <span style="font-size:11px; font-weight:700; color:var(--primary); background:rgba(81,102,230,0.1); padding:2px 8px; border-radius:999px; flex-shrink:0;">Q4</span>
-            <div>
-              <div style="font-weight:500; font-size:13px; margin-bottom:4px;">O que te motiva a participar do evento?</div>
-              <div style="font-size:11px; color:var(--muted);">Pergunta aberta</div>
-            </div>
-          </div>
+          <div style="font-size:13px; color:#454549; padding:10px 14px; background:var(--bg3); border-radius:8px; border-left:3px solid #5166e6;">"Me aprimorar, quero aprender o processo desde o início… almejo chegar longe com impressão 3D."</div>
+          <div style="font-size:13px; color:#454549; padding:10px 14px; background:var(--bg3); border-radius:8px; border-left:3px solid #10B981;">"Gosto de impressão 3D, mas não vendo nada. Quero viver disso, quero aprender e sair do zero em vendas!"</div>
+          <div style="font-size:13px; color:#454549; padding:10px 14px; background:var(--bg3); border-radius:8px; border-left:3px solid #F59E0B;">"Entender o mercado e decidir se sigo na ideia de comercializar 3D ou não."</div>
         </div>
       </div>
     </div>
 
     <div class="footer">
       <img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX">
-      <span class="footer-date" id="s2-footer-date">Em andamento · dados internos</span>
+      <span class="footer-date">29 de maio de 2026 · dados internos</span>
     </div>
   </div>
 </div>
 
 <script>
 // ── Navigation ──────────────────────────────────────
+let s2Initialized = false;
 function showSurvey(id, btn) {
   document.querySelectorAll('.survey-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('panel-' + id).classList.add('active');
   btn.classList.add('active');
+  if (id === 's2' && !s2Initialized) { initS2Charts(); s2Initialized = true; }
 }
 
 function showSection(survey, name, btn) {
@@ -389,16 +431,18 @@ function barChart(id, labels, values, colors) {
   });
 }
 
-function groupedBar(id, labels, d1, d2, c1, c2) {
+function groupedBar(id, labels, d1, d2, c1, c2, l1, l2) {
   const ctx = document.getElementById(id);
   if (!ctx) return null;
   return new Chart(ctx.getContext('2d'), {
     type: 'bar',
     data: { labels, datasets: [
-      { data: d1, backgroundColor: c1, borderWidth: 0, borderRadius: 4 },
-      { data: d2, backgroundColor: c2, borderWidth: 0, borderRadius: 4 }
+      { label: l1 || 'Meta', data: d1, backgroundColor: c1, borderWidth: 0, borderRadius: 4 },
+      { label: l2 || 'Typeform', data: d2, backgroundColor: c2, borderWidth: 0, borderRadius: 4 }
     ]},
-    options: { ...baseOpts, plugins: { legend: { display: false } } }
+    options: { ...baseOpts, plugins: { legend: { display: false }, tooltip: { callbacks: {
+      label: c => ' ' + c.dataset.label + ': ' + c.raw + ' respostas'
+    }}}}
   });
 }
 
@@ -624,6 +668,52 @@ function resetS2() {
   document.getElementById('s2-upload-section').style.display = '';
   document.getElementById('s2-dashboard-section').style.display = 'none';
   document.getElementById('s2-file-input').value = '';
+}
+
+// ── Survey 2 charts (lazy init) ──────────────────────
+function initS2Charts() {
+  const IMP_LABELS2   = ['Nenhuma, não pretendo','Nenhuma, mas vou comprar','1','2–5','6–10','11 ou mais'];
+  const IMP_VALS2     = [486, 89, 490, 172, 18, 4];
+  const RENDA_LABELS2 = ['Até R$ 2.000','R$ 2–5k','R$ 5–10k','Acima de R$ 10k'];
+  const RENDA_VALS2   = [464, 477, 212, 106];
+  const INVEST_LABELS = ['Até R$ 1.000','R$ 2–5k','R$ 10–20k','Acima de R$ 20k'];
+  const INVEST_VALS   = [182, 159, 39, 17];
+  const MOT_LABELS    = ['Aprender / conhecimento','Vender / comercializar','Renda / liberdade financeira','Entender mercado / oportunidade','Começar / montar negócio','Mudança de vida / carreira','Curiosidade / interesse','Decidir compra / investir','Oferta / conteúdo do evento','Outros'];
+  const MOT_VALS      = [200, 49, 45, 37, 35, 22, 20, 20, 15, 60];
+
+  makeLegend('s2-leg-imp', IMP_LABELS2, IMP_VALS2, COLORS);
+  barChart('s2-chart-imp', IMP_LABELS2, IMP_VALS2, COLORS);
+
+  makeLegend('s2-leg-renda', RENDA_LABELS2, RENDA_VALS2, COLORS);
+  barChart('s2-chart-renda', RENDA_LABELS2, RENDA_VALS2, COLORS);
+
+  makeLegend('s2-leg-invest', INVEST_LABELS, INVEST_VALS, COLORS);
+  barChart('s2-chart-invest', INVEST_LABELS, INVEST_VALS, COLORS);
+
+  const motCtx = document.getElementById('s2-chart-mot');
+  if (motCtx) {
+    const motColors = MOT_LABELS.map((l,i) => l === 'Outros' ? '#b0b0b3' : COLORS[i % COLORS.length]);
+    new Chart(motCtx.getContext('2d'), {
+      type: 'bar',
+      data: { labels: MOT_LABELS, datasets: [{ data: MOT_VALS, backgroundColor: motColors, borderWidth: 0, borderRadius: 5 }] },
+      options: { ...baseOpts, indexAxis: 'y', plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ' ' + c.raw + ' respostas (' + Math.round(c.raw/390*100) + '%)' }}}}
+    });
+  }
+
+  // Por fonte — impressoras (Meta vs Typeform)
+  groupedBar('s2-chart-imp-src',
+    ['Não pretendo','Vou comprar','1','2–5','6–10','11+'],
+    [477, 0, 309, 67, 9, 0],
+    [9, 89, 181, 105, 9, 4],
+    META_C, TF_C
+  );
+  // Por fonte — renda (Meta vs Typeform)
+  groupedBar('s2-chart-renda-src',
+    ['Até 2k','2–5k','5–10k','+10k'],
+    [321, 341, 143, 57],
+    [143, 136, 69, 49],
+    META_C, TF_C
+  );
 }
 </script>
 </body>
