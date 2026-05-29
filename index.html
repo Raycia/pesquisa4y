@@ -415,14 +415,22 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
     </div>
 
     <div class="section-panel" id="s2-investimento">
-      <div style="background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.2); border-radius:var(--r1); padding:12px 16px; margin-bottom:14px; display:flex; gap:10px; align-items:flex-start;">
+      <div style="background:rgba(81,102,230,0.05); border:1px solid rgba(81,102,230,0.15); border-radius:var(--r1); padding:12px 16px; margin-bottom:14px; display:flex; gap:10px; align-items:flex-start;">
         <span style="font-size:14px; flex-shrink:0;">ℹ️</span>
-        <span style="font-size:12px; color:#92400e; line-height:1.5;">Pergunta exclusiva do <strong>Typeform</strong> — o formulário do Meta Ads não incluiu esta questão, então não há comparativo por fonte aqui.</span>
+        <span style="font-size:12px; color:#454549; line-height:1.5;">517 respostas no total — todas do Typeform mais a leva de Meta de 29/05 que trouxe as 4 perguntas completas. As levas anteriores de Meta não tinham esta questão.</span>
       </div>
       <div class="chart-card">
-        <div class="chart-header"><div class="chart-title">Qual valor você considera investir para se desenvolver em impressão 3D?</div><span class="chart-pill">397 respostas · Typeform</span></div>
+        <div class="chart-header"><div class="chart-title">Qual valor você considera investir para se desenvolver em impressão 3D?</div><span class="chart-pill">517 respostas</span></div>
         <div class="legend" id="s2-leg-invest"></div>
-        <div style="position:relative;width:100%;height:240px;"><canvas id="s2-chart-invest" role="img" aria-label="Investimento nova pesquisa"></canvas></div>
+        <div style="position:relative;width:100%;height:240px;"><canvas id="s2-chart-invest" role="img" aria-label="Investimento total"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Investimento por fonte</div></div>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-dot" style="background:#2a44c8;"></span>Meta · 120</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#0a7a56;"></span>Typeform · 397</span>
+        </div>
+        <div style="position:relative;width:100%;height:240px;"><canvas id="s2-chart-invest-src" role="img" aria-label="Investimento por fonte"></canvas></div>
       </div>
     </div>
 
@@ -804,6 +812,12 @@ function initS2Charts() {
 
   makeLegend('s2-leg-invest', INVEST_LABELS, INVEST_VALS, COLORS);
   barChart('s2-chart-invest', INVEST_LABELS, INVEST_VALS, COLORS);
+  groupedBar('s2-chart-invest-src',
+    ['Até 1k','2–5k','10–20k','+20k'],
+    [45, 67, 7, 1],
+    [182, 159, 39, 17],
+    META_C, TF_C
+  );
 
   const motCtx = document.getElementById('s2-chart-mot');
   if (motCtx) {
