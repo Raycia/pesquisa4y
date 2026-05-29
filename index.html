@@ -219,6 +219,9 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
         <button class="nav-item" onclick="showSurvey('s2', this)">
           Nova pesquisa <span class="nav-badge new">1.259</span>
         </button>
+        <button class="nav-item" onclick="showSurvey('s4', this)">
+          Cruzamentos
+        </button>
       </div>
     </div>
 
@@ -492,6 +495,67 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
   </div>
 </div>
 
+
+<!-- ===================== CRUZAMENTOS (S4) ===================== -->
+<div class="survey-panel" id="panel-s4">
+  <div class="shell">
+    <div class="page-header">
+      <div class="page-eyebrow">Pesquisas · análise cruzada</div>
+      <h1 class="page-title">Cruzamentos<br>entre respostas</h1>
+      <p class="page-sub">Como os perfis se relacionam · base: 397 respostas do Typeform (dados completos por pessoa)</p>
+    </div>
+
+    <div class="insight">
+      <div class="insight-icon">💡</div>
+      <div class="insight-text"><strong>Leitura rápida:</strong> 94% de quem quer <strong>vender</strong> já tem impressora — público pronto pra escalar. Já quem <strong>não tem</strong> impressora investiria mais (maioria na faixa R$ 2–5k vs. R$ 1k de quem já tem), sinalizando disposição de entrada mais alta entre iniciantes.</div>
+    </div>
+
+    <p style="font-size:11px; color:var(--muted); margin-bottom:14px;">As barras mostram a composição percentual de cada linha. Ex: dentro de cada faixa de renda, qual a proporção que já tem ou não impressora.</p>
+
+    <div class="chart-card">
+      <div class="chart-header"><div class="chart-title">Renda × já tem impressora</div></div>
+      <div class="legend">
+        <span class="legend-item"><span class="legend-dot" style="background:#5166e6;"></span>Já tem</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#d1d1d2;"></span>Não tem</span>
+      </div>
+      <div style="position:relative;width:100%;height:240px;"><canvas id="s4-c1" role="img" aria-label="Renda por posse de impressora"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-header"><div class="chart-title">Renda × quanto investiria</div></div>
+      <div class="legend">
+        <span class="legend-item"><span class="legend-dot" style="background:#5166e6;"></span>Até 1k</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#10B981;"></span>2–5k</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#F59E0B;"></span>10–20k</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#EF4444;"></span>+20k</span>
+      </div>
+      <div style="position:relative;width:100%;height:240px;"><canvas id="s4-c2" role="img" aria-label="Renda por investimento"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-header"><div class="chart-title">Tem impressora × quanto investiria</div></div>
+      <div class="legend">
+        <span class="legend-item"><span class="legend-dot" style="background:#5166e6;"></span>Até 1k</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#10B981;"></span>2–5k</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#F59E0B;"></span>10–20k</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#EF4444;"></span>+20k</span>
+      </div>
+      <div style="position:relative;width:100%;height:200px;"><canvas id="s4-c3" role="img" aria-label="Posse de impressora por investimento"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-header"><div class="chart-title">Motivação × já tem impressora</div><span class="chart-pill">% que já tem, por tema</span></div>
+      <p style="font-size:11px; color:var(--muted); margin:-6px 0 14px;">Entre quem citou cada motivação, qual a proporção que já possui impressora.</p>
+      <div style="position:relative;width:100%;height:260px;"><canvas id="s4-c4" role="img" aria-label="Motivação por posse de impressora"></canvas></div>
+    </div>
+
+    <div class="footer">
+      <img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX">
+      <span class="footer-date">Base Typeform · 397 respostas</span>
+    </div>
+  </div>
+</div>
+
   </div><!-- /.content -->
 </div><!-- /.app -->
 
@@ -499,6 +563,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
 // ── Navigation ──────────────────────────────────────
 let s2Initialized = false;
 let s3Initialized = false;
+let s4Initialized = false;
 function showSurvey(id, btn) {
   document.querySelectorAll('.survey-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
@@ -506,6 +571,7 @@ function showSurvey(id, btn) {
   btn.classList.add('active');
   if (id === 's2' && !s2Initialized) { initS2Charts(); s2Initialized = true; }
   if (id === 's3' && !s3Initialized) { initS3(); s3Initialized = true; }
+  if (id === 's4' && !s4Initialized) { initS4(); s4Initialized = true; }
   // On mobile, close sidebar after picking
   if (window.innerWidth <= 860) closeSidebar();
   // Scroll content to top
@@ -857,6 +923,78 @@ async function initS3() {
     console.error('S3 load error:', e);
   }
 }
+
+// ── Cruzamentos (S4) — barras 100% empilhadas ────────
+function stackedPct(id, labels, datasets) {
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  // Compute row totals for % conversion
+  const totals = labels.map((_, i) => datasets.reduce((s, ds) => s + ds.data[i], 0));
+  new Chart(ctx.getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: datasets.map(ds => ({
+        label: ds.label,
+        data: ds.data.map((v, i) => totals[i] ? (v / totals[i] * 100) : 0),
+        _raw: ds.data,
+        backgroundColor: ds.color,
+        borderWidth: 0,
+        borderRadius: 3
+      }))
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        datalabels: {
+          display: ctx2 => ctx2.dataset.data[ctx2.dataIndex] >= 8,
+          color: '#fff', font: { size: 10, weight: '600', family: "'Inter Tight',sans-serif" },
+          formatter: v => Math.round(v) + '%'
+        },
+        tooltip: { callbacks: {
+          label: c => ' ' + c.dataset.label + ': ' + c.dataset._raw[c.dataIndex] + ' (' + Math.round(c.raw) + '%)'
+        }}
+      },
+      scales: {
+        x: { stacked: true, max: 100, grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#8b8b8d', font: { size: 11 }, callback: v => v + '%' } },
+        y: { stacked: true, grid: { display: false }, ticks: { color: '#5d5d60', font: { size: 12, weight: '500' } } }
+      }
+    }
+  });
+}
+
+function initS4() {
+  // 1. Renda × tem impressora
+  stackedPct('s4-c1', ['Até 2k','2–5k','5–10k','+10k'], [
+    { label: 'Já tem', data: [115, 92, 54, 38], color: '#5166e6' },
+    { label: 'Não tem', data: [28, 44, 15, 11], color: '#d1d1d2' }
+  ]);
+
+  // 2. Renda × investimento
+  stackedPct('s4-c2', ['Até 2k','2–5k','5–10k','+10k'], [
+    { label: 'Até 1k', data: [88, 53, 25, 16], color: '#5166e6' },
+    { label: '2–5k', data: [50, 68, 24, 17], color: '#10B981' },
+    { label: '10–20k', data: [4, 10, 16, 9], color: '#F59E0B' },
+    { label: '+20k', data: [1, 5, 4, 7], color: '#EF4444' }
+  ]);
+
+  // 3. Tem impressora × investimento
+  stackedPct('s4-c3', ['Já tem','Não tem'], [
+    { label: 'Até 1k', data: [155, 27], color: '#5166e6' },
+    { label: '2–5k', data: [98, 61], color: '#10B981' },
+    { label: '10–20k', data: [32, 7], color: '#F59E0B' },
+    { label: '+20k', data: [14, 3], color: '#EF4444' }
+  ]);
+
+  // 4. Motivação × tem impressora
+  stackedPct('s4-c4', ['Vender','Aprender','Renda','Mercado','Negócio'], [
+    { label: 'Já tem', data: [46, 147, 30, 21, 19], color: '#5166e6' },
+    { label: 'Não tem', data: [3, 45, 14, 13, 12], color: '#d1d1d2' }
+  ]);
+}
+
 </script>
 </body>
 </html>
