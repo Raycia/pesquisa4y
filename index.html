@@ -859,15 +859,30 @@ async function initS3() {
   const errorEl = document.getElementById('s3-error');
   const contentEl = document.getElementById('s3-content');
 
-  try {
-    const [basesRes, overlapRes] = await Promise.all([
-      fetch(S3_URL_BASES),
-      fetch(S3_URL_OVERLAP)
-    ]);
-    if (!basesRes.ok || !overlapRes.ok) throw new Error('fetch');
+  // Fetch with CORS fallback — tries direct first, then proxy
+  async function fetchCSV(url) {
+    try {
+      const r = await fetch(url);
+      if (r.ok) {
+        const txt = await r.text();
+        if (txt && txt.includes(',')) return txt;
+      }
+    } catch (e) { /* fall through to proxy */ }
+    // Fallback: CORS proxy
+    const proxied = 'https://corsproxy.io/?url=' + encodeURIComponent(url);
+    const r2 = await fetch(proxied);
+    if (!r2.ok) throw new Error('proxy failed');
+    return await r2.text();
+  }
 
-    const basesRows = parseCSVSimple(await basesRes.text());
-    const overlapRows = parseCSVSimple(await overlapRes.text());
+  try {
+    const [basesText, overlapText] = await Promise.all([
+      fetchCSV(S3_URL_BASES),
+      fetchCSV(S3_URL_OVERLAP)
+    ]);
+
+    const basesRows = parseCSVSimple(basesText);
+    const overlapRows = parseCSVSimple(overlapText);
 
     if (!basesRows.length) throw new Error('Planilha "bases" vazia ou com colunas diferentes do esperado (base, total, cor).');
 
