@@ -6,6 +6,7 @@
 <title>STLFLIX — Central de Pesquisas</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -401,14 +402,31 @@ const COLORS = ['#5166e6','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#14
 const META_C = '#2a44c8';
 const TF_C = '#0a7a56';
 
+// Register datalabels but turned off by default — enable per chart
+if (window.ChartDataLabels) { Chart.register(window.ChartDataLabels); }
+
 const baseOpts = {
   responsive: true, maintainAspectRatio: false,
-  plugins: { legend: { display: false } },
+  plugins: { legend: { display: false }, datalabels: { display: false } },
   scales: {
     x: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#8b8b8d', font: { size: 11, family: "'Inter Tight',sans-serif" } } },
     y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#8b8b8d', font: { size: 11, family: "'Inter Tight',sans-serif" } } }
   }
 };
+
+// Reusable datalabel config — shows % above/beside bars
+function pctLabels(total, orientation) {
+  return {
+    display: true,
+    anchor: 'end',
+    align: orientation === 'y' ? 'right' : 'end',
+    offset: 2,
+    clamp: true,
+    color: '#454549',
+    font: { size: 11, weight: '600', family: "'Inter Tight',sans-serif" },
+    formatter: (v) => v > 0 ? Math.round(v / total * 100) + '%' : ''
+  };
+}
 
 function makeLegend(elId, labels, values, colors) {
   const total = values.reduce((a,b)=>a+b,0);
@@ -419,30 +437,54 @@ function makeLegend(elId, labels, values, colors) {
   ).join('');
 }
 
-function barChart(id, labels, values, colors) {
+function barChart(id, labels, values, colors, horizontal) {
   const ctx = document.getElementById(id);
   if (!ctx) return null;
+  const total = values.reduce((a,b)=>a+b,0);
+  const orient = horizontal ? 'y' : 'x';
   return new Chart(ctx.getContext('2d'), {
     type: 'bar',
     data: { labels, datasets: [{ data: values, backgroundColor: colors, borderWidth: 0, borderRadius: 6 }] },
-    options: { ...baseOpts, plugins: { legend: { display: false }, tooltip: { callbacks: {
-      label: c => ` ${c.raw} respostas (${Math.round(c.raw/values.reduce((a,b)=>a+b,0)*100)}%)`
-    }}}}
+    options: {
+      ...baseOpts,
+      indexAxis: orient,
+      layout: { padding: horizontal ? { right: 36 } : { top: 22 } },
+      plugins: {
+        legend: { display: false },
+        datalabels: pctLabels(total, orient),
+        tooltip: { callbacks: { label: c => ` ${c.raw} respostas (${Math.round(c.raw/total*100)}%)` } }
+      }
+    }
   });
 }
 
 function groupedBar(id, labels, d1, d2, c1, c2, l1, l2) {
   const ctx = document.getElementById(id);
   if (!ctx) return null;
+  const t1 = d1.reduce((a,b)=>a+b,0);
+  const t2 = d2.reduce((a,b)=>a+b,0);
   return new Chart(ctx.getContext('2d'), {
     type: 'bar',
     data: { labels, datasets: [
       { label: l1 || 'Meta', data: d1, backgroundColor: c1, borderWidth: 0, borderRadius: 4 },
       { label: l2 || 'Typeform', data: d2, backgroundColor: c2, borderWidth: 0, borderRadius: 4 }
     ]},
-    options: { ...baseOpts, plugins: { legend: { display: false }, tooltip: { callbacks: {
-      label: c => ' ' + c.dataset.label + ': ' + c.raw + ' respostas'
-    }}}}
+    options: {
+      ...baseOpts,
+      layout: { padding: { top: 22 } },
+      plugins: {
+        legend: { display: false },
+        datalabels: {
+          display: true, anchor: 'end', align: 'end', offset: 2, clamp: true,
+          color: '#454549', font: { size: 10, weight: '600', family: "'Inter Tight',sans-serif" },
+          formatter: (v, ctx) => {
+            const tot = ctx.datasetIndex === 0 ? t1 : t2;
+            return v > 0 ? Math.round(v / tot * 100) + '%' : '';
+          }
+        },
+        tooltip: { callbacks: { label: c => ' ' + c.dataset.label + ': ' + c.raw + ' respostas' } }
+      }
+    }
   });
 }
 
@@ -696,7 +738,19 @@ function initS2Charts() {
     new Chart(motCtx.getContext('2d'), {
       type: 'bar',
       data: { labels: MOT_LABELS, datasets: [{ data: MOT_VALS, backgroundColor: motColors, borderWidth: 0, borderRadius: 5 }] },
-      options: { ...baseOpts, indexAxis: 'y', plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ' ' + c.raw + ' respostas (' + Math.round(c.raw/390*100) + '%)' }}}}
+      options: {
+        ...baseOpts, indexAxis: 'y',
+        layout: { padding: { right: 40 } },
+        plugins: {
+          legend: { display: false },
+          datalabels: {
+            display: true, anchor: 'end', align: 'right', offset: 2, clamp: true,
+            color: '#454549', font: { size: 11, weight: '600', family: "'Inter Tight',sans-serif" },
+            formatter: v => Math.round(v / 390 * 100) + '%'
+          },
+          tooltip: { callbacks: { label: c => ' ' + c.raw + ' respostas (' + Math.round(c.raw/390*100) + '%)' }}
+        }
+      }
     });
   }
 
