@@ -559,205 +559,7 @@ groupedBar('s1-chart-cmp-imp', ['Nenhuma','1','2–5','6+'], [58,45,9,3], [48,38
 groupedBar('s1-chart-cmp-renda', ['Até 2k','2–5k','5–10k','+20k'], [40,39,27,9], [44,40,0,12], META_C, TF_C);
 groupedBar('s1-chart-cmp-esc', ['Superior','Médio','Pós','Fundamental'], [51,44,16,4], [34,38,19,6], META_C, TF_C);
 
-// ── Survey 2 upload ──────────────────────────────────
-let s2Charts = {};
-let s2Data = [];
-let s2Sources = {};
-
-const dropZone = document.getElementById('s2-drop-zone');
-const fileInput = document.getElementById('s2-file-input');
-
-dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
-dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('dragover'); handleS2Files(e.dataTransfer.files); });
-fileInput.addEventListener('change', e => handleS2Files(e.target.files));
-
-function handleS2Files(files) {
-  const promises = Array.from(files).map(f => readFile(f));
-  Promise.all(promises).then(results => {
-    results.forEach(r => { if(r) mergeS2(r.rows, r.source, r.filename); });
-    renderS2();
-  });
-}
-
-function readFile(file) {
-  return new Promise(resolve => {
-    const reader = new FileReader();
-    reader.onload = e => {
-      const text = e.target.result;
-      const name = file.name.toLowerCase();
-      let rows = [], source = 'outro';
-      try {
-        if(name.endsWith('.json')) { rows = normalizeJSON(JSON.parse(text)); source = detectSource(name, rows); }
-        else { rows = parseCSV(text); source = detectSource(name, rows); }
-        resolve({ rows, source, filename: file.name });
-      } catch(err) { resolve(null); }
-    };
-    reader.readAsText(file);
-  });
-}
-
-function detectSource(name, rows) {
-  if(name.includes('typeform')) return 'Typeform';
-  if(name.includes('meta') || name.includes('facebook') || name.includes('lead')) return 'Meta';
-  if(rows[0] && rows[0]['Submitted at']) return 'Typeform';
-  return 'Meta';
-}
-
-function parseCSV(text) {
-  const lines = text.split(/\r?\n/).filter(l => l.trim());
-  if(lines.length < 2) return [];
-  const sep = lines[0].includes('\t') ? '\t' : ',';
-  const headers = splitLine(lines[0], sep);
-  return lines.slice(1).map(line => {
-    const vals = splitLine(line, sep);
-    const obj = {};
-    headers.forEach((h,i) => { obj[h.trim()] = (vals[i]||'').trim(); });
-    return obj;
-  }).filter(r => Object.values(r).some(v => v));
-}
-
-function splitLine(line, sep) {
-  const result = []; let cur = ''; let inQ = false;
-  for(let i = 0; i < line.length; i++) {
-    const ch = line[i];
-    if(ch === '"') { inQ = !inQ; }
-    else if(ch === sep && !inQ) { result.push(cur); cur = ''; }
-    else { cur += ch; }
-  }
-  result.push(cur);
-  return result;
-}
-
-function normalizeJSON(data) {
-  if(Array.isArray(data)) return data.map(flatObj);
-  if(data.results) return data.results.map(flatObj);
-  return [flatObj(data)];
-}
-
-function flatObj(obj, prefix='') {
-  const flat = {};
-  for(const [k,v] of Object.entries(obj)) {
-    const key = prefix ? `${prefix}.${k}` : k;
-    if(v && typeof v === 'object' && !Array.isArray(v)) Object.assign(flat, flatObj(v, key));
-    else flat[key] = String(v ?? '');
-  }
-  return flat;
-}
-
-function mergeS2(rows, source, filename) {
-  const tagged = rows.map(r => ({ ...r, _source: source, _file: filename }));
-  s2Data = s2Data.concat(tagged);
-  if(!s2Sources[source]) s2Sources[source] = { count: 0 };
-  s2Sources[source].count += rows.length;
-}
-
-function renderS2() {
-  if(!s2Data.length) return;
-  document.getElementById('s2-upload-section').style.display = 'none';
-  document.getElementById('s2-dashboard-section').style.display = 'block';
-
-  // Badges
-  const badgeEl = document.getElementById('s2-source-badges');
-  badgeEl.innerHTML = Object.entries(s2Sources).map(([k,s]) => {
-    const cls = k === 'Typeform' ? 'badge-tf' : 'badge-meta';
-    const col = k === 'Typeform' ? '#0a7a56' : '#2a44c8';
-    return `<span class="badge ${cls}"><span class="badge-dot" style="background:${col};"></span>${k} · ${s.count}</span>`;
-  }).join('');
-
-  // Metrics
-  const metricsEl = document.getElementById('s2-metrics');
-  metricsEl.innerHTML = `
-    <div class="metric"><div class="metric-label">Respostas</div><div class="metric-value">${s2Data.length}</div><div class="metric-sub">total</div></div>
-    <div class="metric"><div class="metric-label">Fontes</div><div class="metric-value neutral">${Object.keys(s2Sources).length}</div><div class="metric-sub">canais</div></div>
-    <div class="metric"><div class="metric-label">Arquivos</div><div class="metric-value neutral">${[...new Set(s2Data.map(r=>r._file))].length}</div><div class="metric-sub">importados</div></div>
-  `;
-
-  // Charts
-  Object.values(s2Charts).forEach(c => { try { c.destroy(); } catch(e){} });
-  s2Charts = {};
-  const container = document.getElementById('s2-charts');
-  container.innerHTML = '';
-
-  const skip = new Set(['_source','_file','#','token','response_id','submitted_at','start_date','date_submitted','network_id','ip_address','user_agent','created_time','id','form_id','landing_page','ending','tags','response type','stage date (utc)','start date (utc)','submit date (utc)']);
-  const cols = Object.keys(s2Data[0] || {}).filter(k => !skip.has(k.toLowerCase()));
-
-  cols.forEach((col, ci) => {
-    const vals = s2Data.map(r => (r[col]||'').trim()).filter(v => v);
-    const unique = [...new Set(vals)];
-    const avgLen = vals.reduce((a,b)=>a+b.length,0)/(vals.length||1);
-    const isCat = unique.length <= 15 && avgLen < 80;
-
-    const card = document.createElement('div');
-    card.className = 'chart-card';
-    const cid = 'S2C' + ci;
-    const short = col.length > 70 ? col.slice(0,67)+'…' : col;
-
-    if(isCat) {
-      const counts = {};
-      vals.forEach(v => { counts[v] = (counts[v]||0)+1; });
-      const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,10);
-      const labels = sorted.map(x=>x[0]);
-      const values = sorted.map(x=>x[1]);
-      const total = values.reduce((a,b)=>a+b,0);
-      const h = labels.length > 5 ? Math.max(260, labels.length*38+60) : 220;
-      const isH = labels.length > 5;
-
-      card.innerHTML = `
-        <div class="chart-header">
-          <div class="chart-title" title="${col}">${short}</div>
-          <span class="chart-pill">${total} respostas</span>
-        </div>
-        <div class="legend">${sorted.map((x,i)=>`<span class="legend-item"><span class="legend-dot" style="background:${COLORS[i%COLORS.length]};"></span>${x[0].slice(0,35)} <strong>${x[1]}</strong> <span style="opacity:.5;">(${Math.round(x[1]/total*100)}%)</span></span>`).join('')}</div>
-        <div style="position:relative;width:100%;height:${h}px;"><canvas id="${cid}" role="img" aria-label="${short}"></canvas></div>
-      `;
-      container.appendChild(card);
-      const ctx = document.getElementById(cid).getContext('2d');
-      s2Charts[cid] = new Chart(ctx, {
-        type: 'bar',
-        data: { labels, datasets: [{ data: values, backgroundColor: labels.map((_,i)=>COLORS[i%COLORS.length]), borderWidth: 0, borderRadius: 6 }] },
-        options: { ...baseOpts, indexAxis: isH ? 'y' : 'x', plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ${c.raw} (${Math.round(c.raw/total*100)}%)` }}}}
-      });
-    } else {
-      // Word frequency for open questions
-      const stop = new Set(['de','a','o','e','da','do','em','que','com','para','por','se','na','no','uma','um','é','não','mas','mais','como','eu','meu','sua','seu','os','as','dos','das']);
-      const freq = {};
-      vals.forEach(v => v.toLowerCase().split(/\W+/).filter(w=>w.length>3&&!stop.has(w)).forEach(w=>{ freq[w]=(freq[w]||0)+1; }));
-      const top = Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,12);
-      if(!top.length) return;
-
-      card.innerHTML = `
-        <div class="chart-header">
-          <div class="chart-title" title="${col}">${short}</div>
-          <span class="chart-pill" style="background:rgba(245,158,11,0.1);color:#92400e;">palavras frequentes</span>
-        </div>
-        <div style="position:relative;width:100%;height:220px;"><canvas id="${cid}" role="img" aria-label="Palavras frequentes: ${short}"></canvas></div>
-      `;
-      container.appendChild(card);
-      const ctx = document.getElementById(cid).getContext('2d');
-      s2Charts[cid] = new Chart(ctx, {
-        type: 'bar',
-        data: { labels: top.map(x=>x[0]), datasets: [{ data: top.map(x=>x[1]), backgroundColor: '#5166e6', borderWidth: 0, borderRadius: 5 }] },
-        options: { ...baseOpts, plugins: { legend: { display: false } } }
-      });
-    }
-  });
-
-  if(!cols.length) {
-    container.innerHTML = '<div class="empty-state"><span class="empty-icon">📋</span>Nenhuma coluna de resposta detectada.</div>';
-  }
-
-  document.getElementById('s2-footer-date').textContent = new Date().toLocaleDateString('pt-BR', { day:'numeric', month:'long', year:'numeric' }) + ' · dados internos';
-}
-
-function resetS2() {
-  s2Data = []; s2Sources = {};
-  Object.values(s2Charts).forEach(c => { try { c.destroy(); } catch(e){} });
-  s2Charts = {};
-  document.getElementById('s2-upload-section').style.display = '';
-  document.getElementById('s2-dashboard-section').style.display = 'none';
-  document.getElementById('s2-file-input').value = '';
-}
+// ── Survey 2 charts ──
 
 // ── Survey 2 charts (lazy init) ──────────────────────
 function initS2Charts() {
@@ -818,8 +620,9 @@ function initS2Charts() {
 }
 
 // ── Survey 3 — Bases (Google Sheets ao vivo) ─────────
-const S3_URL_BASES = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRclg1tbeUqXgXDoAv9pstURctAHfxw1bpmeT-kz914PfANfxG3WsPNDOo_bysUPtNPj0o7p6oRsvDh/pub?gid=0&single=true&output=csv';
-const S3_URL_OVERLAP = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRclg1tbeUqXgXDoAv9pstURctAHfxw1bpmeT-kz914PfANfxG3WsPNDOo_bysUPtNPj0o7p6oRsvDh/pub?gid=2039098280&single=true&output=csv';
+// Lê do nosso endpoint serverless (sem CORS) — ele busca o Google Sheets no servidor
+const S3_URL_BASES = '/api/sheets?which=bases';
+const S3_URL_OVERLAP = '/api/sheets?which=sobreposicoes';
 
 function parseCSVSimple(text) {
   const lines = text.trim().split(/\r?\n/).filter(l => l.trim());
@@ -861,18 +664,9 @@ async function initS3() {
 
   // Fetch with CORS fallback — tries direct first, then proxy
   async function fetchCSV(url) {
-    try {
-      const r = await fetch(url);
-      if (r.ok) {
-        const txt = await r.text();
-        if (txt && txt.includes(',')) return txt;
-      }
-    } catch (e) { /* fall through to proxy */ }
-    // Fallback: CORS proxy
-    const proxied = 'https://corsproxy.io/?url=' + encodeURIComponent(url);
-    const r2 = await fetch(proxied);
-    if (!r2.ok) throw new Error('proxy failed');
-    return await r2.text();
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('endpoint returned ' + r.status);
+    return await r.text();
   }
 
   try {
