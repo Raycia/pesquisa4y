@@ -162,6 +162,9 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
   <button class="nav-tab" onclick="showSurvey('s2', this)">
     Nova pesquisa <span class="nav-badge new">1.259</span>
   </button>
+  <button class="nav-tab" onclick="showSurvey('s3', this)">
+    Bases & conversão
+  </button>
 </nav>
 
 <!-- ===================== SURVEY 1 ===================== -->
@@ -376,15 +379,59 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
   </div>
 </div>
 
+<!-- ===================== SURVEY 3 — BASES ===================== -->
+<div class="survey-panel" id="panel-s3">
+  <div class="shell">
+    <div class="page-header">
+      <div class="page-eyebrow">Análise de bases · conversão</div>
+      <h1 class="page-title">Bases &amp; conversão<br>entre canais</h1>
+      <p class="page-sub">Funil e sobreposições entre LP, Meta, WhatsApp e CRM · atualizado automaticamente</p>
+    </div>
+
+    <div id="s3-loading" style="text-align:center; padding:60px 24px; color:var(--muted);">
+      <div style="font-size:13px;">Carregando dados da planilha…</div>
+    </div>
+
+    <div id="s3-error" style="display:none; background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.25); border-radius:var(--r2); padding:20px 24px; color:#92400e; font-size:13px;"></div>
+
+    <div id="s3-content" style="display:none;">
+      <div id="s3-metrics" class="metrics"></div>
+
+      <div class="insight" id="s3-insight" style="display:none;">
+        <div class="insight-icon">💡</div>
+        <div class="insight-text" id="s3-insight-text"></div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Volume por base</div><span class="chart-pill" id="s3-total-pill"></span></div>
+        <div style="position:relative;width:100%;height:300px;"><canvas id="s3-chart-bases" role="img" aria-label="Volume por base"></canvas></div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Sobreposições entre bases</div></div>
+        <p style="font-size:11px; color:var(--muted); margin:-6px 0 14px;">Percentuais calculados em relação à base menor de cada par. Grupo WPP cruzado por telefone; demais por e-mail.</p>
+        <div style="position:relative;width:100%;height:360px;"><canvas id="s3-chart-overlap" role="img" aria-label="Sobreposições entre bases"></canvas></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX">
+      <span class="footer-date" id="s3-footer-date">Dados em tempo real · planilha conectada</span>
+    </div>
+  </div>
+</div>
+
 <script>
 // ── Navigation ──────────────────────────────────────
 let s2Initialized = false;
+let s3Initialized = false;
 function showSurvey(id, btn) {
   document.querySelectorAll('.survey-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('panel-' + id).classList.add('active');
   btn.classList.add('active');
   if (id === 's2' && !s2Initialized) { initS2Charts(); s2Initialized = true; }
+  if (id === 's3' && !s3Initialized) { initS3(); s3Initialized = true; }
 }
 
 function showSection(survey, name, btn) {
@@ -768,6 +815,147 @@ function initS2Charts() {
     [143, 136, 69, 49],
     META_C, TF_C
   );
+}
+
+// ── Survey 3 — Bases (Google Sheets ao vivo) ─────────
+const S3_URL_BASES = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRclg1tbeUqXgXDoAv9pstURctAHfxw1bpmeT-kz914PfANfxG3WsPNDOo_bysUPtNPj0o7p6oRsvDh/pub?gid=0&single=true&output=csv';
+const S3_URL_OVERLAP = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRclg1tbeUqXgXDoAv9pstURctAHfxw1bpmeT-kz914PfANfxG3WsPNDOo_bysUPtNPj0o7p6oRsvDh/pub?gid=2039098280&single=true&output=csv';
+
+function parseCSVSimple(text) {
+  const lines = text.trim().split(/\r?\n/).filter(l => l.trim());
+  if (lines.length < 2) return [];
+  const headers = splitCsvRow(lines[0]).map(h => h.trim().toLowerCase());
+  return lines.slice(1).map(line => {
+    const vals = splitCsvRow(line);
+    const obj = {};
+    headers.forEach((h, i) => { obj[h] = (vals[i] || '').trim(); });
+    return obj;
+  });
+}
+
+function splitCsvRow(line) {
+  const out = []; let cur = ''; let q = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') q = !q;
+    else if (c === ',' && !q) { out.push(cur); cur = ''; }
+    else cur += c;
+  }
+  out.push(cur);
+  return out;
+}
+
+function toNum(v) {
+  if (v == null) return 0;
+  return parseFloat(String(v).replace(/\./g, '').replace(',', '.').replace(/[^0-9.\-]/g, '')) || 0;
+}
+function toPct(v) {
+  if (v == null) return 0;
+  return parseFloat(String(v).replace(',', '.').replace(/[^0-9.\-]/g, '')) || 0;
+}
+
+async function initS3() {
+  const loadingEl = document.getElementById('s3-loading');
+  const errorEl = document.getElementById('s3-error');
+  const contentEl = document.getElementById('s3-content');
+
+  try {
+    const [basesRes, overlapRes] = await Promise.all([
+      fetch(S3_URL_BASES),
+      fetch(S3_URL_OVERLAP)
+    ]);
+    if (!basesRes.ok || !overlapRes.ok) throw new Error('fetch');
+
+    const basesRows = parseCSVSimple(await basesRes.text());
+    const overlapRows = parseCSVSimple(await overlapRes.text());
+
+    if (!basesRows.length) throw new Error('Planilha "bases" vazia ou com colunas diferentes do esperado (base, total, cor).');
+
+    // Bases chart
+    const bLabels = basesRows.map(r => r.base || r[Object.keys(r)[0]]);
+    const bVals = basesRows.map(r => toNum(r.total));
+    const bColors = basesRows.map((r, i) => r.cor && r.cor.startsWith('#') ? r.cor : COLORS[i % COLORS.length]);
+    const totalContatos = bVals.reduce((a,b)=>a+b,0);
+
+    // Metrics — show each base as a metric card
+    const metricsEl = document.getElementById('s3-metrics');
+    metricsEl.innerHTML = basesRows.map((r,i) => `
+      <div class="metric" style="border-top-color:${bColors[i]};">
+        <div class="metric-label">${r.base}</div>
+        <div class="metric-value" style="color:${bColors[i]};">${toNum(r.total).toLocaleString('pt-BR')}</div>
+      </div>
+    `).join('');
+
+    document.getElementById('s3-total-pill').textContent = totalContatos.toLocaleString('pt-BR') + ' contatos';
+
+    const basesCtx = document.getElementById('s3-chart-bases');
+    new Chart(basesCtx.getContext('2d'), {
+      type: 'bar',
+      data: { labels: bLabels, datasets: [{ data: bVals, backgroundColor: bColors, borderWidth: 0, borderRadius: 6 }] },
+      options: {
+        ...baseOpts,
+        layout: { padding: { top: 22 } },
+        plugins: {
+          legend: { display: false },
+          datalabels: {
+            display: true, anchor: 'end', align: 'end', offset: 2, clamp: true,
+            color: '#454549', font: { size: 11, weight: '600', family: "'Inter Tight',sans-serif" },
+            formatter: v => v.toLocaleString('pt-BR')
+          },
+          tooltip: { callbacks: { label: c => ' ' + c.raw.toLocaleString('pt-BR') + ' contatos' } }
+        }
+      }
+    });
+
+    // Overlap chart (horizontal)
+    if (overlapRows.length) {
+      const oLabels = overlapRows.map(r => r.par || r[Object.keys(r)[0]]);
+      const oVals = overlapRows.map(r => toPct(r.percentual));
+      const oInter = overlapRows.map(r => toNum(r.interseccao));
+      const tipoColor = { wpp: '#7F77DD', email: '#D4537E', crm: '#D4537E', lp: '#378ADD', meta: '#1D9E75' };
+      const oColors = overlapRows.map((r,i) => {
+        const t = (r.tipo || '').toLowerCase();
+        return tipoColor[t] || COLORS[i % COLORS.length];
+      });
+
+      const overlapCtx = document.getElementById('s3-chart-overlap');
+      new Chart(overlapCtx.getContext('2d'), {
+        type: 'bar',
+        data: { labels: oLabels, datasets: [{ data: oVals, backgroundColor: oColors, borderWidth: 0, borderRadius: 5 }] },
+        options: {
+          ...baseOpts, indexAxis: 'y',
+          layout: { padding: { right: 44 } },
+          plugins: {
+            legend: { display: false },
+            datalabels: {
+              display: true, anchor: 'end', align: 'right', offset: 2, clamp: true,
+              color: '#454549', font: { size: 11, weight: '600', family: "'Inter Tight',sans-serif" },
+              formatter: (v, ctx) => v.toFixed(1).replace('.', ',') + '%'
+            },
+            tooltip: { callbacks: { label: c => ' ' + oInter[c.dataIndex].toLocaleString('pt-BR') + ' pessoas (' + c.raw.toFixed(1).replace('.', ',') + '%)' } }
+          },
+          scales: {
+            ...baseOpts.scales,
+            x: { ...baseOpts.scales.x, ticks: { ...baseOpts.scales.x.ticks, callback: v => v + '%' } }
+          }
+        }
+      });
+
+      // Insight — highest overlap
+      const maxIdx = oVals.indexOf(Math.max(...oVals));
+      document.getElementById('s3-insight').style.display = 'flex';
+      document.getElementById('s3-insight-text').innerHTML = '<strong>Maior sobreposição:</strong> ' + oLabels[maxIdx] + ' com ' + oVals[maxIdx].toFixed(1).replace('.', ',') + '% (' + oInter[maxIdx].toLocaleString('pt-BR') + ' pessoas). Indica o canal com maior reaproveitamento de público.';
+    }
+
+    loadingEl.style.display = 'none';
+    contentEl.style.display = 'block';
+
+  } catch (e) {
+    loadingEl.style.display = 'none';
+    errorEl.style.display = 'block';
+    errorEl.innerHTML = '⚠️ Não foi possível carregar os dados da planilha. Verifique se ela continua publicada na web como CSV e se as colunas estão como o esperado (bases: <strong>base, total, cor</strong> · sobreposicoes: <strong>par, interseccao, percentual, tipo</strong>).';
+    console.error('S3 load error:', e);
+  }
 }
 </script>
 </body>
