@@ -219,11 +219,14 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
         <button class="nav-item" onclick="showSurvey('s2', this)">
           Nova pesquisa <span class="nav-badge new">4.171</span>
         </button>
+        <button class="nav-item" onclick="showSurvey('s5', this)">
+          Faixa de investimento <span class="nav-badge new">1.022</span>
+        </button>
         <button class="nav-item" onclick="showSurvey('s4', this)">
           Cruzamentos
         </button>
-        <button class="nav-item" onclick="showSurvey('s5', this)">
-          Faixa de investimento <span class="nav-badge new">605</span>
+        <button class="nav-item" onclick="showSurvey('s6', this)">
+          Expectativa & investimento <span class="nav-badge new">65</span>
         </button>
       </div>
     </div>
@@ -513,15 +516,41 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
     <div class="page-header">
       <div class="page-eyebrow">Pesquisas · análise cruzada</div>
       <h1 class="page-title">Cruzamentos<br>entre respostas</h1>
-      <p class="page-sub">Como os perfis se relacionam · base: 4.171 respostas — todas com as 4 perguntas completas</p>
+      <p class="page-sub">Como os perfis se relacionam · base: 1.022 respostas da Faixa de investimento (Meta Lead Ads)</p>
     </div>
 
     <div class="insight">
       <div class="insight-icon">💡</div>
-      <div class="insight-text"><strong>Leitura rápida:</strong> 84% de quem quer <strong>vender</strong> já tem impressora — público pronto pra escalar. Já quem <strong>não tem</strong> impressora investiria mais (maioria na faixa R$ 2–5k vs. R$ 1k de quem já tem), sinalizando disposição de entrada mais alta entre iniciantes.</div>
+      <div class="insight-text"><strong>Leitura rápida:</strong> a disposição de pagamento mensal acompanha a renda — mas mesmo quem ganha mais parcela baixo: só 11% de quem tem renda +R$ 10k toparia R$ 500+/mês. E quem <strong>já tem impressora</strong> quer parcelas menores (69% até R$ 100) do que quem <strong>não tem</strong> — o iniciante aceita pagar mais por mês pra entrar.</div>
     </div>
 
-    <p style="font-size:11px; color:var(--muted); margin-bottom:14px;">As barras mostram a composição percentual de cada linha. Ex: dentro de cada faixa de renda, qual a proporção que já tem ou não impressora.</p>
+    <p style="font-size:11px; color:var(--muted); margin-bottom:14px;">As barras mostram a composição percentual de cada linha. Ex: dentro de cada faixa de renda, como se distribui a faixa de pagamento mensal.</p>
+
+    <div class="chart-card">
+      <div class="chart-header"><div class="chart-title">Renda × faixa de pagamento mensal</div></div>
+      <div class="legend">
+        <span class="legend-item"><span class="legend-dot" style="background:#5166e6;"></span>Até 100</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#10B981;"></span>100–300</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#F59E0B;"></span>300–500</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#EF4444;"></span>500–1k</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#8B5CF6;"></span>+1k</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#d1d1d2;"></span>À vista</span>
+      </div>
+      <div style="position:relative;width:100%;height:240px;"><canvas id="s4-c1" role="img" aria-label="Renda por faixa mensal"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-header"><div class="chart-title">Tem impressora × faixa de pagamento mensal</div></div>
+      <div class="legend">
+        <span class="legend-item"><span class="legend-dot" style="background:#5166e6;"></span>Até 100</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#10B981;"></span>100–300</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#F59E0B;"></span>300–500</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#EF4444;"></span>500–1k</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#8B5CF6;"></span>+1k</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#d1d1d2;"></span>À vista</span>
+      </div>
+      <div style="position:relative;width:100%;height:200px;"><canvas id="s4-c2" role="img" aria-label="Posse por faixa mensal"></canvas></div>
+    </div>
 
     <div class="chart-card">
       <div class="chart-header"><div class="chart-title">Renda × já tem impressora</div></div>
@@ -529,35 +558,19 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
         <span class="legend-item"><span class="legend-dot" style="background:#5166e6;"></span>Já tem</span>
         <span class="legend-item"><span class="legend-dot" style="background:#d1d1d2;"></span>Não tem</span>
       </div>
-      <div style="position:relative;width:100%;height:240px;"><canvas id="s4-c1" role="img" aria-label="Renda por posse de impressora"></canvas></div>
+      <div style="position:relative;width:100%;height:240px;"><canvas id="s4-c3" role="img" aria-label="Renda por posse"></canvas></div>
     </div>
 
     <div class="chart-card">
-      <div class="chart-header"><div class="chart-title">Renda × quanto investiria</div></div>
+      <div class="chart-header"><div class="chart-title">Faixa mensal × investimento total</div></div>
+      <p style="font-size:11px; color:var(--muted); margin:-6px 0 14px;">Quem aceita parcelas maiores também planeja investir mais no total? As barras mostram a composição de investimento total dentro de cada faixa mensal.</p>
       <div class="legend">
         <span class="legend-item"><span class="legend-dot" style="background:#5166e6;"></span>Até 1k</span>
         <span class="legend-item"><span class="legend-dot" style="background:#10B981;"></span>2–5k</span>
         <span class="legend-item"><span class="legend-dot" style="background:#F59E0B;"></span>10–20k</span>
         <span class="legend-item"><span class="legend-dot" style="background:#EF4444;"></span>+20k</span>
       </div>
-      <div style="position:relative;width:100%;height:240px;"><canvas id="s4-c2" role="img" aria-label="Renda por investimento"></canvas></div>
-    </div>
-
-    <div class="chart-card">
-      <div class="chart-header"><div class="chart-title">Tem impressora × quanto investiria</div></div>
-      <div class="legend">
-        <span class="legend-item"><span class="legend-dot" style="background:#5166e6;"></span>Até 1k</span>
-        <span class="legend-item"><span class="legend-dot" style="background:#10B981;"></span>2–5k</span>
-        <span class="legend-item"><span class="legend-dot" style="background:#F59E0B;"></span>10–20k</span>
-        <span class="legend-item"><span class="legend-dot" style="background:#EF4444;"></span>+20k</span>
-      </div>
-      <div style="position:relative;width:100%;height:200px;"><canvas id="s4-c3" role="img" aria-label="Posse de impressora por investimento"></canvas></div>
-    </div>
-
-    <div class="chart-card">
-      <div class="chart-header"><div class="chart-title">Motivação × já tem impressora</div><span class="chart-pill">% que já tem, por tema</span></div>
-      <p style="font-size:11px; color:var(--muted); margin:-6px 0 14px;">Entre quem citou cada motivação, qual a proporção que já possui impressora.</p>
-      <div style="position:relative;width:100%;height:260px;"><canvas id="s4-c4" role="img" aria-label="Motivação por posse de impressora"></canvas></div>
+      <div style="position:relative;width:100%;height:260px;"><canvas id="s4-c4" role="img" aria-label="Faixa mensal por investimento total"></canvas></div>
     </div>
 
     <!-- ── SEÇÃO: SEGMENTOS & ACHADOS ── -->
@@ -569,43 +582,32 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
     <!-- Highlight metrics -->
     <div class="metrics">
       <div class="metric">
-        <div class="metric-label">🔥 Prontos pra converter</div>
-        <div class="metric-value">53%</div>
-        <div class="metric-sub">2.223 com intenção + disposição</div>
+        <div class="metric-label">💳 Parcela baixa (até 300)</div>
+        <div class="metric-value">64%</div>
+        <div class="metric-sub">651 querem parcela acessível</div>
       </div>
       <div class="metric">
         <div class="metric-label">🛒 "Vou comprar"</div>
-        <div class="metric-value">41%</div>
-        <div class="metric-sub">1.702 com intenção declarada</div>
+        <div class="metric-value">48%</div>
+        <div class="metric-sub">495 com intenção declarada</div>
       </div>
       <div class="metric">
-        <div class="metric-label">📈 Investe acima da renda</div>
-        <div class="metric-value">20%</div>
-        <div class="metric-sub">836 com disposição agressiva</div>
+        <div class="metric-label">💰 Pagaria à vista</div>
+        <div class="metric-value neutral">9%</div>
+        <div class="metric-sub">90 sem precisar parcelar</div>
       </div>
       <div class="metric">
-        <div class="metric-label">💼 Profissionais</div>
-        <div class="metric-value neutral">3%</div>
-        <div class="metric-sub">105 escalando produção</div>
+        <div class="metric-label">🚀 Parcela alta (500+)</div>
+        <div class="metric-value neutral">10%</div>
+        <div class="metric-sub">101 toparia R$ 500+/mês</div>
       </div>
     </div>
 
     <!-- Segmentos chart -->
     <div class="chart-card">
-      <div class="chart-header"><div class="chart-title">Composição da audiência por segmento</div><span class="chart-pill">4.171 respostas</span></div>
+      <div class="chart-header"><div class="chart-title">Composição da audiência por faixa mensal</div><span class="chart-pill">1.022 respostas</span></div>
       <div class="legend" id="s4-leg-seg"></div>
-      <div style="position:relative;width:100%;height:240px;"><canvas id="s4-seg" role="img" aria-label="Segmentos da audiência"></canvas></div>
-    </div>
-
-    <!-- Qualidade por canal -->
-    <div class="chart-card">
-      <div class="chart-header"><div class="chart-title">Qualidade da base por canal — % que já tem impressora</div></div>
-      <p style="font-size:11px; color:var(--muted); margin:-6px 0 14px;">Typeform atrai público mais avançado; Meta traz mais topo de funil. Orienta a alocação de budget de mídia.</p>
-      <div class="legend">
-        <span class="legend-item"><span class="legend-dot" style="background:#2a44c8;"></span>Meta</span>
-        <span class="legend-item"><span class="legend-dot" style="background:#0a7a56;"></span>Typeform</span>
-      </div>
-      <div style="position:relative;width:100%;height:160px;"><canvas id="s4-canal" role="img" aria-label="Qualidade por canal"></canvas></div>
+      <div style="position:relative;width:100%;height:240px;"><canvas id="s4-seg" role="img" aria-label="Distribuição por faixa mensal"></canvas></div>
     </div>
 
     <!-- Recomendações -->
@@ -614,22 +616,22 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
       <div style="display:flex; flex-direction:column; gap:12px;">
         <div style="display:flex; gap:10px; align-items:flex-start;">
           <span style="color:var(--primary); font-weight:700; flex-shrink:0;">1.</span>
-          <span style="font-size:13px; color:#454549;"><strong>Mire os 53% quentes na oferta principal.</strong> Eles têm intenção e disposição de investir 2k+. A motivação deles é "aprender pra vender" — posicione o evento como ponte entre conhecimento e faturamento.</span>
+          <span style="font-size:13px; color:#454549;"><strong>Ancore o preço em parcelas de até R$ 300.</strong> 64% do público se concentra aí. A oferta deve liderar com a parcela baixa em destaque, não com o valor cheio — é o que esse público consegue visualizar pagando.</span>
         </div>
         <div style="display:flex; gap:10px; align-items:flex-start;">
           <span style="color:var(--primary); font-weight:700; flex-shrink:0;">2.</span>
-          <span style="font-size:13px; color:#454549;"><strong>Nutra os 11% cautelosos antes de vender.</strong> Não têm impressora e investiriam pouco. Conteúdo educativo primeiro, oferta depois — empurrar venda agora queima o lead.</span>
+          <span style="font-size:13px; color:#454549;"><strong>Crie uma faixa premium pros 10% que topam R$ 500+/mês.</strong> Eles têm renda maior e investimento total mais alto — uma oferta de maior valor (mentoria, bundle pro) captura esse topo sem afetar o grosso da base.</span>
         </div>
         <div style="display:flex; gap:10px; align-items:flex-start;">
           <span style="color:var(--primary); font-weight:700; flex-shrink:0;">3.</span>
-          <span style="font-size:13px; color:#454549;"><strong>Ajuste o budget de mídia por canal.</strong> Typeform e Meta agora têm qualidade parecida (57% vs 51% já têm impressora) — a diferença diminuiu com o volume. Use Meta pra alcance e Typeform/retargeting pra conversão.</span>
+          <span style="font-size:13px; color:#454549;"><strong>Não force venda à vista.</strong> Só 9% preferem pagar à vista. Destacar desconto à vista como gatilho principal ignora 91% do público — o parcelamento é a regra, não a exceção.</span>
         </div>
       </div>
     </div>
 
     <div class="footer">
       <img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX">
-      <span class="footer-date">Base Typeform · 1.584 respostas</span>
+      <span class="footer-date">Base Faixa de investimento · 1.022 respostas</span>
     </div>
   </div>
 </div>
@@ -638,24 +640,24 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
 <div class="survey-panel" id="panel-s5">
   <div class="shell">
     <div class="page-header">
-      <div class="page-eyebrow">Pesquisa faixa de investimento · 10/06/2026</div>
+      <div class="page-eyebrow">Pesquisa faixa de investimento · 15/06/2026</div>
       <h1 class="page-title">Faixa de investimento<br>e disposição de pagamento</h1>
-      <p class="page-sub">605 respostas — Meta Lead Ads (formulário com pesquisa)</p>
+      <p class="page-sub">1.022 respostas — Meta Lead Ads (formulário com pesquisa)</p>
       <div class="source-badges">
-        <span class="badge badge-meta"><span class="badge-dot" style="background:#2a44c8;"></span>Meta Lead Ads · 605</span>
+        <span class="badge badge-meta"><span class="badge-dot" style="background:#2a44c8;"></span>Meta Lead Ads · 1.022</span>
       </div>
     </div>
 
     <div class="metrics">
-      <div class="metric"><div class="metric-label">Respostas totais</div><div class="metric-value">605</div><div class="metric-sub">Meta Lead Ads</div></div>
-      <div class="metric"><div class="metric-label">Parcela até R$ 100</div><div class="metric-value">39%</div><div class="metric-sub">234 respondentes</div></div>
-      <div class="metric"><div class="metric-label">Renda até R$ 5k</div><div class="metric-value">80%</div><div class="metric-sub">487 respondentes</div></div>
-      <div class="metric"><div class="metric-label">Vão comprar impressora</div><div class="metric-value">45%</div><div class="metric-sub">271 respondentes</div></div>
+      <div class="metric"><div class="metric-label">Respostas totais</div><div class="metric-value">1.022</div><div class="metric-sub">Meta Lead Ads</div></div>
+      <div class="metric"><div class="metric-label">Parcela até R$ 100</div><div class="metric-value">37%</div><div class="metric-sub">380 respondentes</div></div>
+      <div class="metric"><div class="metric-label">Renda até R$ 5k</div><div class="metric-value">81%</div><div class="metric-sub">823 respondentes</div></div>
+      <div class="metric"><div class="metric-label">Vão comprar impressora</div><div class="metric-value">48%</div><div class="metric-sub">495 respondentes</div></div>
     </div>
 
     <div class="insight">
       <div class="insight-icon">💡</div>
-      <div class="insight-text"><strong>Achado principal:</strong> a disposição de pagamento mensal é baixa — 65% investiriam até R$ 300/mês (39% até R$ 100). Apenas 9% preferem pagar à vista. Combinado com 80% de renda até R$ 5k, isso reforça que o <strong>parcelamento em valores acessíveis</strong> (parcelas baixas) é decisivo pra conversão deste público.</div>
+      <div class="insight-text"><strong>Achado principal:</strong> a disposição de pagamento mensal é baixa — 64% investiriam até R$ 300/mês (37% até R$ 100). Apenas 9% preferem pagar à vista. Combinado com 81% de renda até R$ 5k, isso reforça que o <strong>parcelamento em valores acessíveis</strong> (parcelas baixas) é decisivo pra conversão deste público.</div>
     </div>
 
     <div class="section-tabs">
@@ -668,7 +670,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
 
     <div class="section-panel active" id="s5-faixa">
       <div class="chart-card">
-        <div class="chart-header"><div class="chart-title">Quanto consideraria investir mensalmente (parcelado)?</div><span class="chart-pill">605 respostas</span></div>
+        <div class="chart-header"><div class="chart-title">Quanto consideraria investir mensalmente (parcelado)?</div><span class="chart-pill">1.022 respostas</span></div>
         <div class="legend" id="s5-leg-faixa"></div>
         <div style="position:relative;width:100%;height:260px;"><canvas id="s5-chart-faixa" role="img" aria-label="Faixa mensal de investimento"></canvas></div>
       </div>
@@ -676,7 +678,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
 
     <div class="section-panel" id="s5-investimento">
       <div class="chart-card">
-        <div class="chart-header"><div class="chart-title">Qual valor você considera investir para se desenvolver em impressão 3D?</div><span class="chart-pill">605 respostas</span></div>
+        <div class="chart-header"><div class="chart-title">Qual valor você considera investir para se desenvolver em impressão 3D?</div><span class="chart-pill">1.022 respostas</span></div>
         <div class="legend" id="s5-leg-invest"></div>
         <div style="position:relative;width:100%;height:240px;"><canvas id="s5-chart-invest" role="img" aria-label="Investimento total"></canvas></div>
       </div>
@@ -684,7 +686,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
 
     <div class="section-panel" id="s5-impressoras">
       <div class="chart-card">
-        <div class="chart-header"><div class="chart-title">Quantas impressoras 3D você possui atualmente?</div><span class="chart-pill">605 respostas</span></div>
+        <div class="chart-header"><div class="chart-title">Quantas impressoras 3D você possui atualmente?</div><span class="chart-pill">1.022 respostas</span></div>
         <div class="legend" id="s5-leg-imp"></div>
         <div style="position:relative;width:100%;height:260px;"><canvas id="s5-chart-imp" role="img" aria-label="Impressoras"></canvas></div>
       </div>
@@ -692,7 +694,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
 
     <div class="section-panel" id="s5-renda">
       <div class="chart-card">
-        <div class="chart-header"><div class="chart-title">Qual sua renda mensal?</div><span class="chart-pill">605 respostas</span></div>
+        <div class="chart-header"><div class="chart-title">Qual sua renda mensal?</div><span class="chart-pill">1.022 respostas</span></div>
         <div class="legend" id="s5-leg-renda"></div>
         <div style="position:relative;width:100%;height:240px;"><canvas id="s5-chart-renda" role="img" aria-label="Renda"></canvas></div>
       </div>
@@ -701,10 +703,10 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
     <div class="section-panel" id="s5-motivacao">
       <div style="background:rgba(81,102,230,0.05); border:1px solid rgba(81,102,230,0.15); border-radius:var(--r1); padding:12px 16px; margin-bottom:14px; display:flex; gap:10px; align-items:flex-start;">
         <span style="font-size:14px; flex-shrink:0;">ℹ️</span>
-        <span style="font-size:12px; color:#454549; line-height:1.5;">Pergunta aberta · 591 respostas agrupadas por tema — uma resposta pode conter mais de um tema, então a soma passa de 100%.</span>
+        <span style="font-size:12px; color:#454549; line-height:1.5;">Pergunta aberta · 996 respostas agrupadas por tema — uma resposta pode conter mais de um tema, então a soma passa de 100%.</span>
       </div>
       <div class="chart-card">
-        <div class="chart-header"><div class="chart-title">O que te motiva a participar do evento? — principais temas</div><span class="chart-pill">591 respostas</span></div>
+        <div class="chart-header"><div class="chart-title">O que te motiva a participar do evento? — principais temas</div><span class="chart-pill">996 respostas</span></div>
         <div class="legend" id="s5-leg-mot"></div>
         <div style="position:relative;width:100%;height:320px;"><canvas id="s5-chart-mot" role="img" aria-label="Motivação por tema"></canvas></div>
       </div>
@@ -712,7 +714,90 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
 
     <div class="footer">
       <img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX">
-      <span class="footer-date">10 de junho de 2026 · Meta Lead Ads</span>
+      <span class="footer-date">15 de junho de 2026 · Meta Lead Ads</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== EXPECTATIVA & INVESTIMENTO (S6) ===================== -->
+<div class="survey-panel" id="panel-s6">
+  <div class="shell">
+    <div class="page-header">
+      <div class="page-eyebrow">Pesquisa expectativa & investimento · 16/06/2026</div>
+      <h1 class="page-title">Expectativa com o evento<br>e investimento</h1>
+      <p class="page-sub">65 respostas — Meta Lead Ads (novo formulário)</p>
+      <div class="source-badges">
+        <span class="badge badge-meta"><span class="badge-dot" style="background:#2a44c8;"></span>Meta Lead Ads · 65</span>
+      </div>
+    </div>
+
+    <div class="insight">
+      <div class="insight-icon">💡</div>
+      <div class="insight-text"><strong>Formulário novo:</strong> esta pesquisa troca a pergunta de motivação por <strong>"qual a sua expectativa com o evento?"</strong> e usa novas faixas de investimento (até R$ 2,5k a R$ 10k). Por isso é uma aba separada — os dados não se somam aos das outras pesquisas.</div>
+    </div>
+
+    <div class="metrics">
+      <div class="metric"><div class="metric-label">Respostas totais</div><div class="metric-value">65</div><div class="metric-sub">Meta Lead Ads</div></div>
+      <div class="metric"><div class="metric-label">Querem gerar renda</div><div class="metric-value">52%</div><div class="metric-sub">33 citaram renda/negócio</div></div>
+      <div class="metric"><div class="metric-label">Vão comprar impressora</div><div class="metric-value">55%</div><div class="metric-sub">36 respondentes</div></div>
+      <div class="metric"><div class="metric-label">Renda até R$ 5k</div><div class="metric-value">77%</div><div class="metric-sub">50 respondentes</div></div>
+    </div>
+
+    <div class="section-tabs">
+      <button class="stab active" onclick="showSection('s6', 'expectativa', this)">Expectativa</button>
+      <button class="stab" onclick="showSection('s6', 'faixa', this)">Faixa mensal</button>
+      <button class="stab" onclick="showSection('s6', 'investimento', this)">Investimento</button>
+      <button class="stab" onclick="showSection('s6', 'impressoras', this)">Impressoras</button>
+      <button class="stab" onclick="showSection('s6', 'renda', this)">Renda</button>
+    </div>
+
+    <div class="section-panel active" id="s6-expectativa">
+      <div style="background:rgba(81,102,230,0.05); border:1px solid rgba(81,102,230,0.15); border-radius:var(--r1); padding:12px 16px; margin-bottom:14px; display:flex; gap:10px; align-items:flex-start;">
+        <span style="font-size:14px; flex-shrink:0;">ℹ️</span>
+        <span style="font-size:12px; color:#454549; line-height:1.5;">Pergunta aberta · 63 respostas agrupadas por tema — uma resposta pode conter mais de um tema, então a soma passa de 100%.</span>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Qual a sua expectativa com o evento? — principais temas</div><span class="chart-pill">63 respostas</span></div>
+        <div class="legend" id="s6-leg-exp"></div>
+        <div style="position:relative;width:100%;height:300px;"><canvas id="s6-chart-exp" role="img" aria-label="Expectativa por tema"></canvas></div>
+      </div>
+    </div>
+
+    <div class="section-panel" id="s6-faixa">
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Quanto consideraria investir mensalmente (parcelado)?</div><span class="chart-pill">65 respostas</span></div>
+        <div class="legend" id="s6-leg-faixa"></div>
+        <div style="position:relative;width:100%;height:260px;"><canvas id="s6-chart-faixa" role="img" aria-label="Faixa mensal"></canvas></div>
+      </div>
+    </div>
+
+    <div class="section-panel" id="s6-investimento">
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Qual valor você considera investir para se desenvolver em impressão 3D?</div><span class="chart-pill">65 respostas</span></div>
+        <div class="legend" id="s6-leg-invest"></div>
+        <div style="position:relative;width:100%;height:240px;"><canvas id="s6-chart-invest" role="img" aria-label="Investimento"></canvas></div>
+      </div>
+    </div>
+
+    <div class="section-panel" id="s6-impressoras">
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Quantas impressoras 3D você possui atualmente?</div><span class="chart-pill">65 respostas</span></div>
+        <div class="legend" id="s6-leg-imp"></div>
+        <div style="position:relative;width:100%;height:260px;"><canvas id="s6-chart-imp" role="img" aria-label="Impressoras"></canvas></div>
+      </div>
+    </div>
+
+    <div class="section-panel" id="s6-renda">
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Qual sua renda mensal?</div><span class="chart-pill">65 respostas</span></div>
+        <div class="legend" id="s6-leg-renda"></div>
+        <div style="position:relative;width:100%;height:240px;"><canvas id="s6-chart-renda" role="img" aria-label="Renda"></canvas></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX">
+      <span class="footer-date">16 de junho de 2026 · Meta Lead Ads</span>
     </div>
   </div>
 </div>
@@ -726,6 +811,7 @@ let s2Initialized = false;
 let s3Initialized = false;
 let s4Initialized = false;
 let s5Initialized = false;
+let s6Initialized = false;
 function showSurvey(id, btn) {
   document.querySelectorAll('.survey-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
@@ -735,6 +821,7 @@ function showSurvey(id, btn) {
   if (id === 's3' && !s3Initialized) { initS3(); s3Initialized = true; }
   if (id === 's4' && !s4Initialized) { initS4(); s4Initialized = true; }
   if (id === 's5' && !s5Initialized) { initS5(); s5Initialized = true; }
+  if (id === 's6' && !s6Initialized) { initS6(); s6Initialized = true; }
   // On mobile, close sidebar after picking
   if (window.innerWidth <= 860) closeSidebar();
   // Scroll content to top
@@ -1135,38 +1222,44 @@ function stackedPct(id, labels, datasets) {
 }
 
 function initS4() {
-  // 1. Renda × tem impressora
+  // 1. Renda × faixa de pagamento mensal
   stackedPct('s4-c1', ['Até 2k','2–5k','5–10k','+10k'], [
-    { label: 'Já tem', data: [1001, 665, 332, 211], color: '#5166e6' },
-    { label: 'Não tem', data: [576, 851, 359, 176], color: '#d1d1d2' }
+    { label: 'Até 100', data: [225, 104, 44, 7], color: '#5166e6' },
+    { label: '100–300', data: [117, 111, 31, 12], color: '#10B981' },
+    { label: '300–500', data: [53, 86, 32, 9], color: '#F59E0B' },
+    { label: '500–1k', data: [25, 26, 21, 8], color: '#EF4444' },
+    { label: '+1k', data: [4, 7, 7, 3], color: '#8B5CF6' },
+    { label: 'À vista', data: [26, 39, 14, 11], color: '#d1d1d2' }
   ]);
 
-  // 2. Renda × investimento
-  stackedPct('s4-c2', ['Até 2k','2–5k','5–10k','+10k'], [
-    { label: 'Até 1k', data: [911, 531, 199, 111], color: '#5166e6' },
-    { label: '2–5k', data: [580, 834, 348, 150], color: '#10B981' },
-    { label: '10–20k', data: [75, 124, 125, 86], color: '#F59E0B' },
-    { label: '+20k', data: [11, 27, 19, 40], color: '#EF4444' }
+  // 2. Tem impressora × faixa de pagamento mensal
+  stackedPct('s4-c2', ['Já tem','Não tem'], [
+    { label: 'Até 100', data: [261, 119], color: '#5166e6' },
+    { label: '100–300', data: [101, 170], color: '#10B981' },
+    { label: '300–500', data: [44, 136], color: '#F59E0B' },
+    { label: '500–1k', data: [27, 53], color: '#EF4444' },
+    { label: '+1k', data: [7, 14], color: '#8B5CF6' },
+    { label: 'À vista', data: [24, 66], color: '#d1d1d2' }
   ]);
 
-  // 3. Tem impressora × investimento
-  stackedPct('s4-c3', ['Já tem','Não tem'], [
-    { label: 'Até 1k', data: [1275, 477], color: '#5166e6' },
-    { label: '2–5k', data: [681, 1231], color: '#10B981' },
-    { label: '10–20k', data: [188, 222], color: '#F59E0B' },
-    { label: '+20k', data: [65, 32], color: '#EF4444' }
+  // 3. Renda × tem impressora
+  stackedPct('s4-c3', ['Até 2k','2–5k','5–10k','+10k'], [
+    { label: 'Já tem', data: [266, 126, 56, 16], color: '#5166e6' },
+    { label: 'Não tem', data: [184, 247, 93, 34], color: '#d1d1d2' }
   ]);
 
-  // 4. Motivação × tem impressora
-  stackedPct('s4-c4', ['Vender','Aprender','Renda','Mercado','Negócio'], [
-    { label: 'Já tem', data: [333, 865, 603, 158, 203], color: '#5166e6' },
-    { label: 'Não tem', data: [65, 628, 603, 173, 293], color: '#d1d1d2' }
+  // 4. Faixa mensal × investimento total
+  stackedPct('s4-c4', ['Até 100','100–300','300–500','500–1k','+1k','À vista'], [
+    { label: 'Até 1k', data: [288, 86, 15, 9, 1, 20], color: '#5166e6' },
+    { label: '2–5k', data: [83, 171, 141, 55, 7, 53], color: '#10B981' },
+    { label: '10–20k', data: [9, 13, 22, 13, 5, 11], color: '#F59E0B' },
+    { label: '+20k', data: [0, 1, 2, 3, 8, 6], color: '#EF4444' }
   ]);
 
-  // Segmentos — barra horizontal simples
-  const segLabels = ['🔥 Prontos pra converter','🌱 Iniciante cauteloso','💼 Profissional','Demais perfis'];
-  const segVals = [2223, 477, 105, 1366];
-  const segColors = ['#5166e6','#10B981','#F59E0B','#d1d1d2'];
+  // Distribuição por faixa mensal
+  const segLabels = ['Até R$ 100','R$ 100–300','R$ 300–500','R$ 500–1k','Acima de R$ 1k','À vista'];
+  const segVals = [380, 271, 180, 80, 21, 90];
+  const segColors = ['#5166e6','#10B981','#F59E0B','#EF4444','#8B5CF6','#d1d1d2'];
   makeLegend('s4-leg-seg', segLabels, segVals, segColors);
   const segCtx = document.getElementById('s4-seg');
   if (segCtx) {
@@ -1178,65 +1271,44 @@ function initS4() {
         layout: { padding: { right: 44 } },
         plugins: {
           legend: { display: false },
-          datalabels: { display: true, anchor: 'end', align: 'right', offset: 2, clamp: true, color: '#454549', font: { size: 11, weight: '600', family: "'Inter Tight',sans-serif" }, formatter: v => Math.round(v/4171*100) + '%' },
-          tooltip: { callbacks: { label: c => ' ' + c.raw + ' pessoas (' + Math.round(c.raw/4144*100) + '%)' } }
+          datalabels: { display: true, anchor: 'end', align: 'right', offset: 2, clamp: true, color: '#454549', font: { size: 11, weight: '600', family: "'Inter Tight',sans-serif" }, formatter: v => Math.round(v/1022*100) + '%' },
+          tooltip: { callbacks: { label: c => ' ' + c.raw + ' pessoas (' + Math.round(c.raw/1022*100) + '%)' } }
         }
-      }
-    });
-  }
-
-  // Qualidade por canal — % já tem impressora
-  const canalCtx = document.getElementById('s4-canal');
-  if (canalCtx) {
-    new Chart(canalCtx.getContext('2d'), {
-      type: 'bar',
-      data: { labels: ['% que já tem impressora'], datasets: [
-        { label: 'Meta', data: [51], backgroundColor: '#2a44c8', borderWidth: 0, borderRadius: 5 },
-        { label: 'Typeform', data: [57], backgroundColor: '#0a7a56', borderWidth: 0, borderRadius: 5 }
-      ]},
-      options: {
-        ...baseOpts, indexAxis: 'y',
-        layout: { padding: { right: 44 } },
-        plugins: {
-          legend: { display: false },
-          datalabels: { display: true, anchor: 'end', align: 'right', offset: 2, color: '#454549', font: { size: 12, weight: '700', family: "'Inter Tight',sans-serif" }, formatter: v => v + '%' },
-          tooltip: { callbacks: { label: c => ' ' + c.dataset.label + ': ' + c.raw + '%' } }
-        },
-        scales: { ...baseOpts.scales, x: { ...baseOpts.scales.x, max: 100, ticks: { ...baseOpts.scales.x.ticks, callback: v => v + '%' } } }
       }
     });
   }
 }
 
+
 // ── Faixa de investimento (S5) ──────────────────────
 function initS5() {
   // 1. Faixa mensal (parcelamento) — a pergunta principal
   const FAIXA_LABELS = ['Até R$ 100','R$ 100–300','R$ 300–500','R$ 500–1k','Acima de R$ 1k','À vista'];
-  const FAIXA_VALS   = [234, 157, 107, 44, 8, 55];
+  const FAIXA_VALS   = [380, 271, 180, 80, 21, 90];
   makeLegend('s5-leg-faixa', FAIXA_LABELS, FAIXA_VALS, COLORS);
   barChart('s5-chart-faixa', FAIXA_LABELS, FAIXA_VALS, COLORS);
 
   // 2. Investimento total
   const INV_LABELS = ['Até R$ 1.000','R$ 2–5k','R$ 10–20k','Acima de R$ 20k'];
-  const INV_VALS   = [265, 297, 33, 10];
+  const INV_VALS   = [419, 510, 73, 20];
   makeLegend('s5-leg-invest', INV_LABELS, INV_VALS, COLORS);
   barChart('s5-chart-invest', INV_LABELS, INV_VALS, COLORS);
 
   // 3. Impressoras
   const IMP_LABELS = ['Nenhuma, não pretendo','Nenhuma, mas vou comprar','1','2–5','6–10','11 ou mais'];
-  const IMP_VALS   = [41, 271, 253, 39, 1, 0];
+  const IMP_VALS   = [63, 495, 385, 75, 4, 0];
   makeLegend('s5-leg-imp', IMP_LABELS, IMP_VALS, COLORS);
   barChart('s5-chart-imp', IMP_LABELS, IMP_VALS, COLORS);
 
   // 4. Renda
   const RENDA_LABELS = ['Até R$ 2.000','R$ 2–5k','R$ 5–10k','Acima de R$ 10k'];
-  const RENDA_VALS   = [267, 220, 90, 28];
+  const RENDA_VALS   = [450, 373, 149, 50];
   makeLegend('s5-leg-renda', RENDA_LABELS, RENDA_VALS, COLORS);
   barChart('s5-chart-renda', RENDA_LABELS, RENDA_VALS, COLORS);
 
   // 5. Motivação
   const MOT_LABELS = ['Aprender / conhecimento','Renda / liberdade financeira','Entender mercado / oportunidade','Vender / comercializar','Começar / montar negócio','Mudança de vida / carreira','Curiosidade / interesse','Outros'];
-  const MOT_VALS   = [302, 130, 77, 57, 56, 31, 29, 85];
+  const MOT_VALS   = [490, 214, 109, 84, 93, 59, 41, 162];
   const motColors = ['#5166e6','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#14B8A6','#9ca3af'];
   makeLegend('s5-leg-mot', MOT_LABELS, MOT_VALS, motColors);
   const motCtx = document.getElementById('s5-chart-mot');
@@ -1249,12 +1321,61 @@ function initS5() {
         layout: { padding: { right: 44 } },
         plugins: {
           legend: { display: false },
-          datalabels: { display: true, anchor: 'end', align: 'right', offset: 2, clamp: true, color: '#454549', font: { size: 10, weight: '600', family: "'Inter Tight',sans-serif" }, formatter: v => Math.round(v / 591 * 100) + '%' },
-          tooltip: { callbacks: { label: c => ' ' + c.raw + ' respostas (' + Math.round(c.raw/591*100) + '%)' } }
+          datalabels: { display: true, anchor: 'end', align: 'right', offset: 2, clamp: true, color: '#454549', font: { size: 10, weight: '600', family: "'Inter Tight',sans-serif" }, formatter: v => Math.round(v / 996 * 100) + '%' },
+          tooltip: { callbacks: { label: c => ' ' + c.raw + ' respostas (' + Math.round(c.raw/996*100) + '%)' } }
         }
       }
     });
   }
+}
+
+// ── Expectativa & investimento (S6) ─────────────────
+function initS6() {
+  // 1. Expectativa (pergunta aberta nova)
+  const EXP_LABELS = ['Gerar renda / negócio','Aprender / dominar técnica','Começar do zero','Oportunidades / mercado','Motivação / inspiração','Novidades / equipamentos'];
+  const EXP_VALS   = [33, 29, 11, 4, 3, 2];
+  const expColors = ['#10B981','#5166e6','#F59E0B','#8B5CF6','#EC4899','#14B8A6'];
+  makeLegend('s6-leg-exp', EXP_LABELS, EXP_VALS, expColors);
+  const expCtx = document.getElementById('s6-chart-exp');
+  if (expCtx) {
+    new Chart(expCtx.getContext('2d'), {
+      type: 'bar',
+      data: { labels: EXP_LABELS, datasets: [{ data: EXP_VALS, backgroundColor: expColors, borderWidth: 0, borderRadius: 5 }] },
+      options: {
+        ...baseOpts, indexAxis: 'y',
+        layout: { padding: { right: 44 } },
+        plugins: {
+          legend: { display: false },
+          datalabels: { display: true, anchor: 'end', align: 'right', offset: 2, clamp: true, color: '#454549', font: { size: 10, weight: '600', family: "'Inter Tight',sans-serif" }, formatter: v => Math.round(v / 63 * 100) + '%' },
+          tooltip: { callbacks: { label: c => ' ' + c.raw + ' respostas (' + Math.round(c.raw/63*100) + '%)' } }
+        }
+      }
+    });
+  }
+
+  // 2. Faixa mensal
+  const FAIXA_LABELS = ['Até R$ 100','R$ 100–300','R$ 300–500','R$ 500–1k','Acima de R$ 1k','À vista'];
+  const FAIXA_VALS   = [23, 17, 12, 9, 4, 0];
+  makeLegend('s6-leg-faixa', FAIXA_LABELS, FAIXA_VALS, COLORS);
+  barChart('s6-chart-faixa', FAIXA_LABELS, FAIXA_VALS, COLORS);
+
+  // 3. Investimento (faixas NOVAS)
+  const INV_LABELS = ['Até R$ 2,5k','R$ 2,5–3,5k','R$ 3,5–5k','R$ 5–10k'];
+  const INV_VALS   = [25, 14, 14, 12];
+  makeLegend('s6-leg-invest', INV_LABELS, INV_VALS, COLORS);
+  barChart('s6-chart-invest', INV_LABELS, INV_VALS, COLORS);
+
+  // 4. Impressoras
+  const IMP_LABELS = ['Nenhuma, não pretendo','Nenhuma, mas vou comprar','1','2–5','6–10','11 ou mais'];
+  const IMP_VALS   = [3, 36, 22, 4, 0, 0];
+  makeLegend('s6-leg-imp', IMP_LABELS, IMP_VALS, COLORS);
+  barChart('s6-chart-imp', IMP_LABELS, IMP_VALS, COLORS);
+
+  // 5. Renda
+  const RENDA_LABELS = ['Até R$ 2.000','R$ 2–5k','R$ 5–10k','Acima de R$ 10k'];
+  const RENDA_VALS   = [25, 25, 9, 6];
+  makeLegend('s6-leg-renda', RENDA_LABELS, RENDA_VALS, COLORS);
+  barChart('s6-chart-renda', RENDA_LABELS, RENDA_VALS, COLORS);
 }
 
 </script>
