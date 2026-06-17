@@ -228,6 +228,9 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
         <button class="nav-item" onclick="showSurvey('s6', this)">
           Expectativa & investimento <span class="nav-badge new">65</span>
         </button>
+        <button class="nav-item" onclick="showSurvey('s7', this)">
+          Perfil & escolaridade <span class="nav-badge new">1.375</span>
+        </button>
       </div>
     </div>
 
@@ -802,6 +805,67 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
   </div>
 </div>
 
+<!-- ===================== PERFIL & ESCOLARIDADE (S7) ===================== -->
+<div class="survey-panel" id="panel-s7">
+  <div class="shell">
+    <div class="page-header">
+      <div class="page-eyebrow">Pesquisa perfil & escolaridade · 01/06/2026</div>
+      <h1 class="page-title">Perfil, escolaridade<br>e renda</h1>
+      <p class="page-sub">1.375 respostas — Meta Lead Ads (captação live aniversário)</p>
+      <div class="source-badges">
+        <span class="badge badge-meta"><span class="badge-dot" style="background:#2a44c8;"></span>Meta Lead Ads · 1.375</span>
+      </div>
+    </div>
+
+    <div class="insight">
+      <div class="insight-icon">💡</div>
+      <div class="insight-text"><strong>Achado principal:</strong> 61% têm ensino superior ou pós — público qualificado academicamente. Mas 58% ainda não têm impressora e 76% têm renda até R$ 5k: é um público instruído, em fase de entrada na impressão 3D e sensível a preço. A comunicação pode ser mais técnica/aprofundada sem perder a régua de acessibilidade.</div>
+    </div>
+
+    <div class="metrics">
+      <div class="metric"><div class="metric-label">Respostas totais</div><div class="metric-value">1.375</div><div class="metric-sub">Meta Lead Ads</div></div>
+      <div class="metric"><div class="metric-label">Superior ou pós</div><div class="metric-value">61%</div><div class="metric-sub">842 respondentes</div></div>
+      <div class="metric"><div class="metric-label">Já têm impressora</div><div class="metric-value">42%</div><div class="metric-sub">574 respondentes</div></div>
+      <div class="metric"><div class="metric-label">Renda até R$ 5k</div><div class="metric-value">76%</div><div class="metric-sub">1.046 respondentes</div></div>
+    </div>
+
+    <div class="section-tabs">
+      <button class="stab active" onclick="showSection('s7', 'escolaridade', this)">Escolaridade</button>
+      <button class="stab" onclick="showSection('s7', 'impressoras', this)">Impressoras</button>
+      <button class="stab" onclick="showSection('s7', 'renda', this)">Renda</button>
+    </div>
+
+    <div class="section-panel active" id="s7-escolaridade">
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Qual o seu nível de escolaridade?</div><span class="chart-pill">1.375 respostas</span></div>
+        <div class="legend" id="s7-leg-esc"></div>
+        <div style="position:relative;width:100%;height:240px;"><canvas id="s7-chart-esc" role="img" aria-label="Escolaridade"></canvas></div>
+      </div>
+    </div>
+
+    <div class="section-panel" id="s7-impressoras">
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Quantas impressoras 3D você possui atualmente?</div><span class="chart-pill">1.375 respostas</span></div>
+        <div class="legend" id="s7-leg-imp"></div>
+        <div style="position:relative;width:100%;height:240px;"><canvas id="s7-chart-imp" role="img" aria-label="Impressoras"></canvas></div>
+      </div>
+    </div>
+
+    <div class="section-panel" id="s7-renda">
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Qual sua renda mensal?</div><span class="chart-pill">1.375 respostas</span></div>
+        <div class="legend" id="s7-leg-renda"></div>
+        <div style="position:relative;width:100%;height:240px;"><canvas id="s7-chart-renda" role="img" aria-label="Renda"></canvas></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX">
+      <span class="footer-date">01 de junho de 2026 · Meta Lead Ads</span>
+    </div>
+  </div>
+</div>
+
   </div><!-- /.content -->
 </div><!-- /.app -->
 
@@ -812,6 +876,7 @@ let s3Initialized = false;
 let s4Initialized = false;
 let s5Initialized = false;
 let s6Initialized = false;
+let s7Initialized = false;
 function showSurvey(id, btn) {
   document.querySelectorAll('.survey-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
@@ -822,6 +887,7 @@ function showSurvey(id, btn) {
   if (id === 's4' && !s4Initialized) { initS4(); s4Initialized = true; }
   if (id === 's5' && !s5Initialized) { initS5(); s5Initialized = true; }
   if (id === 's6' && !s6Initialized) { initS6(); s6Initialized = true; }
+  if (id === 's7' && !s7Initialized) { initS7(); s7Initialized = true; }
   // On mobile, close sidebar after picking
   if (window.innerWidth <= 860) closeSidebar();
   // Scroll content to top
@@ -1376,6 +1442,27 @@ function initS6() {
   const RENDA_VALS   = [25, 25, 9, 6];
   makeLegend('s6-leg-renda', RENDA_LABELS, RENDA_VALS, COLORS);
   barChart('s6-chart-renda', RENDA_LABELS, RENDA_VALS, COLORS);
+}
+
+// ── Perfil & escolaridade (S7) ──────────────────────
+function initS7() {
+  // 1. Escolaridade
+  const ESC_LABELS = ['Ensino fundamental','Ensino médio','Ensino superior','Pós-graduação ou mais'];
+  const ESC_VALS   = [53, 480, 606, 236];
+  makeLegend('s7-leg-esc', ESC_LABELS, ESC_VALS, COLORS);
+  barChart('s7-chart-esc', ESC_LABELS, ESC_VALS, COLORS);
+
+  // 2. Impressoras
+  const IMP_LABELS = ['Nenhuma','1 impressora','2 a 5','Mais de 5'];
+  const IMP_VALS   = [801, 457, 105, 12];
+  makeLegend('s7-leg-imp', IMP_LABELS, IMP_VALS, COLORS);
+  barChart('s7-chart-imp', IMP_LABELS, IMP_VALS, COLORS);
+
+  // 3. Renda
+  const RENDA_LABELS7 = ['Até R$ 2.000','R$ 2–5k','R$ 5–10k','Acima de R$ 10k'];
+  const RENDA_VALS7   = [495, 551, 221, 108];
+  makeLegend('s7-leg-renda', RENDA_LABELS7, RENDA_VALS7, COLORS);
+  barChart('s7-chart-renda', RENDA_LABELS7, RENDA_VALS7, COLORS);
 }
 
 </script>
