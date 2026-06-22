@@ -188,6 +188,55 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
   .mobile-menu-btn { background: none; border: none; cursor: pointer; font-size: 20px; color: var(--text); padding: 0; line-height: 1; }
   .shell { padding: 24px 20px 60px; }
 }
+
+/* Painel de bases — tabelas */
+.ptable { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ptable thead th {
+  text-align: left; font-weight: 600; color: var(--muted2);
+  font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
+  padding: 10px 12px; border-bottom: 1px solid var(--border);
+}
+.ptable thead th.num { text-align: right; }
+.ptable tbody td { padding: 11px 12px; border-bottom: 1px solid var(--border); color: #454549; }
+.ptable tbody tr:last-child td { border-bottom: none; }
+.ptable tbody tr:hover { background: var(--bg3); }
+.ptable td.num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; color: var(--text); }
+.ptable td.pct { text-align: right; font-variant-numeric: tabular-nums; color: var(--primary-active); font-weight: 600; }
+.block-title {
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 800;
+  letter-spacing: -0.02em; margin: 28px 0 12px; color: var(--text);
+}
+
+/* Home — grid de cards */
+.home-group-title {
+  font-family: 'Inter Tight', sans-serif; font-size: 12px; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted2);
+  margin: 32px 0 14px;
+}
+.home-group-title:first-of-type { margin-top: 8px; }
+.home-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+.home-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r2);
+  padding: 22px; cursor: pointer; text-align: left;
+  transition: all 0.18s; position: relative; overflow: hidden;
+  display: flex; flex-direction: column; gap: 0; min-height: 150px;
+}
+.home-card::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+  background: var(--accent-bar, var(--primary)); opacity: 0; transition: opacity 0.18s;
+}
+.home-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(81,102,230,0.10); }
+.home-card:hover::before { opacity: 1; }
+.home-card-eyebrow { font-size: 11px; font-weight: 600; color: var(--primary-active); letter-spacing: 0.03em; margin-bottom: 8px; }
+.home-card-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 17px; font-weight: 800; letter-spacing: -0.02em; color: var(--text); line-height: 1.2; margin-bottom: 10px; }
+.home-card-number { font-size: 26px; font-weight: 800; color: var(--primary); font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.03em; line-height: 1; margin-bottom: 2px; }
+.home-card-number-label { font-size: 11px; color: var(--muted); margin-bottom: 12px; }
+.home-card-insight { font-size: 12px; color: #5d5d60; line-height: 1.5; margin-top: auto; }
+.home-card-arrow { position: absolute; bottom: 18px; right: 20px; color: var(--muted2); font-size: 16px; transition: transform 0.18s, color 0.18s; }
+.home-card:hover .home-card-arrow { transform: translateX(3px); color: var(--primary); }
 </style>
 </head>
 <body>
@@ -207,13 +256,17 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
       <img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX">
     </div>
 
+    <button class="nav-item active" onclick="showSurvey('home', this)" style="margin-bottom:8px;">
+      Início
+    </button>
+
     <div class="nav-group" id="group-pesquisas">
       <button class="nav-group-header" onclick="toggleGroup('pesquisas')">
         <span>Pesquisas</span>
         <span class="nav-group-chevron">▾</span>
       </button>
       <div class="nav-group-items">
-        <button class="nav-item active" onclick="showSurvey('s1', this)">
+        <button class="nav-item" onclick="showSurvey('s1', this)">
           Live 4 anos <span class="nav-badge">212</span>
         </button>
         <button class="nav-item" onclick="showSurvey('s2', this)">
@@ -226,7 +279,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
           Cruzamentos
         </button>
         <button class="nav-item" onclick="showSurvey('s6', this)">
-          Expectativa & investimento <span class="nav-badge new">65</span>
+          Expectativa & investimento <span class="nav-badge new">235</span>
         </button>
         <button class="nav-item" onclick="showSurvey('s7', this)">
           Perfil & escolaridade <span class="nav-badge new">1.375</span>
@@ -243,6 +296,9 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
         <button class="nav-item" onclick="showSurvey('s3', this)">
           Sobreposições
         </button>
+        <button class="nav-item" onclick="showSurvey('s8', this)">
+          Tamanho das bases
+        </button>
       </div>
     </div>
   </aside>
@@ -251,7 +307,95 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
   <div class="content">
 
 <!-- ===================== SURVEY 1 ===================== -->
-<div class="survey-panel active" id="panel-s1">
+<!-- ===================== HOME ===================== -->
+<div class="survey-panel active" id="panel-home">
+  <div class="shell">
+    <div class="page-header">
+      <div class="page-eyebrow">STLFLIX · Central de Pesquisas</div>
+      <h1 class="page-title">Aniversário 4 anos<br>painel de pesquisas</h1>
+      <p class="page-sub">Escolha uma pesquisa ou painel para explorar os dados</p>
+    </div>
+
+    <div class="home-group-title">Pesquisas</div>
+    <div class="home-grid">
+      <button class="home-card" onclick="goTo('s1')">
+        <div class="home-card-eyebrow">Live 4 anos</div>
+        <div class="home-card-title">Live 4 anos</div>
+        <div class="home-card-number">212</div>
+        <div class="home-card-number-label">respostas · Meta + Typeform</div>
+        <div class="home-card-insight">Primeira pesquisa da campanha — impressoras, renda e escolaridade.</div>
+        <span class="home-card-arrow">→</span>
+      </button>
+      <button class="home-card" onclick="goTo('s2')">
+        <div class="home-card-eyebrow">Nova pesquisa</div>
+        <div class="home-card-title">Nova pesquisa</div>
+        <div class="home-card-number">4.171</div>
+        <div class="home-card-number-label">respostas · Meta + Typeform</div>
+        <div class="home-card-insight">53% já têm impressora e 41% pretendem comprar — público engajado.</div>
+        <span class="home-card-arrow">→</span>
+      </button>
+      <button class="home-card" onclick="goTo('s5')">
+        <div class="home-card-eyebrow">Faixa de investimento</div>
+        <div class="home-card-title">Faixa de investimento</div>
+        <div class="home-card-number">1.022</div>
+        <div class="home-card-number-label">respostas · Meta Lead Ads</div>
+        <div class="home-card-insight">64% investiriam até R$ 300/mês — parcela acessível é decisiva.</div>
+        <span class="home-card-arrow">→</span>
+      </button>
+      <button class="home-card" onclick="goTo('s4')">
+        <div class="home-card-eyebrow">Análise cruzada</div>
+        <div class="home-card-title">Cruzamentos</div>
+        <div class="home-card-number">1.022</div>
+        <div class="home-card-number-label">base de cruzamento</div>
+        <div class="home-card-insight">Mesmo quem ganha mais parcela baixo — disposição não cresce com a renda.</div>
+        <span class="home-card-arrow">→</span>
+      </button>
+      <button class="home-card" onclick="goTo('s6')">
+        <div class="home-card-eyebrow">Expectativa &amp; investimento</div>
+        <div class="home-card-title">Expectativa &amp; investimento</div>
+        <div class="home-card-number">235</div>
+        <div class="home-card-number-label">respostas · formulário novo</div>
+        <div class="home-card-insight">Expectativa nº 1: gerar renda/negócio (65%), acima de aprender (44%).</div>
+        <span class="home-card-arrow">→</span>
+      </button>
+      <button class="home-card" onclick="goTo('s7')">
+        <div class="home-card-eyebrow">Perfil &amp; escolaridade</div>
+        <div class="home-card-title">Perfil &amp; escolaridade</div>
+        <div class="home-card-number">1.375</div>
+        <div class="home-card-number-label">respostas · Meta Lead Ads</div>
+        <div class="home-card-insight">61% têm superior ou pós — público qualificado e sensível a preço.</div>
+        <span class="home-card-arrow">→</span>
+      </button>
+    </div>
+
+    <div class="home-group-title">Bases &amp; Conversão</div>
+    <div class="home-grid">
+      <button class="home-card" onclick="goTo('s3')">
+        <div class="home-card-eyebrow">Sobreposições</div>
+        <div class="home-card-title">Sobreposições</div>
+        <div class="home-card-number-label" style="margin-top:8px;">dados ao vivo · planilha</div>
+        <div class="home-card-insight">Análise de sobreposição entre as bases de contatos da campanha.</div>
+        <span class="home-card-arrow">→</span>
+      </button>
+      <button class="home-card" onclick="goTo('s8')">
+        <div class="home-card-eyebrow">Painel de indicadores</div>
+        <div class="home-card-title">Tamanho das bases</div>
+        <div class="home-card-number">6.503</div>
+        <div class="home-card-number-label">META total deduplicado</div>
+        <div class="home-card-insight">LP tem engajamento de e-mail 2x maior que o META; WPP VIP é o hub.</div>
+        <span class="home-card-arrow">→</span>
+      </button>
+    </div>
+
+    <div class="footer">
+      <img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX">
+      <span class="footer-date">Central de Pesquisas · Aniversário 4 anos</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SURVEY 1 ===================== -->
+<div class="survey-panel" id="panel-s1">
   <div class="shell">
     <div class="page-header">
       <div class="page-eyebrow">Pesquisa de público · 28/05/2026</div>
@@ -728,9 +872,9 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
     <div class="page-header">
       <div class="page-eyebrow">Pesquisa expectativa & investimento · 16/06/2026</div>
       <h1 class="page-title">Expectativa com o evento<br>e investimento</h1>
-      <p class="page-sub">65 respostas — Meta Lead Ads (novo formulário)</p>
+      <p class="page-sub">235 respostas — Meta Lead Ads (novo formulário · 15-22/06)</p>
       <div class="source-badges">
-        <span class="badge badge-meta"><span class="badge-dot" style="background:#2a44c8;"></span>Meta Lead Ads · 65</span>
+        <span class="badge badge-meta"><span class="badge-dot" style="background:#2a44c8;"></span>Meta Lead Ads · 235</span>
       </div>
     </div>
 
@@ -740,10 +884,10 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
     </div>
 
     <div class="metrics">
-      <div class="metric"><div class="metric-label">Respostas totais</div><div class="metric-value">65</div><div class="metric-sub">Meta Lead Ads</div></div>
-      <div class="metric"><div class="metric-label">Querem gerar renda</div><div class="metric-value">52%</div><div class="metric-sub">33 citaram renda/negócio</div></div>
-      <div class="metric"><div class="metric-label">Vão comprar impressora</div><div class="metric-value">55%</div><div class="metric-sub">36 respondentes</div></div>
-      <div class="metric"><div class="metric-label">Renda até R$ 5k</div><div class="metric-value">77%</div><div class="metric-sub">50 respondentes</div></div>
+      <div class="metric"><div class="metric-label">Respostas totais</div><div class="metric-value">235</div><div class="metric-sub">Meta Lead Ads</div></div>
+      <div class="metric"><div class="metric-label">Querem gerar renda</div><div class="metric-value">65%</div><div class="metric-sub">149 citaram renda/negócio</div></div>
+      <div class="metric"><div class="metric-label">Vão comprar impressora</div><div class="metric-value">52%</div><div class="metric-sub">123 respondentes</div></div>
+      <div class="metric"><div class="metric-label">Renda até R$ 5k</div><div class="metric-value">73%</div><div class="metric-sub">171 respondentes</div></div>
     </div>
 
     <div class="section-tabs">
@@ -760,7 +904,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
         <span style="font-size:12px; color:#454549; line-height:1.5;">Pergunta aberta · 63 respostas agrupadas por tema — uma resposta pode conter mais de um tema, então a soma passa de 100%.</span>
       </div>
       <div class="chart-card">
-        <div class="chart-header"><div class="chart-title">Qual a sua expectativa com o evento? — principais temas</div><span class="chart-pill">63 respostas</span></div>
+        <div class="chart-header"><div class="chart-title">Qual a sua expectativa com o evento? — principais temas</div><span class="chart-pill">230 respostas</span></div>
         <div class="legend" id="s6-leg-exp"></div>
         <div style="position:relative;width:100%;height:300px;"><canvas id="s6-chart-exp" role="img" aria-label="Expectativa por tema"></canvas></div>
       </div>
@@ -768,7 +912,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
 
     <div class="section-panel" id="s6-faixa">
       <div class="chart-card">
-        <div class="chart-header"><div class="chart-title">Quanto consideraria investir mensalmente (parcelado)?</div><span class="chart-pill">65 respostas</span></div>
+        <div class="chart-header"><div class="chart-title">Quanto consideraria investir mensalmente (parcelado)?</div><span class="chart-pill">235 respostas</span></div>
         <div class="legend" id="s6-leg-faixa"></div>
         <div style="position:relative;width:100%;height:260px;"><canvas id="s6-chart-faixa" role="img" aria-label="Faixa mensal"></canvas></div>
       </div>
@@ -776,7 +920,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
 
     <div class="section-panel" id="s6-investimento">
       <div class="chart-card">
-        <div class="chart-header"><div class="chart-title">Qual valor você considera investir para se desenvolver em impressão 3D?</div><span class="chart-pill">65 respostas</span></div>
+        <div class="chart-header"><div class="chart-title">Qual valor você considera investir para se desenvolver em impressão 3D?</div><span class="chart-pill">235 respostas</span></div>
         <div class="legend" id="s6-leg-invest"></div>
         <div style="position:relative;width:100%;height:240px;"><canvas id="s6-chart-invest" role="img" aria-label="Investimento"></canvas></div>
       </div>
@@ -784,7 +928,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
 
     <div class="section-panel" id="s6-impressoras">
       <div class="chart-card">
-        <div class="chart-header"><div class="chart-title">Quantas impressoras 3D você possui atualmente?</div><span class="chart-pill">65 respostas</span></div>
+        <div class="chart-header"><div class="chart-title">Quantas impressoras 3D você possui atualmente?</div><span class="chart-pill">235 respostas</span></div>
         <div class="legend" id="s6-leg-imp"></div>
         <div style="position:relative;width:100%;height:260px;"><canvas id="s6-chart-imp" role="img" aria-label="Impressoras"></canvas></div>
       </div>
@@ -792,7 +936,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
 
     <div class="section-panel" id="s6-renda">
       <div class="chart-card">
-        <div class="chart-header"><div class="chart-title">Qual sua renda mensal?</div><span class="chart-pill">65 respostas</span></div>
+        <div class="chart-header"><div class="chart-title">Qual sua renda mensal?</div><span class="chart-pill">235 respostas</span></div>
         <div class="legend" id="s6-leg-renda"></div>
         <div style="position:relative;width:100%;height:240px;"><canvas id="s6-chart-renda" role="img" aria-label="Renda"></canvas></div>
       </div>
@@ -800,7 +944,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
 
     <div class="footer">
       <img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX">
-      <span class="footer-date">16 de junho de 2026 · Meta Lead Ads</span>
+      <span class="footer-date">15–22 de junho de 2026 · Meta Lead Ads</span>
     </div>
   </div>
 </div>
@@ -866,6 +1010,93 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
   </div>
 </div>
 
+<!-- ===================== TAMANHO DAS BASES (S8) ===================== -->
+<div class="survey-panel" id="panel-s8">
+  <div class="shell">
+    <div class="page-header">
+      <div class="page-eyebrow">Bases &amp; Conversão · painel de indicadores</div>
+      <h1 class="page-title">Tamanho das bases<br>e engajamento</h1>
+      <p class="page-sub">Visão consolidada de inscritos, engajamento de e-mail e sobreposições entre bases</p>
+    </div>
+
+    <!-- Cards principais -->
+    <div class="metrics">
+      <div class="metric"><div class="metric-label">Inscritos LP</div><div class="metric-value">4.483</div><div class="metric-sub">landing page oficial</div></div>
+      <div class="metric"><div class="metric-label">META total (dedup)</div><div class="metric-value">6.503</div><div class="metric-sub">todas as versões</div></div>
+      <div class="metric"><div class="metric-label">WPP VIP</div><div class="metric-value">9.536</div><div class="metric-sub">membros do grupo</div></div>
+      <div class="metric"><div class="metric-label">WPP BF25</div><div class="metric-value">13.734</div><div class="metric-sub">membros do grupo</div></div>
+    </div>
+
+    <!-- Bloco 1: Tamanho das bases -->
+    <div class="block-title">Tamanho das bases</div>
+    <div class="chart-card" style="padding:6px 4px;">
+      <table class="ptable">
+        <thead><tr><th>Base</th><th class="num">Total</th></tr></thead>
+        <tbody>
+          <tr><td>Inscritos LP</td><td class="num">4.483</td></tr>
+          <tr><td>Inscritos META s/ pesquisa</td><td class="num">1.930</td></tr>
+          <tr><td>Inscritos META V1</td><td class="num">1.375</td></tr>
+          <tr><td>Inscritos META V2</td><td class="num">2.670</td></tr>
+          <tr><td>Inscritos META V3</td><td class="num">1.026</td></tr>
+          <tr><td>Membros WPP VIP</td><td class="num">9.536</td></tr>
+          <tr><td>Membros WPP BF25</td><td class="num">13.734</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Bloco 2: Engajamento -->
+    <div class="block-title">Engajamento de e-mail</div>
+    <div class="chart-card" style="padding:6px 4px;">
+      <table class="ptable">
+        <thead><tr><th>Canal</th><th class="num">Abriram</th><th class="num">Open rate</th><th class="num">CTR</th></tr></thead>
+        <tbody>
+          <tr><td>LP</td><td class="num">633</td><td class="pct">14,1%</td><td class="pct">4,74%</td></tr>
+          <tr><td>META</td><td class="num">433</td><td class="pct">6,2%</td><td class="pct">2,08%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Bloco 3: Sobreposições -->
+    <div class="block-title">Sobreposições entre bases</div>
+    <div class="chart-card" style="padding:6px 4px;">
+      <table class="ptable">
+        <thead><tr><th>Cruzamento</th><th class="num">Contagem</th><th class="num">%</th></tr></thead>
+        <tbody>
+          <tr><td>LP ∩ WPP VIP</td><td class="num">1.933</td><td class="pct">43,1%</td></tr>
+          <tr><td>META ∩ WPP VIP</td><td class="num">2.758</td><td class="pct">39,39%</td></tr>
+          <tr><td>LP ∩ WPP BF25</td><td class="num">358</td><td class="pct">8,0%</td></tr>
+          <tr><td>LP ∩ abriram 1º e-mail CRM</td><td class="num">633</td><td class="pct">14,1%</td></tr>
+          <tr><td>META ∩ abriram 1º e-mail CRM</td><td class="num">433</td><td class="pct">6,7%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Bloco 4: Qualificação META -->
+    <div class="block-title">Qualificação META — sobreposição entre versões</div>
+    <div class="chart-card" style="padding:6px 4px;">
+      <table class="ptable">
+        <thead><tr><th>Métrica</th><th class="num">Valor</th></tr></thead>
+        <tbody>
+          <tr><td>META total deduplicado</td><td class="num">6.503</td></tr>
+          <tr><td>Sobreposição V1 ∩ V2</td><td class="num">166</td></tr>
+          <tr><td>Sobreposição V1 ∩ V3</td><td class="num">69</td></tr>
+          <tr><td>Sobreposição V2 ∩ V3</td><td class="num">191</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="insight" style="margin-top:24px;">
+      <div class="insight-icon">💡</div>
+      <div class="insight-text"><strong>Leitura rápida:</strong> a LP tem engajamento de e-mail bem mais forte que o META (open rate 14,1% vs 6,2%, CTR 4,74% vs 2,08%) — base mais quente e qualificada. Já o grupo WPP VIP é o grande ponto de convergência: 43% da LP e 39% do META estão nele, confirmando o grupo como hub central da audiência.</div>
+    </div>
+
+    <div class="footer">
+      <img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX">
+      <span class="footer-date">Painel de bases · dados consolidados</span>
+    </div>
+  </div>
+</div>
+
   </div><!-- /.content -->
 </div><!-- /.app -->
 
@@ -881,7 +1112,7 @@ function showSurvey(id, btn) {
   document.querySelectorAll('.survey-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
   document.getElementById('panel-' + id).classList.add('active');
-  btn.classList.add('active');
+  if (btn) btn.classList.add('active');
   if (id === 's2' && !s2Initialized) { initS2Charts(); s2Initialized = true; }
   if (id === 's3' && !s3Initialized) { initS3(); s3Initialized = true; }
   if (id === 's4' && !s4Initialized) { initS4(); s4Initialized = true; }
@@ -892,6 +1123,16 @@ function showSurvey(id, btn) {
   if (window.innerWidth <= 860) closeSidebar();
   // Scroll content to top
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Navega a partir de um card da home — sincroniza o item do menu lateral
+function goTo(id) {
+  let navBtn = null;
+  document.querySelectorAll('.nav-item').forEach(b => {
+    const oc = b.getAttribute('onclick') || '';
+    if (oc.indexOf("'" + id + "'") !== -1) navBtn = b;
+  });
+  showSurvey(id, navBtn);
 }
 
 function toggleGroup(name) {
@@ -1397,9 +1638,9 @@ function initS5() {
 
 // ── Expectativa & investimento (S6) ─────────────────
 function initS6() {
-  // 1. Expectativa (pergunta aberta nova)
+  // 1. Expectativa (pergunta aberta)
   const EXP_LABELS = ['Gerar renda / negócio','Aprender / dominar técnica','Começar do zero','Oportunidades / mercado','Motivação / inspiração','Novidades / equipamentos'];
-  const EXP_VALS   = [33, 29, 11, 4, 3, 2];
+  const EXP_VALS   = [149, 102, 53, 12, 4, 4];
   const expColors = ['#10B981','#5166e6','#F59E0B','#8B5CF6','#EC4899','#14B8A6'];
   makeLegend('s6-leg-exp', EXP_LABELS, EXP_VALS, expColors);
   const expCtx = document.getElementById('s6-chart-exp');
@@ -1412,8 +1653,8 @@ function initS6() {
         layout: { padding: { right: 44 } },
         plugins: {
           legend: { display: false },
-          datalabels: { display: true, anchor: 'end', align: 'right', offset: 2, clamp: true, color: '#454549', font: { size: 10, weight: '600', family: "'Inter Tight',sans-serif" }, formatter: v => Math.round(v / 63 * 100) + '%' },
-          tooltip: { callbacks: { label: c => ' ' + c.raw + ' respostas (' + Math.round(c.raw/63*100) + '%)' } }
+          datalabels: { display: true, anchor: 'end', align: 'right', offset: 2, clamp: true, color: '#454549', font: { size: 10, weight: '600', family: "'Inter Tight',sans-serif" }, formatter: v => Math.round(v / 230 * 100) + '%' },
+          tooltip: { callbacks: { label: c => ' ' + c.raw + ' respostas (' + Math.round(c.raw/230*100) + '%)' } }
         }
       }
     });
@@ -1421,25 +1662,25 @@ function initS6() {
 
   // 2. Faixa mensal
   const FAIXA_LABELS = ['Até R$ 100','R$ 100–300','R$ 300–500','R$ 500–1k','Acima de R$ 1k','À vista'];
-  const FAIXA_VALS   = [23, 17, 12, 9, 4, 0];
+  const FAIXA_VALS   = [83, 71, 40, 25, 16, 0];
   makeLegend('s6-leg-faixa', FAIXA_LABELS, FAIXA_VALS, COLORS);
   barChart('s6-chart-faixa', FAIXA_LABELS, FAIXA_VALS, COLORS);
 
-  // 3. Investimento (faixas NOVAS)
-  const INV_LABELS = ['Até R$ 2,5k','R$ 2,5–3,5k','R$ 3,5–5k','R$ 5–10k'];
-  const INV_VALS   = [25, 14, 14, 12];
+  // 3. Investimento (6 faixas — novo formulário tem mais opções)
+  const INV_LABELS = ['Até R$ 1k','Até R$ 2,5k','R$ 2,5–3,5k','R$ 3,5–5k','R$ 5–10k','R$ 10–20k'];
+  const INV_VALS   = [2, 100, 47, 48, 32, 6];
   makeLegend('s6-leg-invest', INV_LABELS, INV_VALS, COLORS);
   barChart('s6-chart-invest', INV_LABELS, INV_VALS, COLORS);
 
   // 4. Impressoras
   const IMP_LABELS = ['Nenhuma, não pretendo','Nenhuma, mas vou comprar','1','2–5','6–10','11 ou mais'];
-  const IMP_VALS   = [3, 36, 22, 4, 0, 0];
+  const IMP_VALS   = [17, 123, 75, 17, 2, 1];
   makeLegend('s6-leg-imp', IMP_LABELS, IMP_VALS, COLORS);
   barChart('s6-chart-imp', IMP_LABELS, IMP_VALS, COLORS);
 
   // 5. Renda
   const RENDA_LABELS = ['Até R$ 2.000','R$ 2–5k','R$ 5–10k','Acima de R$ 10k'];
-  const RENDA_VALS   = [25, 25, 9, 6];
+  const RENDA_VALS   = [87, 84, 48, 16];
   makeLegend('s6-leg-renda', RENDA_LABELS, RENDA_VALS, COLORS);
   barChart('s6-chart-renda', RENDA_LABELS, RENDA_VALS, COLORS);
 }
