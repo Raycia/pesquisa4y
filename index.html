@@ -1019,80 +1019,59 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
       <p class="page-sub">Visão consolidada de inscritos, engajamento de e-mail e sobreposições entre bases</p>
     </div>
 
+    <div id="s8-loading" style="padding:40px 0; text-align:center; color:var(--muted); font-size:13px;">Carregando dados da planilha…</div>
+    <div id="s8-error" style="display:none; padding:16px; background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.2); border-radius:var(--r1); color:#b91c1c; font-size:13px; margin-bottom:16px;"></div>
+
     <!-- Cards principais -->
-    <div class="metrics">
-      <div class="metric"><div class="metric-label">Inscritos LP</div><div class="metric-value">4.483</div><div class="metric-sub">landing page oficial</div></div>
-      <div class="metric"><div class="metric-label">META total (dedup)</div><div class="metric-value">6.503</div><div class="metric-sub">todas as versões</div></div>
-      <div class="metric"><div class="metric-label">WPP VIP</div><div class="metric-value">9.536</div><div class="metric-sub">membros do grupo</div></div>
-      <div class="metric"><div class="metric-label">WPP BF25</div><div class="metric-value">13.734</div><div class="metric-sub">membros do grupo</div></div>
+    <div class="metrics" id="s8-cards" style="display:none;">
+      <div class="metric"><div class="metric-label">Inscritos LP</div><div class="metric-value" id="s8-card-lp">—</div><div class="metric-sub">landing page oficial</div></div>
+      <div class="metric"><div class="metric-label">META total (dedup)</div><div class="metric-value" id="s8-card-meta">—</div><div class="metric-sub">todas as versões</div></div>
+      <div class="metric"><div class="metric-label">WPP VIP</div><div class="metric-value" id="s8-card-wppvip">—</div><div class="metric-sub">membros do grupo</div></div>
+      <div class="metric"><div class="metric-label">WPP BF25</div><div class="metric-value" id="s8-card-wppbf">—</div><div class="metric-sub">membros do grupo</div></div>
     </div>
 
-    <!-- Bloco 1: Tamanho das bases -->
-    <div class="block-title">Tamanho das bases</div>
-    <div class="chart-card" style="padding:6px 4px;">
-      <table class="ptable">
-        <thead><tr><th>Base</th><th class="num">Total</th></tr></thead>
-        <tbody>
-          <tr><td>Inscritos LP</td><td class="num">4.483</td></tr>
-          <tr><td>Inscritos META s/ pesquisa</td><td class="num">1.930</td></tr>
-          <tr><td>Inscritos META V1</td><td class="num">1.375</td></tr>
-          <tr><td>Inscritos META V2</td><td class="num">2.670</td></tr>
-          <tr><td>Inscritos META V3</td><td class="num">1.026</td></tr>
-          <tr><td>Membros WPP VIP</td><td class="num">9.536</td></tr>
-          <tr><td>Membros WPP BF25</td><td class="num">13.734</td></tr>
-        </tbody>
-      </table>
-    </div>
+    <div id="s8-content" style="display:none;">
+      <div class="block-title">Tamanho das bases</div>
+      <div class="chart-card" style="padding:6px 4px;">
+        <table class="ptable">
+          <thead><tr><th>Base</th><th class="num">Total</th></tr></thead>
+          <tbody id="s8-tbody-bases"></tbody>
+        </table>
+      </div>
 
-    <!-- Bloco 2: Engajamento -->
-    <div class="block-title">Engajamento de e-mail</div>
-    <div class="chart-card" style="padding:6px 4px;">
-      <table class="ptable">
-        <thead><tr><th>Canal</th><th class="num">Abriram</th><th class="num">Open rate</th><th class="num">CTR</th></tr></thead>
-        <tbody>
-          <tr><td>LP</td><td class="num">633</td><td class="pct">14,1%</td><td class="pct">4,74%</td></tr>
-          <tr><td>META</td><td class="num">433</td><td class="pct">6,2%</td><td class="pct">2,08%</td></tr>
-        </tbody>
-      </table>
-    </div>
+      <div class="block-title">Engajamento de e-mail</div>
+      <div class="chart-card" style="padding:6px 4px;">
+        <table class="ptable">
+          <thead><tr><th>Canal</th><th class="num">Abriram</th><th class="num">Open rate</th><th class="num">CTR</th></tr></thead>
+          <tbody id="s8-tbody-eng"></tbody>
+        </table>
+      </div>
 
-    <!-- Bloco 3: Sobreposições -->
-    <div class="block-title">Sobreposições entre bases</div>
-    <div class="chart-card" style="padding:6px 4px;">
-      <table class="ptable">
-        <thead><tr><th>Cruzamento</th><th class="num">Contagem</th><th class="num">%</th></tr></thead>
-        <tbody>
-          <tr><td>LP ∩ WPP VIP</td><td class="num">1.933</td><td class="pct">43,1%</td></tr>
-          <tr><td>META ∩ WPP VIP</td><td class="num">2.758</td><td class="pct">39,39%</td></tr>
-          <tr><td>LP ∩ WPP BF25</td><td class="num">358</td><td class="pct">8,0%</td></tr>
-          <tr><td>LP ∩ abriram 1º e-mail CRM</td><td class="num">633</td><td class="pct">14,1%</td></tr>
-          <tr><td>META ∩ abriram 1º e-mail CRM</td><td class="num">433</td><td class="pct">6,7%</td></tr>
-        </tbody>
-      </table>
-    </div>
+      <div class="block-title">Sobreposições entre bases</div>
+      <div class="chart-card" style="padding:6px 4px;">
+        <table class="ptable">
+          <thead><tr><th>Cruzamento</th><th class="num">Contagem</th><th class="num">%</th></tr></thead>
+          <tbody id="s8-tbody-sob"></tbody>
+        </table>
+      </div>
 
-    <!-- Bloco 4: Qualificação META -->
-    <div class="block-title">Qualificação META — sobreposição entre versões</div>
-    <div class="chart-card" style="padding:6px 4px;">
-      <table class="ptable">
-        <thead><tr><th>Métrica</th><th class="num">Valor</th></tr></thead>
-        <tbody>
-          <tr><td>META total deduplicado</td><td class="num">6.503</td></tr>
-          <tr><td>Sobreposição V1 ∩ V2</td><td class="num">166</td></tr>
-          <tr><td>Sobreposição V1 ∩ V3</td><td class="num">69</td></tr>
-          <tr><td>Sobreposição V2 ∩ V3</td><td class="num">191</td></tr>
-        </tbody>
-      </table>
-    </div>
+      <div class="block-title">Qualificação META — sobreposição entre versões</div>
+      <div class="chart-card" style="padding:6px 4px;">
+        <table class="ptable">
+          <thead><tr><th>Métrica</th><th class="num">Valor</th></tr></thead>
+          <tbody id="s8-tbody-qual"></tbody>
+        </table>
+      </div>
 
-    <div class="insight" style="margin-top:24px;">
-      <div class="insight-icon">💡</div>
-      <div class="insight-text"><strong>Leitura rápida:</strong> a LP tem engajamento de e-mail bem mais forte que o META (open rate 14,1% vs 6,2%, CTR 4,74% vs 2,08%) — base mais quente e qualificada. Já o grupo WPP VIP é o grande ponto de convergência: 43% da LP e 39% do META estão nele, confirmando o grupo como hub central da audiência.</div>
+      <div class="insight" style="margin-top:24px;">
+        <div class="insight-icon">💡</div>
+        <div class="insight-text" id="s8-insight">Dados carregados da planilha.</div>
+      </div>
     </div>
 
     <div class="footer">
       <img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX">
-      <span class="footer-date">Painel de bases · dados consolidados</span>
+      <span class="footer-date" id="s8-footer">Painel de bases · ao vivo</span>
     </div>
   </div>
 </div>
@@ -1108,6 +1087,7 @@ let s4Initialized = false;
 let s5Initialized = false;
 let s6Initialized = false;
 let s7Initialized = false;
+let s8Initialized = false;
 function showSurvey(id, btn) {
   document.querySelectorAll('.survey-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
@@ -1119,6 +1099,7 @@ function showSurvey(id, btn) {
   if (id === 's5' && !s5Initialized) { initS5(); s5Initialized = true; }
   if (id === 's6' && !s6Initialized) { initS6(); s6Initialized = true; }
   if (id === 's7' && !s7Initialized) { initS7(); s7Initialized = true; }
+  if (id === 's8' && !s8Initialized) { initS8(); s8Initialized = true; }
   // On mobile, close sidebar after picking
   if (window.innerWidth <= 860) closeSidebar();
   // Scroll content to top
@@ -1704,6 +1685,95 @@ function initS7() {
   const RENDA_VALS7   = [495, 551, 221, 108];
   makeLegend('s7-leg-renda', RENDA_LABELS7, RENDA_VALS7, COLORS);
   barChart('s7-chart-renda', RENDA_LABELS7, RENDA_VALS7, COLORS);
+}
+
+// ── Tamanho das bases (S8) — ao vivo via planilha ───
+function parseCSVSimple8(text) {
+  const lines = text.trim().split(/\r?\n/).filter(l => l.trim());
+  if (lines.length < 2) return [];
+  const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/"/g,''));
+  return lines.slice(1).map(line => {
+    const vals = line.split(',').map(v => v.trim().replace(/"/g,''));
+    const obj = {};
+    headers.forEach((h,i) => { obj[h] = vals[i] || ''; });
+    return obj;
+  });
+}
+function fmt8(v) {
+  const n = parseFloat(String(v).replace(/\./g,'').replace(',','.').replace(/[^0-9.\-]/g,''));
+  if (isNaN(n)) return v;
+  if (n >= 1000) return n.toLocaleString('pt-BR');
+  return v;
+}
+
+async function initS8() {
+  try {
+    const r = await fetch('/api/sheets?which=bases_metricas');
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const rows = parseCSVSimple8(await r.text());
+
+    const bases = rows.filter(r => r.bloco === 'bases');
+    const eng   = rows.filter(r => r.bloco === 'engajamento');
+    const sob   = rows.filter(r => r.bloco === 'sobreposicao');
+    const qual  = rows.filter(r => r.bloco === 'qualificacao');
+
+    // Cards
+    const lp   = bases.find(r => r.metrica && r.metrica.includes('LP'));
+    const meta = qual.find(r => r.metrica && r.metrica.includes('deduplicado'));
+    const wvip = bases.find(r => r.metrica && r.metrica.includes('WPP VIP'));
+    const wbf  = bases.find(r => r.metrica && r.metrica.includes('BF25'));
+    if (lp)   document.getElementById('s8-card-lp').textContent = fmt8(lp.valor);
+    if (meta) document.getElementById('s8-card-meta').textContent = fmt8(meta.valor);
+    if (wvip) document.getElementById('s8-card-wppvip').textContent = fmt8(wvip.valor);
+    if (wbf)  document.getElementById('s8-card-wppbf').textContent = fmt8(wbf.valor);
+
+    // Bloco bases
+    const tb = document.getElementById('s8-tbody-bases');
+    bases.forEach(r => { tb.innerHTML += `<tr><td>${r.metrica}</td><td class="num">${fmt8(r.valor)}</td></tr>`; });
+
+    // Bloco engajamento
+    const te = document.getElementById('s8-tbody-eng');
+    const eL = {a:'',or:'',ctr:''}, eM = {a:'',or:'',ctr:''};
+    eng.forEach(r => {
+      const m = r.metrica.toLowerCase();
+      if (m.includes('abriu') && m.includes('lp'))   eL.a = fmt8(r.valor);
+      if (m.includes('open')  && m.includes('lp'))   eL.or = r.valor;
+      if (m.includes('ctr')   && m.includes('lp'))   eL.ctr = r.valor;
+      if (m.includes('abriu') && m.includes('meta'))  eM.a = fmt8(r.valor);
+      if (m.includes('open')  && m.includes('meta'))  eM.or = r.valor;
+      if (m.includes('ctr')   && m.includes('meta'))  eM.ctr = r.valor;
+    });
+    te.innerHTML = `<tr><td>LP</td><td class="num">${eL.a}</td><td class="pct">${eL.or}</td><td class="pct">${eL.ctr}</td></tr>
+      <tr><td>META</td><td class="num">${eM.a}</td><td class="pct">${eM.or}</td><td class="pct">${eM.ctr}</td></tr>`;
+
+    // Bloco sobreposições com % calculado
+    const ts = document.getElementById('s8-tbody-sob');
+    const lpN = parseFloat((lp?.valor||'0').replace(/\./g,'').replace(',','.'));
+    const metaN = parseFloat((meta?.valor||'0').replace(/\./g,'').replace(',','.'));
+    sob.forEach(r => {
+      const n = parseFloat(String(r.valor).replace(/\./g,'').replace(',','.'));
+      const base = r.metrica.toLowerCase().startsWith('lp') ? lpN : metaN;
+      const pct = (!isNaN(n) && base) ? (n/base*100).toFixed(1)+'%' : '';
+      ts.innerHTML += `<tr><td>${r.metrica}</td><td class="num">${fmt8(r.valor)}</td><td class="pct">${pct}</td></tr>`;
+    });
+
+    // Bloco qualificação
+    const tq = document.getElementById('s8-tbody-qual');
+    qual.forEach(r => { tq.innerHTML += `<tr><td>${r.metrica}</td><td class="num">${fmt8(r.valor)}</td></tr>`; });
+
+    // Insight dinâmico
+    document.getElementById('s8-insight').innerHTML =
+      `<strong>Leitura rápida:</strong> LP tem engajamento de e-mail mais forte que o META (open rate ${eL.or} vs ${eM.or}) — base mais quente. O grupo WPP VIP é o hub central da audiência.`;
+    document.getElementById('s8-footer').textContent = 'Painel de bases · atualizado ' + new Date().toLocaleDateString('pt-BR');
+    document.getElementById('s8-loading').style.display = 'none';
+    document.getElementById('s8-cards').style.display = 'grid';
+    document.getElementById('s8-content').style.display = 'block';
+  } catch(e) {
+    document.getElementById('s8-loading').style.display = 'none';
+    const err = document.getElementById('s8-error');
+    err.style.display = 'block';
+    err.textContent = 'Erro ao carregar dados: ' + e.message;
+  }
 }
 
 </script>
