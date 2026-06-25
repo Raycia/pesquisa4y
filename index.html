@@ -189,7 +189,21 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
   .shell { padding: 24px 20px 60px; }
 }
 
-/* Painel de bases — tabelas */
+/* Filtro de impressora */
+.filter-bar {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.filter-label { font-size: 12px; font-weight: 600; color: var(--muted2); letter-spacing: 0.03em; margin-right: 4px; }
+.filter-btn {
+  font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 999px;
+  border: 1.5px solid var(--border); background: var(--bg2); color: var(--muted);
+  cursor: pointer; transition: all 0.15s; font-family: 'Inter Tight', sans-serif;
+}
+.filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+.filter-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+.filter-count { font-size: 11px; color: var(--muted2); margin-left: 4px; }
+</style>
 .ptable { width: 100%; border-collapse: collapse; font-size: 13px; }
 .ptable thead th {
   text-align: left; font-weight: 600; color: var(--muted2);
@@ -260,9 +274,13 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
       Início
     </button>
 
-    <div class="nav-group" id="group-pesquisas">
-      <button class="nav-group-header" onclick="toggleGroup('pesquisas')">
-        <span>Pesquisas</span>
+    <button class="nav-item" onclick="showSurvey('snova', this)" style="margin-bottom:8px; background:rgba(81,102,230,0.06); border:1.5px solid rgba(81,102,230,0.2);">
+      ✦ Nova pesquisa
+    </button>
+
+    <div class="nav-group" id="group-anteriores">
+      <button class="nav-group-header" onclick="toggleGroup('anteriores')">
+        <span>Pesquisas anteriores</span>
         <span class="nav-group-chevron">▾</span>
       </button>
       <div class="nav-group-items">
@@ -270,19 +288,28 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
           Live 4 anos <span class="nav-badge">212</span>
         </button>
         <button class="nav-item" onclick="showSurvey('s2', this)">
-          Nova pesquisa <span class="nav-badge new">4.171</span>
+          Nova pesquisa (4.171)
         </button>
         <button class="nav-item" onclick="showSurvey('s5', this)">
-          Faixa de investimento <span class="nav-badge new">1.022</span>
-        </button>
-        <button class="nav-item" onclick="showSurvey('s4', this)">
-          Cruzamentos
+          Faixa de investimento <span class="nav-badge">1.022</span>
         </button>
         <button class="nav-item" onclick="showSurvey('s6', this)">
-          Expectativa & investimento <span class="nav-badge new">235</span>
+          Expectativa &amp; investimento <span class="nav-badge">235</span>
         </button>
         <button class="nav-item" onclick="showSurvey('s7', this)">
-          Perfil & escolaridade <span class="nav-badge new">1.375</span>
+          Perfil &amp; escolaridade <span class="nav-badge">1.375</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="nav-group" id="group-analise">
+      <button class="nav-group-header" onclick="toggleGroup('analise')">
+        <span>Análise</span>
+        <span class="nav-group-chevron">▾</span>
+      </button>
+      <div class="nav-group-items">
+        <button class="nav-item" onclick="showSurvey('s4', this)">
+          Cruzamentos
         </button>
       </div>
     </div>
@@ -307,6 +334,26 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
   <div class="content">
 
 <!-- ===================== SURVEY 1 ===================== -->
+<!-- ===================== NOVA PESQUISA (SNOVA) ===================== -->
+<div class="survey-panel" id="panel-snova">
+  <div class="shell">
+    <div class="page-header">
+      <div class="page-eyebrow">Em breve</div>
+      <h1 class="page-title">Nova pesquisa</h1>
+      <p class="page-sub">Os dados desta pesquisa serão adicionados em breve</p>
+    </div>
+    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:80px 0; gap:16px; color:var(--muted);">
+      <div style="font-size:48px; opacity:0.3;">📊</div>
+      <div style="font-size:15px; font-weight:600; color:var(--muted);">Aguardando dados da nova pesquisa</div>
+      <div style="font-size:13px; color:var(--muted2); text-align:center; max-width:360px; line-height:1.6;">Quando os dados chegarem, esta aba será atualizada com os resultados completos.</div>
+    </div>
+    <div class="footer">
+      <img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX">
+      <span class="footer-date">Em breve</span>
+    </div>
+  </div>
+</div>
+
 <!-- ===================== HOME ===================== -->
 <div class="survey-panel active" id="panel-home">
   <div class="shell">
@@ -316,7 +363,19 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
       <p class="page-sub">Escolha uma pesquisa ou painel para explorar os dados</p>
     </div>
 
-    <div class="home-group-title">Pesquisas</div>
+    <!-- Nova pesquisa em destaque -->
+    <div class="home-group-title">Em destaque</div>
+    <div class="home-grid">
+      <button class="home-card" onclick="goTo('snova')" style="border-color:rgba(81,102,230,0.3); background:rgba(81,102,230,0.04); --accent-bar:#5166e6;">
+        <div class="home-card-eyebrow" style="color:var(--primary);">✦ Nova pesquisa</div>
+        <div class="home-card-title">Nova pesquisa</div>
+        <div class="home-card-number-label" style="margin-top:8px; color:var(--primary-active);">Em breve · aguardando dados</div>
+        <div class="home-card-insight">A nova pesquisa da campanha será publicada aqui assim que os dados chegarem.</div>
+        <span class="home-card-arrow" style="color:var(--primary);">→</span>
+      </button>
+    </div>
+
+    <div class="home-group-title">Pesquisas anteriores</div>
     <div class="home-grid">
       <button class="home-card" onclick="goTo('s1')">
         <div class="home-card-eyebrow">Live 4 anos</div>
@@ -327,7 +386,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
         <span class="home-card-arrow">→</span>
       </button>
       <button class="home-card" onclick="goTo('s2')">
-        <div class="home-card-eyebrow">Nova pesquisa</div>
+        <div class="home-card-eyebrow">Nova pesquisa (anterior)</div>
         <div class="home-card-title">Nova pesquisa</div>
         <div class="home-card-number">4.171</div>
         <div class="home-card-number-label">respostas · Meta + Typeform</div>
@@ -340,14 +399,6 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
         <div class="home-card-number">1.022</div>
         <div class="home-card-number-label">respostas · Meta Lead Ads</div>
         <div class="home-card-insight">64% investiriam até R$ 300/mês — parcela acessível é decisiva.</div>
-        <span class="home-card-arrow">→</span>
-      </button>
-      <button class="home-card" onclick="goTo('s4')">
-        <div class="home-card-eyebrow">Análise cruzada</div>
-        <div class="home-card-title">Cruzamentos</div>
-        <div class="home-card-number">1.022</div>
-        <div class="home-card-number-label">base de cruzamento</div>
-        <div class="home-card-insight">Mesmo quem ganha mais parcela baixo — disposição não cresce com a renda.</div>
         <span class="home-card-arrow">→</span>
       </button>
       <button class="home-card" onclick="goTo('s6')">
@@ -364,6 +415,14 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
         <div class="home-card-number">1.375</div>
         <div class="home-card-number-label">respostas · Meta Lead Ads</div>
         <div class="home-card-insight">61% têm superior ou pós — público qualificado e sensível a preço.</div>
+        <span class="home-card-arrow">→</span>
+      </button>
+      <button class="home-card" onclick="goTo('s4')">
+        <div class="home-card-eyebrow">Análise cruzada</div>
+        <div class="home-card-title">Cruzamentos</div>
+        <div class="home-card-number">1.022</div>
+        <div class="home-card-number-label">base de cruzamento</div>
+        <div class="home-card-insight">Mesmo quem ganha mais parcela baixo — disposição não cresce com a renda.</div>
         <span class="home-card-arrow">→</span>
       </button>
     </div>
@@ -510,6 +569,15 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
       <div class="page-eyebrow">Nova pesquisa · 29/05/2026</div>
       <h1 class="page-title">Perfil de investimento<br>em impressão 3D</h1>
       <p class="page-sub">4.171 respostas unificadas — Meta Ads + Typeform</p>
+    <!-- Filtro impressora -->
+    <div class="filter-bar">
+      <span class="filter-label">🖨️ Filtrar por impressora:</span>
+      <button class="filter-btn active" onclick="setFilter('s2', 'todos', this)">Todos</button>
+      <button class="filter-btn" onclick="setFilter('s2', 'tem', this)">Já tem impressora</button>
+      <button class="filter-btn" onclick="setFilter('s2', 'nao', this)">Não tem impressora</button>
+      <span class="filter-count" id="s2-filter-count"></span>
+    </div>
+
       <div class="source-badges">
         <span class="badge badge-meta"><span class="badge-dot" style="background:#2a44c8;"></span>Meta · 2.587</span>
         <span class="badge badge-tf"><span class="badge-dot" style="background:#0a7a56;"></span>Typeform · 1.584</span>
@@ -790,6 +858,15 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
       <div class="page-eyebrow">Pesquisa faixa de investimento · 15/06/2026</div>
       <h1 class="page-title">Faixa de investimento<br>e disposição de pagamento</h1>
       <p class="page-sub">1.022 respostas — Meta Lead Ads (formulário com pesquisa)</p>
+    <!-- Filtro impressora -->
+    <div class="filter-bar">
+      <span class="filter-label">🖨️ Filtrar por impressora:</span>
+      <button class="filter-btn active" onclick="setFilter('s5', 'todos', this)">Todos</button>
+      <button class="filter-btn" onclick="setFilter('s5', 'tem', this)">Já tem impressora</button>
+      <button class="filter-btn" onclick="setFilter('s5', 'nao', this)">Não tem impressora</button>
+      <span class="filter-count" id="s5-filter-count"></span>
+    </div>
+
       <div class="source-badges">
         <span class="badge badge-meta"><span class="badge-dot" style="background:#2a44c8;"></span>Meta Lead Ads · 1.022</span>
       </div>
@@ -873,6 +950,15 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
       <div class="page-eyebrow">Pesquisa expectativa & investimento · 16/06/2026</div>
       <h1 class="page-title">Expectativa com o evento<br>e investimento</h1>
       <p class="page-sub">235 respostas — Meta Lead Ads (novo formulário · 15-22/06)</p>
+    <!-- Filtro impressora -->
+    <div class="filter-bar">
+      <span class="filter-label">🖨️ Filtrar por impressora:</span>
+      <button class="filter-btn active" onclick="setFilter('s6', 'todos', this)">Todos</button>
+      <button class="filter-btn" onclick="setFilter('s6', 'tem', this)">Já tem impressora</button>
+      <button class="filter-btn" onclick="setFilter('s6', 'nao', this)">Não tem impressora</button>
+      <span class="filter-count" id="s6-filter-count"></span>
+    </div>
+
       <div class="source-badges">
         <span class="badge badge-meta"><span class="badge-dot" style="background:#2a44c8;"></span>Meta Lead Ads · 235</span>
       </div>
@@ -956,6 +1042,15 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
       <div class="page-eyebrow">Pesquisa perfil & escolaridade · 01/06/2026</div>
       <h1 class="page-title">Perfil, escolaridade<br>e renda</h1>
       <p class="page-sub">1.375 respostas — Meta Lead Ads (captação live aniversário)</p>
+    <!-- Filtro impressora -->
+    <div class="filter-bar">
+      <span class="filter-label">🖨️ Filtrar por impressora:</span>
+      <button class="filter-btn active" onclick="setFilter('s7', 'todos', this)">Todos</button>
+      <button class="filter-btn" onclick="setFilter('s7', 'tem', this)">Já tem impressora</button>
+      <button class="filter-btn" onclick="setFilter('s7', 'nao', this)">Não tem impressora</button>
+      <span class="filter-count" id="s7-filter-count"></span>
+    </div>
+
       <div class="source-badges">
         <span class="badge badge-meta"><span class="badge-dot" style="background:#2a44c8;"></span>Meta Lead Ads · 1.375</span>
       </div>
@@ -1184,7 +1279,7 @@ function barChart(id, labels, values, colors, horizontal) {
   if (!ctx) return null;
   const total = values.reduce((a,b)=>a+b,0);
   const orient = horizontal ? 'y' : 'x';
-  return new Chart(ctx.getContext('2d'), {
+  const chart = new Chart(ctx.getContext('2d'), {
     type: 'bar',
     data: { labels, datasets: [{ data: values, backgroundColor: colors, borderWidth: 0, borderRadius: 6 }] },
     options: {
@@ -1198,6 +1293,8 @@ function barChart(id, labels, values, colors, horizontal) {
       }
     }
   });
+  if (typeof CHART_REGISTRY !== 'undefined') CHART_REGISTRY[id] = chart;
+  return chart;
 }
 
 function groupedBar(id, labels, d1, d2, c1, c2, l1, l2) {
@@ -1619,14 +1716,15 @@ function initS5() {
 
 // ── Expectativa & investimento (S6) ─────────────────
 function initS6() {
-  // 1. Expectativa (pergunta aberta)
   const EXP_LABELS = ['Gerar renda / negócio','Aprender / dominar técnica','Começar do zero','Oportunidades / mercado','Motivação / inspiração','Novidades / equipamentos'];
-  const EXP_VALS   = [149, 102, 53, 12, 4, 4];
-  const expColors = ['#10B981','#5166e6','#F59E0B','#8B5CF6','#EC4899','#14B8A6'];
-  makeLegend('s6-leg-exp', EXP_LABELS, EXP_VALS, expColors);
+  const expColors  = ['#10B981','#5166e6','#F59E0B','#8B5CF6','#EC4899','#14B8A6'];
+
+  // 1. Expectativa — chart horizontal registrado manualmente
   const expCtx = document.getElementById('s6-chart-exp');
   if (expCtx) {
-    new Chart(expCtx.getContext('2d'), {
+    const EXP_VALS = [149, 102, 53, 12, 4, 4];
+    makeLegend('s6-leg-exp', EXP_LABELS, EXP_VALS, expColors);
+    const expChart = new Chart(expCtx.getContext('2d'), {
       type: 'bar',
       data: { labels: EXP_LABELS, datasets: [{ data: EXP_VALS, backgroundColor: expColors, borderWidth: 0, borderRadius: 5 }] },
       options: {
@@ -1639,31 +1737,28 @@ function initS6() {
         }
       }
     });
+    CHART_REGISTRY['s6-chart-exp'] = expChart;
   }
 
   // 2. Faixa mensal
   const FAIXA_LABELS = ['Até R$ 100','R$ 100–300','R$ 300–500','R$ 500–1k','Acima de R$ 1k','À vista'];
-  const FAIXA_VALS   = [83, 71, 40, 25, 16, 0];
-  makeLegend('s6-leg-faixa', FAIXA_LABELS, FAIXA_VALS, COLORS);
-  barChart('s6-chart-faixa', FAIXA_LABELS, FAIXA_VALS, COLORS);
+  makeLegend('s6-leg-faixa', FAIXA_LABELS, [83,71,40,25,16,0], COLORS);
+  barChart('s6-chart-faixa', FAIXA_LABELS, [83,71,40,25,16,0], COLORS);
 
-  // 3. Investimento (6 faixas — novo formulário tem mais opções)
+  // 3. Investimento (6 faixas)
   const INV_LABELS = ['Até R$ 1k','Até R$ 2,5k','R$ 2,5–3,5k','R$ 3,5–5k','R$ 5–10k','R$ 10–20k'];
-  const INV_VALS   = [2, 100, 47, 48, 32, 6];
-  makeLegend('s6-leg-invest', INV_LABELS, INV_VALS, COLORS);
-  barChart('s6-chart-invest', INV_LABELS, INV_VALS, COLORS);
+  makeLegend('s6-leg-invest', INV_LABELS, [2,100,47,48,32,6], COLORS);
+  barChart('s6-chart-invest', INV_LABELS, [2,100,47,48,32,6], COLORS);
 
-  // 4. Impressoras
+  // 4. Impressoras (sem filtro — é a dimensão de segmentação)
   const IMP_LABELS = ['Nenhuma, não pretendo','Nenhuma, mas vou comprar','1','2–5','6–10','11 ou mais'];
-  const IMP_VALS   = [17, 123, 75, 17, 2, 1];
-  makeLegend('s6-leg-imp', IMP_LABELS, IMP_VALS, COLORS);
-  barChart('s6-chart-imp', IMP_LABELS, IMP_VALS, COLORS);
+  makeLegend('s6-leg-imp', IMP_LABELS, [17,123,75,17,2,1], COLORS);
+  barChart('s6-chart-imp', IMP_LABELS, [17,123,75,17,2,1], COLORS);
 
   // 5. Renda
   const RENDA_LABELS = ['Até R$ 2.000','R$ 2–5k','R$ 5–10k','Acima de R$ 10k'];
-  const RENDA_VALS   = [87, 84, 48, 16];
-  makeLegend('s6-leg-renda', RENDA_LABELS, RENDA_VALS, COLORS);
-  barChart('s6-chart-renda', RENDA_LABELS, RENDA_VALS, COLORS);
+  makeLegend('s6-leg-renda', RENDA_LABELS, [87,84,48,16], COLORS);
+  barChart('s6-chart-renda', RENDA_LABELS, [87,84,48,16], COLORS);
 }
 
 // ── Perfil & escolaridade (S7) ──────────────────────
@@ -1685,6 +1780,93 @@ function initS7() {
   const RENDA_VALS7   = [495, 551, 221, 108];
   makeLegend('s7-leg-renda', RENDA_LABELS7, RENDA_VALS7, COLORS);
   barChart('s7-chart-renda', RENDA_LABELS7, RENDA_VALS7, COLORS);
+}
+
+// ── Filtro de impressora ──────────────────────────────
+// Dados pré-calculados por segmento para cada aba
+const SEG_DATA = {
+  s2: {
+    todos: { n: 4171, renda: [1577,1516,691,387], invest: [1752,1912,410,97] },
+    tem:   { n: 1932, renda: [905,567,286,174],   invest: [1145,584,156,47]  },
+    nao:   { n: 1962, renda: [576,851,359,176],   invest: [477,1231,222,32]  }
+  },
+  s5: {
+    todos: { n: 1022, renda: [450,373,149,50], invest: [419,510,73,20], parc: [380,271,180,80,21,90] },
+    tem:   { n: 464,  renda: [266,126,56,16],  invest: [291,139,28,6],  parc: [261,101,44,27,7,24]  },
+    nao:   { n: 558,  renda: [184,247,93,34],  invest: [128,371,45,14], parc: [119,170,136,53,14,66] }
+  },
+  s6: {
+    todos: { n: 235, renda: [87,84,48,16],  invest: [2,100,47,48,32,6], parc: [83,71,40,25,16,0],  exp: [149,102,53,12,4,4]  },
+    tem:   { n: 95,  renda: [51,22,17,5],   invest: [1,67,8,11,6,2],   parc: [61,22,6,2,4,0],    exp: [36,40,5,4,2,2]    },
+    nao:   { n: 140, renda: [36,62,31,11],  invest: [1,33,39,37,26,4], parc: [22,49,34,23,12,0],  exp: [113,62,48,8,2,2]  }
+  },
+  s7: {
+    todos: { n: 1375, renda: [495,551,221,108], esc: [53,480,606,236] },
+    tem:   { n: 574,  renda: [265,197,65,47],   esc: [22,193,257,102] },
+    nao:   { n: 801,  renda: [230,354,156,61],  esc: [31,287,349,134] }
+  }
+};
+
+// Chart registry: { chartId: Chart instance }
+const CHART_REGISTRY = {};
+
+function regChart(id, chart) { CHART_REGISTRY[id] = chart; }
+
+function updateChart(id, newData) {
+  const chart = CHART_REGISTRY[id];
+  if (!chart) return;
+  if (Array.isArray(newData[0])) {
+    // Multiple datasets (stacked/grouped)
+    newData.forEach((d, i) => { if (chart.data.datasets[i]) chart.data.datasets[i].data = d; });
+  } else {
+    chart.data.datasets[0].data = newData;
+  }
+  chart.update();
+}
+
+function setFilter(sid, seg, btn) {
+  // Update button states
+  const bar = btn.closest('.filter-bar');
+  bar.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const d = SEG_DATA[sid]?.[seg];
+  if (!d) return;
+
+  // Update count badge
+  const count = document.getElementById(sid + '-filter-count');
+  if (count) count.textContent = seg === 'todos' ? '' : `${d.n.toLocaleString('pt-BR')} respostas`;
+
+  // Update charts by survey
+  if (sid === 's2') {
+    updateChart('s2-renda', d.renda);
+    updateChart('s2-invest', d.invest);
+    // Update grouped bar charts (renda-src, invest-src not filtered — no per-source segmented data)
+  }
+  if (sid === 's5') {
+    updateChart('s5-renda', d.renda);
+    updateChart('s5-invest', d.invest);
+    updateChart('s5-faixa', d.parc);
+  }
+  if (sid === 's2') {
+    updateChart('s2-chart-renda', d.renda);
+    updateChart('s2-chart-invest', d.invest);
+  }
+  if (sid === 's5') {
+    updateChart('s5-chart-renda', d.renda);
+    updateChart('s5-chart-invest', d.invest);
+    updateChart('s5-chart-faixa', d.parc);
+  }
+  if (sid === 's6') {
+    updateChart('s6-chart-exp', d.exp);
+    updateChart('s6-chart-renda', d.renda);
+    updateChart('s6-chart-invest', d.invest);
+    updateChart('s6-chart-faixa', d.parc);
+  }
+  if (sid === 's7') {
+    updateChart('s7-chart-renda', d.renda);
+    updateChart('s7-chart-esc', d.esc);
+  }
 }
 
 // ── Tamanho das bases (S8) — ao vivo via planilha ───
