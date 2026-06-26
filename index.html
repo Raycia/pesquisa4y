@@ -1486,6 +1486,18 @@ function showSection(survey, name, btn) {
   btn.closest('.shell').querySelectorAll('.stab').forEach(t => t.classList.remove('active'));
   document.getElementById(prefix + name).classList.add('active');
   btn.classList.add('active');
+
+  // Lazy-init Pesquisa Meta sub-tabs on first click
+  if (survey === 'snova') {
+    const snovaMap = {
+      sorteio:   ['s', ['imp','parc','canal','formato']],
+      modelagem: ['m', ['imp','parc','canal','formato']],
+      live:      ['l', ['imp','parc','canal','formato']],
+      renda:     ['r', ['imp','parc','canal','formato']],
+      programa:  ['p', ['imp','parc','canal','formato']]
+    };
+    if (snovaMap[name]) initSnovaSubTab(name, snovaMap[name][0], snovaMap[name][1]);
+  }
 }
 
 // ── Chart helpers ────────────────────────────────────
@@ -2191,31 +2203,27 @@ function metaBarChart(id, labels, values, colors) {
   return chart;
 }
 
-function initSnova() {
-  const subs = [
-    { key: 'sorteio',   id: 's', charts: ['imp','parc','canal','formato'] },
-    { key: 'modelagem', id: 'm', charts: ['imp','parc','canal','formato'] },
-    { key: 'live',      id: 'l', charts: ['imp','parc','canal','formato'] },
-    { key: 'renda',     id: 'r', charts: ['imp','parc','canal','formato'] },
-    { key: 'programa',  id: 'p', charts: ['imp','parc','canal','formato'] }
-  ];
-  const labelMap = {
-    imp:    IMP_META,
-    parc:   PARC_META,
-    canal:  CANAL_META,
-    formato: FORMATO_META
-  };
-  subs.forEach(sub => {
-    const d = META_DATA[sub.key];
-    sub.charts.forEach(c => {
-      const cid = 'snova-' + sub.id + '-' + c;
-      const labels = labelMap[c];
-      const vals = d ? d.todos[c] : labels.map(()=>0);
-      const pill = document.getElementById(cid + '-pill');
-      if (pill && d) pill.textContent = d.n.todos.toLocaleString('pt-BR') + ' respostas';
-      metaBarChart(cid, labels, vals, c === 'formato' ? MOT_COLORS : COLORS);
-    });
+const snovaSubInitialized = {};
+
+function initSnovaSubTab(key, prefix, charts) {
+  if (snovaSubInitialized[key]) return;
+  snovaSubInitialized[key] = true;
+  const labelMap = { imp: IMP_META, parc: PARC_META, canal: CANAL_META, formato: FORMATO_META };
+  const d = META_DATA[key];
+  charts.forEach(c => {
+    const cid = 'snova-' + prefix + '-' + c;
+    const labels = labelMap[c];
+    if (!labels) return;
+    const vals = d ? d.todos[c] : labels.map(()=>0);
+    const pill = document.getElementById(cid + '-pill');
+    if (pill && d) pill.textContent = d.n.todos.toLocaleString('pt-BR') + ' respostas';
+    metaBarChart(cid, labels, vals, c === 'formato' ? MOT_COLORS : COLORS);
   });
+}
+
+function initSnova() {
+  // Only init the active sub-tab (sorteio) on first load — others init on click
+  initSnovaSubTab('sorteio', 's', ['imp','parc','canal','formato']);
 }
 
 function setFilterMeta(sid, seg, btn) {
