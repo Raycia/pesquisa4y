@@ -250,6 +250,17 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
 .home-card-insight { font-size: 12px; color: #5d5d60; line-height: 1.5; margin-top: auto; }
 .home-card-arrow { position: absolute; bottom: 18px; right: 20px; color: var(--muted2); font-size: 16px; transition: transform 0.18s, color 0.18s; }
 .home-card:hover .home-card-arrow { transform: translateX(3px); color: var(--primary); }
+
+/* Status badges */
+.status-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; letter-spacing: 0.04em; text-transform: uppercase; }
+.status-rodando { background: rgba(16,185,129,0.12); color: #065f46; }
+.status-ajustado { background: rgba(245,158,11,0.12); color: #92400e; }
+.status-vazio { background: rgba(156,163,175,0.15); color: #6b7280; }
+.status-rodando::before { content: '● '; font-size: 8px; color: #10B981; }
+.status-ajustado::before { content: '● '; font-size: 8px; color: #F59E0B; }
+.status-vazio::before { content: '○ '; font-size: 8px; color: #9CA3AF; }
+.subaba-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+.subaba-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 800; letter-spacing: -0.02em; color: var(--text); }
 </style>
 </head>
 <body>
@@ -274,7 +285,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
     </button>
 
     <button class="nav-item" onclick="showSurvey('snova', this)" style="margin-bottom:8px; background:rgba(81,102,230,0.06); border:1.5px solid rgba(81,102,230,0.2);">
-      ✦ Nova pesquisa
+      ✦ Pesquisa Meta
     </button>
 
     <div class="nav-group" id="group-anteriores">
@@ -333,22 +344,244 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
   <div class="content">
 
 <!-- ===================== SURVEY 1 ===================== -->
-<!-- ===================== NOVA PESQUISA (SNOVA) ===================== -->
+<!-- ===================== PESQUISA META (SNOVA) ===================== -->
 <div class="survey-panel" id="panel-snova">
   <div class="shell">
     <div class="page-header">
-      <div class="page-eyebrow">Em breve</div>
-      <h1 class="page-title">Nova pesquisa</h1>
-      <p class="page-sub">Os dados desta pesquisa serão adicionados em breve</p>
+      <div class="page-eyebrow">Nova pesquisa · Meta Lead Ads</div>
+      <h1 class="page-title">Pesquisa Meta</h1>
+      <p class="page-sub">Resultados por criativo — 5 versões de formulário em campanha</p>
     </div>
-    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:80px 0; gap:16px; color:var(--muted);">
-      <div style="font-size:48px; opacity:0.3;">📊</div>
-      <div style="font-size:15px; font-weight:600; color:var(--muted);">Aguardando dados da nova pesquisa</div>
-      <div style="font-size:13px; color:var(--muted2); text-align:center; max-width:360px; line-height:1.6;">Quando os dados chegarem, esta aba será atualizada com os resultados completos.</div>
+
+    <div class="section-tabs">
+      <button class="stab active" onclick="showSection('snova','sorteio',this)">Sorteio</button>
+      <button class="stab" onclick="showSection('snova','modelagem',this)">Modelagem</button>
+      <button class="stab" onclick="showSection('snova','live',this)">Chamada Live</button>
+      <button class="stab" onclick="showSection('snova','renda',this)">Renda Extra</button>
+      <button class="stab" onclick="showSection('snova','programa',this)">Programa</button>
     </div>
+
+    <!-- ── SORTEIO ── -->
+    <div class="section-panel active" id="snova-sorteio">
+      <div class="subaba-header">
+        <span class="subaba-title">Criativos focados no sorteio</span>
+        <span class="status-badge status-rodando">Rodando</span>
+      </div>
+      
+    <div class="filter-bar">
+      <span class="filter-label">🖨️ Filtrar:</span>
+      <button class="filter-btn active" onclick="setFilterMeta('snova-sorteio','todos',this)">Todos</button>
+      <button class="filter-btn" onclick="setFilterMeta('snova-sorteio','tem',this)">Já tem impressora</button>
+      <button class="filter-btn" onclick="setFilterMeta('snova-sorteio','nao',this)">Não tem impressora</button>
+      <span class="filter-count" id="snova-sorteio-filter-count"></span>
+    </div>
+      
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Quantas impressoras 3D você possui?</div><span class="chart-pill" id="snova-s-imp-pill">Aguardando dados</span></div>
+        <div class="legend" id="snova-s-imp-leg"></div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="snova-s-imp"></canvas></div>
+      </div>
+      
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Qual valor investiria mensalmente para estudar?</div><span class="chart-pill" id="snova-s-parc-pill">Aguardando dados</span></div>
+        <div class="legend" id="snova-s-parc-leg"></div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="snova-s-parc"></canvas></div>
+      </div>
+      
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Canal da STLFLIX que mais consome</div><span class="chart-pill" id="snova-s-canal-pill">Aguardando dados</span></div>
+        <div class="legend" id="snova-s-canal-leg"></div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="snova-s-canal"></canvas></div>
+      </div>
+      
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Formato favorito para estudar impressão 3D</div><span class="chart-pill" id="snova-s-formato-pill">Aguardando dados</span></div>
+        <div class="legend" id="snova-s-formato-leg"></div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="snova-s-formato"></canvas></div>
+      </div>
+    </div>
+
+    <!-- ── MODELAGEM ── -->
+    <div class="section-panel" id="snova-modelagem">
+      <div class="subaba-header">
+        <span class="subaba-title">Criativos focados em modelagem</span>
+        <span class="status-badge status-ajustado">Ajustado</span>
+      </div>
+      
+    <div class="filter-bar">
+      <span class="filter-label">🖨️ Filtrar:</span>
+      <button class="filter-btn active" onclick="setFilterMeta('snova-modelagem','todos',this)">Todos</button>
+      <button class="filter-btn" onclick="setFilterMeta('snova-modelagem','tem',this)">Já tem impressora</button>
+      <button class="filter-btn" onclick="setFilterMeta('snova-modelagem','nao',this)">Não tem impressora</button>
+      <span class="filter-count" id="snova-modelagem-filter-count"></span>
+    </div>
+      
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Quantas impressoras 3D você possui?</div><span class="chart-pill" id="snova-m-imp-pill">Aguardando dados</span></div>
+        <div class="legend" id="snova-m-imp-leg"></div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="snova-m-imp"></canvas></div>
+      </div>
+      
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Qual valor investiria mensalmente para estudar?</div><span class="chart-pill" id="snova-m-parc-pill">Aguardando dados</span></div>
+        <div class="legend" id="snova-m-parc-leg"></div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="snova-m-parc"></canvas></div>
+      </div>
+      
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">O que te motiva a participar do evento?</div><span class="chart-pill" id="snova-m-mot-pill">Aguardando dados</span></div>
+        <div class="legend" id="snova-m-mot-leg"></div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="snova-m-mot"></canvas></div>
+      </div>
+      
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Canal da STLFLIX que mais consome</div><span class="chart-pill" id="snova-m-canal-pill">Aguardando dados</span></div>
+        <div class="legend" id="snova-m-canal-leg"></div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="snova-m-canal"></canvas></div>
+      </div>
+      
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Formato favorito para estudar impressão 3D</div><span class="chart-pill" id="snova-m-formato-pill">Aguardando dados</span></div>
+        <div class="legend" id="snova-m-formato-leg"></div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="snova-m-formato"></canvas></div>
+      </div>
+    </div>
+
+    <!-- ── LIVE ── -->
+    <div class="section-panel" id="snova-live">
+      <div class="subaba-header">
+        <span class="subaba-title">Criativos focados em chamada para live</span>
+        <span class="status-badge status-ajustado">Ajustado</span>
+      </div>
+      
+    <div class="filter-bar">
+      <span class="filter-label">🖨️ Filtrar:</span>
+      <button class="filter-btn active" onclick="setFilterMeta('snova-live','todos',this)">Todos</button>
+      <button class="filter-btn" onclick="setFilterMeta('snova-live','tem',this)">Já tem impressora</button>
+      <button class="filter-btn" onclick="setFilterMeta('snova-live','nao',this)">Não tem impressora</button>
+      <span class="filter-count" id="snova-live-filter-count"></span>
+    </div>
+      
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Quantas impressoras 3D você possui?</div><span class="chart-pill" id="snova-l-imp-pill">Aguardando dados</span></div>
+        <div class="legend" id="snova-l-imp-leg"></div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="snova-l-imp"></canvas></div>
+      </div>
+      
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Qual valor investiria mensalmente para estudar?</div><span class="chart-pill" id="snova-l-parc-pill">Aguardando dados</span></div>
+        <div class="legend" id="snova-l-parc-leg"></div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="snova-l-parc"></canvas></div>
+      </div>
+      
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">O que te motiva a participar do evento?</div><span class="chart-pill" id="snova-l-mot-pill">Aguardando dados</span></div>
+        <div class="legend" id="snova-l-mot-leg"></div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="snova-l-mot"></canvas></div>
+      </div>
+      
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Canal da STLFLIX que mais consome</div><span class="chart-pill" id="snova-l-canal-pill">Aguardando dados</span></div>
+        <div class="legend" id="snova-l-canal-leg"></div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="snova-l-canal"></canvas></div>
+      </div>
+      
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Formato favorito para estudar impressão 3D</div><span class="chart-pill" id="snova-l-formato-pill">Aguardando dados</span></div>
+        <div class="legend" id="snova-l-formato-leg"></div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="snova-l-formato"></canvas></div>
+      </div>
+    </div>
+
+    <!-- ── RENDA EXTRA ── -->
+    <div class="section-panel" id="snova-renda">
+      <div class="subaba-header">
+        <span class="subaba-title">Criativos focados em renda extra</span>
+        <span class="status-badge status-vazio">Vazio</span>
+      </div>
+      
+    <div class="filter-bar">
+      <span class="filter-label">🖨️ Filtrar:</span>
+      <button class="filter-btn active" onclick="setFilterMeta('snova-renda','todos',this)">Todos</button>
+      <button class="filter-btn" onclick="setFilterMeta('snova-renda','tem',this)">Já tem impressora</button>
+      <button class="filter-btn" onclick="setFilterMeta('snova-renda','nao',this)">Não tem impressora</button>
+      <span class="filter-count" id="snova-renda-filter-count"></span>
+    </div>
+      
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Quantas impressoras 3D você possui?</div><span class="chart-pill" id="snova-r-imp-pill">Aguardando dados</span></div>
+        <div class="legend" id="snova-r-imp-leg"></div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="snova-r-imp"></canvas></div>
+      </div>
+      
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Qual valor investiria mensalmente para estudar?</div><span class="chart-pill" id="snova-r-parc-pill">Aguardando dados</span></div>
+        <div class="legend" id="snova-r-parc-leg"></div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="snova-r-parc"></canvas></div>
+      </div>
+      
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Canal da STLFLIX que mais consome</div><span class="chart-pill" id="snova-r-canal-pill">Aguardando dados</span></div>
+        <div class="legend" id="snova-r-canal-leg"></div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="snova-r-canal"></canvas></div>
+      </div>
+      
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Formato favorito para estudar impressão 3D</div><span class="chart-pill" id="snova-r-formato-pill">Aguardando dados</span></div>
+        <div class="legend" id="snova-r-formato-leg"></div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="snova-r-formato"></canvas></div>
+      </div>
+    </div>
+
+    <!-- ── PROGRAMA ── -->
+    <div class="section-panel" id="snova-programa">
+      <div class="subaba-header">
+        <span class="subaba-title">Criativos focados no programa</span>
+        <span class="status-badge status-ajustado">Ajustado</span>
+      </div>
+      
+    <div class="filter-bar">
+      <span class="filter-label">🖨️ Filtrar:</span>
+      <button class="filter-btn active" onclick="setFilterMeta('snova-programa','todos',this)">Todos</button>
+      <button class="filter-btn" onclick="setFilterMeta('snova-programa','tem',this)">Já tem impressora</button>
+      <button class="filter-btn" onclick="setFilterMeta('snova-programa','nao',this)">Não tem impressora</button>
+      <span class="filter-count" id="snova-programa-filter-count"></span>
+    </div>
+      
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Quantas impressoras 3D você possui?</div><span class="chart-pill" id="snova-p-imp-pill">Aguardando dados</span></div>
+        <div class="legend" id="snova-p-imp-leg"></div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="snova-p-imp"></canvas></div>
+      </div>
+      
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Qual valor investiria mensalmente para estudar?</div><span class="chart-pill" id="snova-p-parc-pill">Aguardando dados</span></div>
+        <div class="legend" id="snova-p-parc-leg"></div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="snova-p-parc"></canvas></div>
+      </div>
+      
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">O que te motiva a participar do evento?</div><span class="chart-pill" id="snova-p-mot-pill">Aguardando dados</span></div>
+        <div class="legend" id="snova-p-mot-leg"></div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="snova-p-mot"></canvas></div>
+      </div>
+      
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Canal da STLFLIX que mais consome</div><span class="chart-pill" id="snova-p-canal-pill">Aguardando dados</span></div>
+        <div class="legend" id="snova-p-canal-leg"></div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="snova-p-canal"></canvas></div>
+      </div>
+      
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Formato favorito para estudar impressão 3D</div><span class="chart-pill" id="snova-p-formato-pill">Aguardando dados</span></div>
+        <div class="legend" id="snova-p-formato-leg"></div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="snova-p-formato"></canvas></div>
+      </div>
+    </div>
+
     <div class="footer">
       <img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX">
-      <span class="footer-date">Em breve</span>
+      <span class="footer-date">Pesquisa Meta · em andamento</span>
     </div>
   </div>
 </div>
@@ -366,10 +599,10 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
     <div class="home-group-title">Em destaque</div>
     <div class="home-grid">
       <button class="home-card" onclick="goTo('snova')" style="border-color:rgba(81,102,230,0.3); background:rgba(81,102,230,0.04); --accent-bar:#5166e6;">
-        <div class="home-card-eyebrow" style="color:var(--primary);">✦ Nova pesquisa</div>
-        <div class="home-card-title">Nova pesquisa</div>
-        <div class="home-card-number-label" style="margin-top:8px; color:var(--primary-active);">Em breve · aguardando dados</div>
-        <div class="home-card-insight">A nova pesquisa da campanha será publicada aqui assim que os dados chegarem.</div>
+        <div class="home-card-eyebrow" style="color:var(--primary);">✦ Pesquisa Meta</div>
+        <div class="home-card-title">Pesquisa Meta</div>
+        <div class="home-card-number-label" style="margin-top:8px; color:var(--primary-active);">5 criativos · em andamento</div>
+        <div class="home-card-insight">Sorteio (rodando) · Modelagem · Live · Renda extra · Programa — com filtro por posse de impressora.</div>
         <span class="home-card-arrow" style="color:var(--primary);">→</span>
       </button>
     </div>
@@ -1176,6 +1409,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
 <script>
 // ── Navigation ──────────────────────────────────────
 let s2Initialized = false;
+let snovaInitialized = false;
 let s3Initialized = false;
 let s4Initialized = false;
 let s5Initialized = false;
@@ -1188,6 +1422,7 @@ function showSurvey(id, btn) {
   document.getElementById('panel-' + id).classList.add('active');
   if (btn) btn.classList.add('active');
   if (id === 's2' && !s2Initialized) { initS2Charts(); s2Initialized = true; }
+  if (id === 'snova' && !snovaInitialized) { initSnova(); snovaInitialized = true; }
   if (id === 's3' && !s3Initialized) { initS3(); s3Initialized = true; }
   if (id === 's4' && !s4Initialized) { initS4(); s4Initialized = true; }
   if (id === 's5' && !s5Initialized) { initS5(); s5Initialized = true; }
@@ -1866,6 +2101,81 @@ function setFilter(sid, seg, btn) {
     updateChart('s7-chart-renda', d.renda);
     updateChart('s7-chart-esc', d.esc);
   }
+}
+
+// ── Pesquisa Meta (SNOVA) ────────────────────────────
+const IMP_META    = ['Nenhuma','1','2–5','6 ou mais'];
+const PARC_META   = ['Até R$100','R$100–300','R$300–500','R$500–1k','Acima de R$1k'];
+const CANAL_META  = ['Facebook','Instagram','TikTok','Youtube'];
+const FORMATO_META= ['Cursos gravados','Cursos ao vivo','Ebooks/PDFs','Podcasts/Áudio','Comunidades/grupos','Newsletters','Workshops presenciais'];
+const MOT_COLORS  = ['#5166e6','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#14B8A6'];
+
+// Dados por sub-aba e segmento — preenchidos conforme chegam
+const META_DATA = {
+  sorteio:   { todos: null, tem: null, nao: null },
+  modelagem: { todos: null, tem: null, nao: null },
+  live:      { todos: null, tem: null, nao: null },
+  renda:     { todos: null, tem: null, nao: null },
+  programa:  { todos: null, tem: null, nao: null }
+};
+
+function metaBarChart(id, labels, values, colors) {
+  const ctx = document.getElementById(id);
+  if (!ctx) return null;
+  const zeros = !values || values.every(v => v === 0);
+  const total = zeros ? 1 : values.reduce((a,b)=>a+b,0);
+  const chart = new Chart(ctx.getContext('2d'), {
+    type: 'bar',
+    data: { labels, datasets: [{ data: zeros ? labels.map(()=>0) : values, backgroundColor: colors || COLORS, borderWidth: 0, borderRadius: 5 }] },
+    options: {
+      ...baseOpts, indexAxis: 'y',
+      layout: { padding: { right: 44 } },
+      plugins: {
+        legend: { display: false },
+        datalabels: {
+          display: c => !zeros && c.dataset.data[c.dataIndex] > 0,
+          anchor: 'end', align: 'right', offset: 2, clamp: true,
+          color: '#454549', font: { size: 10, weight: '600', family: "'Inter Tight',sans-serif" },
+          formatter: v => Math.round(v/total*100) + '%'
+        },
+        tooltip: { callbacks: { label: c => zeros ? ' Sem dados' : ' ' + c.raw + ' respostas (' + Math.round(c.raw/total*100) + '%)' } }
+      }
+    }
+  });
+  CHART_REGISTRY[id] = chart;
+  return chart;
+}
+
+function initSnova() {
+  const subs = [
+    { id: 's', charts: ['imp','parc','canal','formato'] },
+    { id: 'm', charts: ['imp','parc','mot','canal','formato'] },
+    { id: 'l', charts: ['imp','parc','mot','canal','formato'] },
+    { id: 'r', charts: ['imp','parc','canal','formato'] },
+    { id: 'p', charts: ['imp','parc','mot','canal','formato'] }
+  ];
+  subs.forEach(sub => {
+    sub.charts.forEach(c => {
+      const cid = 'snova-' + sub.id + '-' + c;
+      let labels, colors;
+      if (c === 'imp')    { labels = IMP_META;     colors = COLORS; }
+      else if (c === 'parc')   { labels = PARC_META;    colors = COLORS; }
+      else if (c === 'canal')  { labels = CANAL_META;   colors = COLORS; }
+      else if (c === 'formato'){ labels = FORMATO_META; colors = MOT_COLORS; }
+      else if (c === 'mot')    { labels = ['Renda/liberdade','Aprender','Negócio/empreender','Vender','Mercado/oportunidade','Outros']; colors = MOT_COLORS; }
+      if (labels) metaBarChart(cid, labels, labels.map(()=>0), colors);
+    });
+  });
+}
+
+function setFilterMeta(sid, seg, btn) {
+  const bar = btn.closest('.filter-bar');
+  bar.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // When data arrives, update charts via META_DATA
+  // For now just toggles button state
+  const count = document.getElementById(sid + '-filter-count');
+  if (count) count.textContent = seg === 'todos' ? '' : '';
 }
 
 // ── Tamanho das bases (S8) — ao vivo via planilha ───
