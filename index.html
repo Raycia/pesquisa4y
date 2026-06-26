@@ -1491,17 +1491,19 @@ function showSection(survey, name, btn) {
   if (survey === 'snova') {
     const snovaMap = {
       sorteio:   ['s', ['imp','parc','canal','formato']],
-      modelagem: ['m', ['imp','parc','canal','formato']],
-      live:      ['l', ['imp','parc','canal','formato']],
+      modelagem: ['m', ['imp','parc','mot','canal','formato']],
+      live:      ['l', ['imp','parc','mot','canal','formato']],
       renda:     ['r', ['imp','parc','canal','formato']],
       programa:  ['p', ['imp','parc','canal','formato']]
     };
-    if (snovaMap[name]) initSnovaSubTab(name, snovaMap[name][0], snovaMap[name][1]);
+    if (snovaMap[name]) setTimeout(() => initSnovaSubTab(name, snovaMap[name][0], snovaMap[name][1]), 50);
   }
 }
 
 // ── Chart helpers ────────────────────────────────────
 const COLORS = ['#5166e6','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#14B8A6'];
+const CHART_REGISTRY = {};
+const snovaSubInitialized = {};
 const META_C = '#2a44c8';
 const TF_C = '#0a7a56';
 
@@ -2074,8 +2076,6 @@ const SEG_DATA = {
 };
 
 // Chart registry: { chartId: Chart instance }
-const CHART_REGISTRY = {};
-
 function regChart(id, chart) { CHART_REGISTRY[id] = chart; }
 
 function updateChart(id, newData) {
@@ -2152,15 +2152,15 @@ const META_DATA = {
   },
   modelagem: {
     n: { todos: 39, tem: 22, nao: 17 },
-    todos: { imp:[17,19,2,1],  parc:[5,3,0,0,0],  canal:[1,5,0,2],   formato:[4,3,0,0,0,0,0]  },
-    tem:   { imp:[0,19,2,1],   parc:[4,2,0,0,0],  canal:[1,3,0,2],   formato:[3,2,0,0,0,0,0]  },
-    nao:   { imp:[17,0,0,0],   parc:[1,1,0,0,0],  canal:[0,2,0,0],   formato:[1,1,0,0,0,0,0]  }
+    todos: { imp:[17,19,2,1],  parc:[5,3,0,0,0],  canal:[1,5,0,2],   formato:[4,3,0,0,0,0,0],  mot:[7,2,0,1,0,0,2]  },
+    tem:   { imp:[0,19,2,1],   parc:[4,2,0,0,0],  canal:[1,3,0,2],   formato:[3,2,0,0,0,0,0],  mot:[5,1,0,1,0,0,1]  },
+    nao:   { imp:[17,0,0,0],   parc:[1,1,0,0,0],  canal:[0,2,0,0],   formato:[1,1,0,0,0,0,0],  mot:[2,1,0,0,0,0,1]  }
   },
   live: {
     n: { todos: 185, tem: 90, nao: 95 },
-    todos: { imp:[95,64,25,1],  parc:[39,15,3,2,3],  canal:[14,45,0,3],   formato:[42,14,0,2,0,0,2]  },
-    tem:   { imp:[0,64,25,1],   parc:[13,3,2,0,1],   canal:[2,14,0,3],    formato:[11,5,0,1,0,0,1]   },
-    nao:   { imp:[95,0,0,0],    parc:[26,12,1,2,2],  canal:[12,31,0,0],   formato:[31,9,0,1,0,0,1]   }
+    todos: { imp:[95,64,25,1],  parc:[39,15,3,2,3],  canal:[14,45,0,3],   formato:[42,14,0,2,0,0,2],  mot:[17,6,4,0,3,1,10]  },
+    tem:   { imp:[0,64,25,1],   parc:[13,3,2,0,1],   canal:[2,14,0,3],    formato:[11,5,0,1,0,0,1],   mot:[12,3,1,0,2,0,5]   },
+    nao:   { imp:[95,0,0,0],    parc:[26,12,1,2,2],  canal:[12,31,0,0],   formato:[31,9,0,1,0,0,1],   mot:[5,3,3,0,1,1,5]    }
   },
   renda: {
     n: { todos: 138, tem: 63, nao: 75 },
@@ -2179,23 +2179,50 @@ const META_DATA = {
 function metaBarChart(id, labels, values, colors) {
   const ctx = document.getElementById(id);
   if (!ctx) return null;
-  const zeros = !values || values.every(v => v === 0);
-  const total = zeros ? 1 : values.reduce((a,b)=>a+b,0);
+  // Destroy existing chart if any (prevent duplicate canvas error)
+  if (CHART_REGISTRY[id]) {
+    CHART_REGISTRY[id].destroy();
+    delete CHART_REGISTRY[id];
+  }
+  const total = values && values.some(v => v > 0) ? values.reduce((a,b)=>a+b,0) : 0;
+  const hasData = total > 0;
   const chart = new Chart(ctx.getContext('2d'), {
     type: 'bar',
-    data: { labels, datasets: [{ data: zeros ? labels.map(()=>0) : values, backgroundColor: colors || COLORS, borderWidth: 0, borderRadius: 5 }] },
+    data: {
+      labels,
+      datasets: [{ data: values || labels.map(()=>0), backgroundColor: colors || COLORS, borderWidth: 0, borderRadius: 5 }]
+    },
     options: {
-      ...baseOpts, indexAxis: 'y',
-      layout: { padding: { right: 44 } },
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: 'y',
+      layout: { padding: { right: hasData ? 44 : 0 } },
       plugins: {
         legend: { display: false },
         datalabels: {
-          display: c => !zeros && c.dataset.data[c.dataIndex] > 0,
+          display: c => hasData && c.dataset.data[c.dataIndex] > 0,
           anchor: 'end', align: 'right', offset: 2, clamp: true,
-          color: '#454549', font: { size: 10, weight: '600', family: "'Inter Tight',sans-serif" },
-          formatter: v => Math.round(v/total*100) + '%'
+          color: '#454549',
+          font: { size: 10, weight: '600', family: "'Inter Tight',sans-serif" },
+          formatter: v => Math.round(v / total * 100) + '%'
         },
-        tooltip: { callbacks: { label: c => zeros ? ' Sem dados' : ' ' + c.raw + ' respostas (' + Math.round(c.raw/total*100) + '%)' } }
+        tooltip: {
+          callbacks: {
+            label: c => hasData
+              ? ' ' + c.raw + ' respostas (' + Math.round(c.raw / total * 100) + '%)'
+              : ' Sem dados'
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(0,0,0,0.04)' },
+          ticks: { color: '#8b8b8d', font: { size: 11 } }
+        },
+        y: {
+          grid: { display: false },
+          ticks: { color: '#5d5d60', font: { size: 11, weight: '500' } }
+        }
       }
     }
   });
@@ -2203,27 +2230,26 @@ function metaBarChart(id, labels, values, colors) {
   return chart;
 }
 
-const snovaSubInitialized = {};
-
 function initSnovaSubTab(key, prefix, charts) {
   if (snovaSubInitialized[key]) return;
   snovaSubInitialized[key] = true;
-  const labelMap = { imp: IMP_META, parc: PARC_META, canal: CANAL_META, formato: FORMATO_META };
+  const MOT_META = ['Aprender','Renda/liberdade','Negócio/empreender','Vender','Mercado/oportunidade','Mudança/carreira','Outros'];
+  const labelMap = { imp: IMP_META, parc: PARC_META, canal: CANAL_META, formato: FORMATO_META, mot: MOT_META };
   const d = META_DATA[key];
   charts.forEach(c => {
     const cid = 'snova-' + prefix + '-' + c;
     const labels = labelMap[c];
     if (!labels) return;
-    const vals = d ? d.todos[c] : labels.map(()=>0);
+    const vals = d ? (d.todos[c] || labels.map(()=>0)) : labels.map(()=>0);
     const pill = document.getElementById(cid + '-pill');
     if (pill && d) pill.textContent = d.n.todos.toLocaleString('pt-BR') + ' respostas';
-    metaBarChart(cid, labels, vals, c === 'formato' ? MOT_COLORS : COLORS);
+    metaBarChart(cid, labels, vals, c === 'formato' || c === 'mot' ? MOT_COLORS : COLORS);
   });
 }
 
 function initSnova() {
-  // Only init the active sub-tab (sorteio) on first load — others init on click
-  initSnovaSubTab('sorteio', 's', ['imp','parc','canal','formato']);
+  // Defer slightly to ensure panel is visible before Chart.js calculates canvas dimensions
+  setTimeout(() => initSnovaSubTab('sorteio', 's', ['imp','parc','canal','formato']), 50);
 }
 
 function setFilterMeta(sid, seg, btn) {
@@ -2253,7 +2279,7 @@ function setFilterMeta(sid, seg, btn) {
   if (count) count.textContent = seg === 'todos' ? '' : n.toLocaleString('pt-BR') + ' respostas';
 
   // Update charts
-  ['imp','parc','canal','formato'].forEach(c => {
+  ['imp','parc','mot','canal','formato'].forEach(c => {
     const cid = 'snova-' + prefix + '-' + c;
     if (CHART_REGISTRY[cid] && segData[c]) {
       CHART_REGISTRY[cid].data.datasets[0].data = segData[c];
