@@ -350,13 +350,14 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
     <div class="page-header">
       <div class="page-eyebrow">Nova pesquisa · Meta Lead Ads</div>
       <h1 class="page-title">Pesquisa Meta</h1>
-      <p class="page-sub">1.226 leads · 5 criativos · comparativo por criativo</p>
+      <p class="page-sub">1.226 leads · 6 criativos · comparativo por criativo</p>
     </div>
 
     <!-- Legenda de criativos -->
     <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:24px; align-items:center;">
       <span style="font-size:12px; font-weight:600; color:var(--muted2); letter-spacing:0.03em;">CRIATIVOS:</span>
-      <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><span style="width:12px;height:12px;border-radius:3px;background:#5166e6;display:inline-block;"></span>Sorteio (811)</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><span style="width:12px;height:12px;border-radius:3px;background:#F97316;display:inline-block;"></span>Sorteio Filamento (145)</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><span style="width:12px;height:12px;border-radius:3px;background:#3B82F6;display:inline-block;"></span>Sorteio Impressora (666)</span>
       <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><span style="width:12px;height:12px;border-radius:3px;background:#10B981;display:inline-block;"></span>Modelagem (39)</span>
       <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><span style="width:12px;height:12px;border-radius:3px;background:#F59E0B;display:inline-block;"></span>Live (185)</span>
       <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><span style="width:12px;height:12px;border-radius:3px;background:#EF4444;display:inline-block;"></span>Renda Extra (138)</span>
@@ -376,25 +377,25 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
 
     <!-- Gráfico 1: Impressoras -->
     <div class="chart-card">
-      <div class="chart-header"><div class="chart-title">Quantas impressoras 3D você possui?</div><span class="chart-pill">5 criativos · 1.226 leads</span></div>
+      <div class="chart-header"><div class="chart-title">Quantas impressoras 3D você possui?</div><span class="chart-pill">6 criativos · 1.226 leads</span></div>
       <div style="position:relative;width:100%;height:280px;"><canvas id="comp-imp"></canvas></div>
     </div>
 
     <!-- Gráfico 2: Faixa mensal -->
     <div class="chart-card">
-      <div class="chart-header"><div class="chart-title">Qual valor investiria mensalmente para estudar?</div><span class="chart-pill">5 criativos</span></div>
+      <div class="chart-header"><div class="chart-title">Qual valor investiria mensalmente para estudar?</div><span class="chart-pill">6 criativos</span></div>
       <div style="position:relative;width:100%;height:280px;"><canvas id="comp-parc"></canvas></div>
     </div>
 
     <!-- Gráfico 3: Canal -->
     <div class="chart-card">
-      <div class="chart-header"><div class="chart-title">Canal da STLFLIX que mais consome</div><span class="chart-pill">5 criativos</span></div>
+      <div class="chart-header"><div class="chart-title">Canal da STLFLIX que mais consome</div><span class="chart-pill">6 criativos</span></div>
       <div style="position:relative;width:100%;height:240px;"><canvas id="comp-canal"></canvas></div>
     </div>
 
     <!-- Gráfico 4: Formato -->
     <div class="chart-card">
-      <div class="chart-header"><div class="chart-title">Formato favorito para estudar impressão 3D</div><span class="chart-pill">5 criativos</span></div>
+      <div class="chart-header"><div class="chart-title">Formato favorito para estudar impressão 3D</div><span class="chart-pill">6 criativos</span></div>
       <div style="position:relative;width:100%;height:300px;"><canvas id="comp-formato"></canvas></div>
     </div>
 
@@ -428,8 +429,8 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
         <div class="home-card-eyebrow" style="color:var(--primary);">✦ Pesquisa Meta</div>
         <div class="home-card-title">Pesquisa Meta</div>
         <div class="home-card-number">1.226</div>
-        <div class="home-card-number-label">leads · 5 criativos</div>
-        <div class="home-card-insight">Sorteio (811) · Live (185) · Renda extra (138) · Programa (53) · Modelagem (39) — com filtro por impressora.</div>
+        <div class="home-card-number-label">leads · 6 criativos</div>
+        <div class="home-card-insight">Sorteio Filamento (145) · Sorteio Impressora (666) · Live (185) · Renda extra (138) · Programa (53) · Modelagem (39) — com filtro por impressora.</div>
         <span class="home-card-arrow" style="color:var(--primary);">→</span>
       </button>
     </div>
@@ -1958,11 +1959,17 @@ const MOT_COLORS  = ['#5166e6','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899'
 
 // Dados por sub-aba e segmento
 const META_DATA = {
-  sorteio: {
-    n: { todos: 811, tem: 400, nao: 411 },
-    todos: { imp:[411,318,76,6],  parc:[473,201,47,28,25],  canal:[91,611,12,60],   formato:[563,111,31,7,0,5,20]  },
-    tem:   { imp:[0,318,76,6],    parc:[248,84,25,13,13],   canal:[37,310,6,30],    formato:[291,52,10,2,0,2,7]   },
-    nao:   { imp:[411,0,0,0],     parc:[225,117,22,15,12],  canal:[54,301,6,30],    formato:[272,59,21,5,0,3,13]  }
+  filamento: {
+    n: { todos: 145, tem: 120, nao: 25 },
+    todos: { imp:[25,91,27,2],   parc:[98,36,6,2,3],    canal:[9,122,3,11],    formato:[115,21,2,0,0,0,3],  mot:[0,0,0,0,0,0,0] },
+    tem:   { imp:[0,91,27,2],    parc:[85,26,6,0,3],    canal:[7,101,3,9],     formato:[95,18,1,0,0,0,3],   mot:[0,0,0,0,0,0,0] },
+    nao:   { imp:[25,0,0,0],     parc:[13,10,0,2,0],    canal:[2,21,0,2],      formato:[20,3,1,0,0,0,0],    mot:[0,0,0,0,0,0,0] }
+  },
+  impressora: {
+    n: { todos: 666, tem: 280, nao: 386 },
+    todos: { imp:[386,227,49,4], parc:[375,165,41,26,22], canal:[82,489,9,49],   formato:[448,90,29,7,0,5,17], mot:[0,0,0,0,0,0,0] },
+    tem:   { imp:[0,227,49,4],   parc:[163,58,19,13,10],  canal:[30,209,3,21],   formato:[196,34,9,2,0,2,4],  mot:[0,0,0,0,0,0,0] },
+    nao:   { imp:[386,0,0,0],    parc:[212,107,22,13,12], canal:[52,280,6,28],   formato:[252,56,20,5,0,3,13],mot:[0,0,0,0,0,0,0] }
   },
   modelagem: {
     n: { todos: 39, tem: 22, nao: 17 },
@@ -1978,15 +1985,15 @@ const META_DATA = {
   },
   renda: {
     n: { todos: 138, tem: 63, nao: 75 },
-    todos: { imp:[75,51,10,2],  parc:[73,30,12,5,7],  canal:[10,106,2,9],   formato:[92,16,0,4,0,3,9]  },
-    tem:   { imp:[0,51,10,2],   parc:[34,13,4,3,4],   canal:[1,52,1,4],     formato:[44,6,0,2,0,2,3]   },
-    nao:   { imp:[75,0,0,0],    parc:[39,17,8,2,3],   canal:[9,54,1,5],     formato:[48,10,0,2,0,1,6]  }
+    todos: { imp:[75,51,10,2],  parc:[73,30,12,5,7],  canal:[10,106,2,9],   formato:[92,16,0,4,0,3,9],  mot:[0,0,0,0,0,0,0] },
+    tem:   { imp:[0,51,10,2],   parc:[34,13,4,3,4],   canal:[1,52,1,4],     formato:[44,6,0,2,0,2,3],   mot:[0,0,0,0,0,0,0] },
+    nao:   { imp:[75,0,0,0],    parc:[39,17,8,2,3],   canal:[9,54,1,5],     formato:[48,10,0,2,0,1,6],  mot:[0,0,0,0,0,0,0] }
   },
   programa: {
     n: { todos: 53, tem: 20, nao: 33 },
-    todos: { imp:[33,17,2,1],  parc:[10,6,2,1,0],  canal:[4,12,1,2],   formato:[16,1,0,1,0,0,1]  },
-    tem:   { imp:[0,17,2,1],   parc:[2,3,1,1,0],   canal:[0,6,1,0],    formato:[4,1,0,1,0,0,1]   },
-    nao:   { imp:[33,0,0,0],   parc:[8,3,1,0,0],   canal:[4,6,0,2],    formato:[12,0,0,0,0,0,0]  }
+    todos: { imp:[33,17,2,1],  parc:[10,6,2,1,0],  canal:[4,12,1,2],   formato:[16,1,0,1,0,0,1],  mot:[0,0,0,0,0,0,0] },
+    tem:   { imp:[0,17,2,1],   parc:[2,3,1,1,0],   canal:[0,6,1,0],    formato:[4,1,0,1,0,0,1],   mot:[0,0,0,0,0,0,0] },
+    nao:   { imp:[33,0,0,0],   parc:[8,3,1,0,0],   canal:[4,6,0,2],    formato:[12,0,0,0,0,0,0],  mot:[0,0,0,0,0,0,0] }
   }
 };
 
@@ -2103,9 +2110,9 @@ function setFilterMeta(sid, seg, btn) {
 }
 
 // ── Pesquisa Meta — Comparativo (SNOVA) ─────────────
-const CRIATIVO_CORES = ['#5166e6','#10B981','#F59E0B','#EF4444','#8B5CF6'];
-const CRIATIVO_KEYS  = ['sorteio','modelagem','live','renda','programa'];
-const CRIATIVO_NAMES = ['Sorteio','Modelagem','Live','Renda Extra','Programa'];
+const CRIATIVO_CORES = ['#F97316','#3B82F6','#10B981','#F59E0B','#EF4444','#8B5CF6'];
+const CRIATIVO_KEYS  = ['filamento','impressora','modelagem','live','renda','programa'];
+const CRIATIVO_NAMES = ['Sorteio Filamento','Sorteio Impressora','Modelagem','Live','Renda Extra','Programa'];
 
 function pct(arr) {
   const t = arr.reduce((a,b)=>a+b,0);
