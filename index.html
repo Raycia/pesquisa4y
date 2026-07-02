@@ -261,6 +261,19 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
 .status-vazio::before { content: '○ '; font-size: 8px; color: #9CA3AF; }
 .subaba-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
 .subaba-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 800; letter-spacing: -0.02em; color: var(--text); }
+
+/* Modal */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:1000; align-items:center; justify-content:center; padding:20px; }
+.modal-overlay.open { display:flex; }
+.modal-box { background:var(--bg2); border-radius:var(--r2); border:1px solid var(--border); max-width:560px; width:100%; max-height:80vh; overflow-y:auto; padding:28px; box-shadow:0 20px 60px rgba(0,0,0,0.2); }
+.modal-header { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:20px; }
+.modal-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:17px; font-weight:800; letter-spacing:-0.02em; color:var(--text); }
+.modal-close { background:none; border:none; font-size:22px; color:var(--muted); cursor:pointer; line-height:1; padding:0; flex-shrink:0; }
+.modal-close:hover { color:var(--text); }
+.modal-section-title { font-size:11px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:var(--muted2); margin:18px 0 10px; }
+.modal-chips { display:flex; flex-wrap:wrap; gap:7px; }
+.modal-chip { font-size:12px; padding:4px 10px; border-radius:999px; background:var(--bg3); border:1px solid var(--border); color:#454549; line-height:1.4; }
+.modal-chip.muted { background:rgba(156,163,175,0.08); color:var(--muted); border-color:transparent; }
 </style>
 </head>
 <body>
@@ -285,7 +298,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
     </button>
 
     <button class="nav-item" onclick="showSurvey('snova', this)" style="margin-bottom:8px; background:rgba(81,102,230,0.06); border:1.5px solid rgba(81,102,230,0.2);">
-      ✦ Pesquisa Meta <span class="nav-badge new">1.226</span>
+      ✦ Pesquisa Meta <span class="nav-badge new">6.833</span>
     </button>
 
     <div class="nav-group" id="group-anteriores">
@@ -350,18 +363,28 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
     <div class="page-header">
       <div class="page-eyebrow">Nova pesquisa · Meta Lead Ads</div>
       <h1 class="page-title">Pesquisa Meta</h1>
-      <p class="page-sub">1.226 leads · 6 criativos · comparativo por criativo</p>
+      <p class="page-sub">6.833 leads · 7 criativos · comparativo por criativo</p>
     </div>
 
     <!-- Legenda de criativos -->
     <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:24px; align-items:center;">
       <span style="font-size:12px; font-weight:600; color:var(--muted2); letter-spacing:0.03em;">CRIATIVOS:</span>
-      <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><span style="width:12px;height:12px;border-radius:3px;background:#F97316;display:inline-block;"></span>Sorteio Filamento (145)</span>
-      <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><span style="width:12px;height:12px;border-radius:3px;background:#3B82F6;display:inline-block;"></span>Sorteio Impressora (666)</span>
-      <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><span style="width:12px;height:12px;border-radius:3px;background:#10B981;display:inline-block;"></span>Modelagem (39)</span>
-      <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><span style="width:12px;height:12px;border-radius:3px;background:#F59E0B;display:inline-block;"></span>Live (185)</span>
-      <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><span style="width:12px;height:12px;border-radius:3px;background:#EF4444;display:inline-block;"></span>Renda Extra (138)</span>
-      <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><span style="width:12px;height:12px;border-radius:3px;background:#8B5CF6;display:inline-block;"></span>Programa (53)</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><span style="width:12px;height:12px;border-radius:3px;background:#F97316;display:inline-block;"></span>Sorteio Filamento (1.429)</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><span style="width:12px;height:12px;border-radius:3px;background:#3B82F6;display:inline-block;"></span>Sorteio Impressora (3.342)</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><span style="width:12px;height:12px;border-radius:3px;background:#14B8A6;display:inline-block;"></span>Lincoln (285)</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><span style="width:12px;height:12px;border-radius:3px;background:#F59E0B;display:inline-block;"></span>Live (664)</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><span style="width:12px;height:12px;border-radius:3px;background:#EF4444;display:inline-block;"></span>Renda Extra (887)</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><span style="width:12px;height:12px;border-radius:3px;background:#8B5CF6;display:inline-block;"></span>Programa (132)</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><span style="width:12px;height:12px;border-radius:3px;background:#10B981;display:inline-block;"></span>Modelagem (94)</span>
+    </div>
+
+    <!-- Filtro de lote (global) -->
+    <div class="filter-bar" style="margin-bottom:10px;">
+      <span class="filter-label">📦 Lote:</span>
+      <button class="filter-btn active" id="lote-todos" onclick="setLoteFilter('todos',this)">Todos os dados</button>
+      <button class="filter-btn" id="lote-lote2" onclick="setLoteFilter('lote2',this)">01–02/07</button>
+      <button class="filter-btn" id="lote-lote3" onclick="setLoteFilter('lote3',this)">24–30/06</button>
+      <span class="filter-count" id="lote-filter-count"></span>
     </div>
 
     <!-- Filtro impressora -->
@@ -377,25 +400,26 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
 
     <!-- Gráfico 1: Impressoras -->
     <div class="chart-card">
-      <div class="chart-header"><div class="chart-title">Quantas impressoras 3D você possui?</div><span class="chart-pill">6 criativos · 1.226 leads</span></div>
+      <div class="chart-header"><div class="chart-title">Quantas impressoras 3D você possui?</div><span class="chart-pill">7 criativos · 6.833 leads</span></div>
       <div style="position:relative;width:100%;height:280px;"><canvas id="comp-imp"></canvas></div>
     </div>
 
     <!-- Gráfico 2: Faixa mensal -->
     <div class="chart-card">
-      <div class="chart-header"><div class="chart-title">Qual valor investiria mensalmente para estudar?</div><span class="chart-pill">6 criativos</span></div>
+      <div class="chart-header"><div class="chart-title">Qual valor investiria mensalmente para estudar?</div><span class="chart-pill">7 criativos</span></div>
       <div style="position:relative;width:100%;height:280px;"><canvas id="comp-parc"></canvas></div>
     </div>
 
     <!-- Gráfico 3: Canal -->
     <div class="chart-card">
-      <div class="chart-header"><div class="chart-title">Canal da STLFLIX que mais consome</div><span class="chart-pill">6 criativos</span></div>
+      <div class="chart-header"><div class="chart-title">Canal da STLFLIX que mais consome</div><span class="chart-pill">7 criativos</span></div>
+      <p style="font-size:11px;color:var(--muted);margin:-6px 0 14px;">⚠️ Sorteio Impressora: reflete só os 666 leads do formulário original — o lote de 01-02/jul substituiu esta pergunta por "Conteúdo STLFlix que mais marcou".</p>
       <div style="position:relative;width:100%;height:240px;"><canvas id="comp-canal"></canvas></div>
     </div>
 
     <!-- Gráfico 4: Formato -->
     <div class="chart-card">
-      <div class="chart-header"><div class="chart-title">Formato favorito para estudar impressão 3D</div><span class="chart-pill">6 criativos</span></div>
+      <div class="chart-header"><div class="chart-title">Formato favorito para estudar impressão 3D</div><span class="chart-pill">7 criativos</span></div>
       <div style="position:relative;width:100%;height:300px;"><canvas id="comp-formato"></canvas></div>
     </div>
 
@@ -406,9 +430,25 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
       <div style="position:relative;width:100%;height:280px;"><canvas id="comp-mot"></canvas></div>
     </div>
 
+    <!-- Gráfico 6: Conteúdo STLFlix (só Sorteio Impressora) -->
+    <div class="chart-card">
+      <div class="chart-header"><div class="chart-title">Conteúdo STLFlix que mais marcou</div><span class="chart-pill" id="comp-conteudo-pill">Sorteio Impressora · 459 leads</span></div>
+      <div style="font-size:11px;color:var(--muted);margin:-6px 0 14px;">Pergunta disponível apenas no criativo Sorteio Impressora (lote 01-02/jul). Campo aberto categorizado por tema. <span style="color:var(--primary-active);cursor:pointer;font-weight:600;" onclick="openOutrosModal()">Ver respostas "Outros" →</span></div>
+
+      <!-- Filtro de data -->
+      <div class="filter-bar" style="margin-bottom:16px;">
+        <span class="filter-label">📅 Data:</span>
+        <button class="filter-btn active" id="date-todos" onclick="setDateFilter('todos',this)">Todos os dias</button>
+        <button class="filter-btn" id="date-2026-07-01" onclick="setDateFilter('2026-07-01',this)">01/07</button>
+        <button class="filter-btn" id="date-2026-07-02" onclick="setDateFilter('2026-07-02',this)">02/07</button>
+      </div>
+
+      <div style="position:relative;width:100%;height:300px;"><canvas id="comp-conteudo"></canvas></div>
+    </div>
+
     <div class="footer">
       <img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX">
-      <span class="footer-date">Pesquisa Meta · atualizado em 01/07/2026</span>
+      <span class="footer-date">Pesquisa Meta · atualizado em 02/07/2026</span>
     </div>
   </div>
 </div>
@@ -428,9 +468,9 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
       <button class="home-card" onclick="goTo('snova')" style="border-color:rgba(81,102,230,0.3); background:rgba(81,102,230,0.04); --accent-bar:#5166e6;">
         <div class="home-card-eyebrow" style="color:var(--primary);">✦ Pesquisa Meta</div>
         <div class="home-card-title">Pesquisa Meta</div>
-        <div class="home-card-number">1.226</div>
+        <div class="home-card-number">6.833</div>
         <div class="home-card-number-label">leads · 6 criativos</div>
-        <div class="home-card-insight">Sorteio Filamento (145) · Sorteio Impressora (666) · Live (185) · Renda extra (138) · Programa (53) · Modelagem (39) — com filtro por impressora.</div>
+        <div class="home-card-insight">Sorteio Filamento (1.429) · Sorteio Impressora (3.342) · Live (664) · Renda extra (138) · Programa (132) · Modelagem (94) — com filtro por impressora.</div>
         <span class="home-card-arrow" style="color:var(--primary);">→</span>
       </button>
     </div>
@@ -1956,44 +1996,219 @@ const PARC_META   = ['Até R$100','R$100–300','R$300–500','R$500–1k','Acim
 const CANAL_META  = ['Facebook','Instagram','TikTok','Youtube'];
 const FORMATO_META= ['Cursos gravados','Cursos ao vivo','Ebooks/PDFs','Podcasts/Áudio','Comunidades/grupos','Newsletters','Workshops presenciais'];
 const MOT_COLORS  = ['#5166e6','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#14B8A6'];
+const CONTEUDO_META = ['Vídeos / redes sociais','Biblioteca de STLs','Lives e eventos','Sorteio de impressora','STLAI / IA','Como viver/vender de impres. 3D','Reviews de impressoras','Modelagem e articulados','Renda extra / histórias','Dicas técnicas','Outros / não especificado'];
+
+// Date filter data — 459 novos leads do lote 01-02/jul por data
+const CONTEUDO_BY_DATE = {
+  'todos':      { data:[37,16,13,12,1,7,11,4,4,3,159], n:459 },
+  '2026-07-01': { data:[35,15,12,11,1,6,10,4,4,3,148], n:415 },
+  '2026-07-02': { data:[2,1,1,1,0,1,1,0,0,0,11],       n:44  }
+};
+
+let currentDateFilter = 'todos';
+
+function buildConteudoChart(dateSeg, impSeg) {
+  const ctx = document.getElementById('comp-conteudo');
+  if (!ctx) return;
+  if (CHART_REGISTRY['comp-conteudo']) { CHART_REGISTRY['comp-conteudo'].destroy(); delete CHART_REGISTRY['comp-conteudo']; }
+
+  let vals, n;
+  if (dateSeg !== 'todos') {
+    vals = CONTEUDO_BY_DATE[dateSeg]?.data || CONTEUDO_META.map(()=>0);
+    n = CONTEUDO_BY_DATE[dateSeg]?.n || 0;
+  } else {
+    vals = META_DATA.impressora[impSeg]?.conteudo || CONTEUDO_META.map(()=>0);
+    n = META_DATA.impressora.n[impSeg] || 0;
+  }
+
+  const pill = document.getElementById('comp-conteudo-pill');
+  if (pill) pill.textContent = `Sorteio Impressora · ${n.toLocaleString('pt-BR')} leads`;
+
+  const total = vals.reduce((a,b)=>a+b,0) || 1;
+  const pcts = vals.map(v=>Math.round(v/total*100));
+  const maxPct = Math.max(...pcts);
+  const bgColors = pcts.map(p => (p===maxPct && p>0) ? '#5166e6' : hexToRgba('#5166e6',0.20));
+
+  const chart = new Chart(ctx.getContext('2d'), {
+    type: 'bar',
+    data: { labels: CONTEUDO_META, datasets: [{ data: pcts, backgroundColor: bgColors, borderRadius:4, borderWidth:0 }] },
+    options: {
+      responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      layout: { padding: { right:44 } },
+      plugins: {
+        legend: { display:false },
+        datalabels: { display: c => c.dataset.data[c.dataIndex]>=3, anchor:'end', align:'right', offset:2, clamp:true, color:'#454549', font:{size:10,weight:'600',family:"'Inter Tight',sans-serif"}, formatter: v => v+'%' },
+        tooltip: { callbacks: { label: c => {
+          const suffix = CONTEUDO_META[c.dataIndex] === 'Outros / não especificado' ? ' — clique para ver detalhes' : '';
+          return ' ' + vals[c.dataIndex] + ' respostas (' + c.raw + '%)' + suffix;
+        }}}
+      },
+      scales: {
+        x: { grid:{color:'rgba(0,0,0,0.04)'}, ticks:{font:{size:11},callback:v=>v+'%'} },
+        y: { grid:{display:false}, ticks:{font:{size:11}} }
+      },
+      onClick: (e, elements) => {
+        if (!elements.length) return;
+        const idx = elements[0].index;
+        if (CONTEUDO_META[idx] === 'Outros / não especificado') openOutrosModal();
+      },
+      onHover: (e, elements) => {
+        if (!elements.length) { e.native.target.style.cursor = 'default'; return; }
+        const idx = elements[0].index;
+        e.native.target.style.cursor = CONTEUDO_META[idx] === 'Outros / não especificado' ? 'pointer' : 'default';
+      }
+    }
+  });
+  CHART_REGISTRY['comp-conteudo'] = chart;
+}
+
+function setDateFilter(dateSeg, btn) {
+  document.querySelectorAll('[id^="date-"]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentDateFilter = dateSeg;
+  buildConteudoChart(dateSeg, compSeg || 'todos');
+}
 
 // Dados por sub-aba e segmento
 const META_DATA = {
   filamento: {
-    n: { todos: 145, tem: 120, nao: 25 },
-    todos: { imp:[25,91,27,2],   parc:[98,36,6,2,3],    canal:[9,122,3,11],    formato:[115,21,2,0,0,0,3],  mot:[0,0,0,0,0,0,0] },
-    tem:   { imp:[0,91,27,2],    parc:[85,26,6,0,3],    canal:[7,101,3,9],     formato:[95,18,1,0,0,0,3],   mot:[0,0,0,0,0,0,0] },
-    nao:   { imp:[25,0,0,0],     parc:[13,10,0,2,0],    canal:[2,21,0,2],      formato:[20,3,1,0,0,0,0],    mot:[0,0,0,0,0,0,0] }
+    lotes: ['lote1','lote2','lote3'],
+    n: { todos: 1429, tem: 1231, nao: 198, lote1: 145, lote2: 222, lote3: 1062 },
+    todos: { imp:[198,887,320,24], parc:[988,294,75,38,34],  canal:[86,1036,26,134],  formato:[1151,168,31,5,0,3,29],  mot:[0,0,0,0,0,0,0], conteudo:[26,14,1,2,0,3,1,4,4,7,64] },
+    tem:   { imp:[0,887,320,24],   parc:[841,250,65,30,34],  canal:[74,900,23,113],   formato:[986,147,27,4,0,3,29],   mot:[0,0,0,0,0,0,0], conteudo:[22,13,1,1,0,3,1,3,3,5,52] },
+    nao:   { imp:[198,0,0,0],      parc:[147,44,10,8,0],     canal:[12,136,3,21],     formato:[165,21,4,1,0,0,0],      mot:[0,0,0,0,0,0,0], conteudo:[4,1,0,1,0,0,0,1,1,2,12]   },
+    lote1: {
+      todos: { imp:[25,91,27,2],   parc:[98,36,6,2,3],    canal:[9,122,3,11],    formato:[115,21,2,0,0,0,3],    mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+      tem:   { imp:[0,91,27,2],    parc:[85,26,6,0,3],    canal:[7,101,3,9],     formato:[95,18,1,0,0,0,3],     mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+      nao:   { imp:[25,0,0,0],     parc:[13,10,0,2,0],    canal:[2,21,0,2],      formato:[20,3,1,0,0,0,0],      mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0] }
+    },
+    lote2: {
+      todos: { imp:[36,128,55,3],  parc:[144,48,16,7,7],  canal:[4,58,4,9],      formato:[154,34,15,4,0,0,7],   mot:[0,0,0,0,0,0,0], conteudo:[26,14,1,2,0,3,1,4,4,7,64] },
+      tem:   { imp:[0,128,55,3],   parc:[118,40,12,6,7],  canal:[3,49,3,8],      formato:[127,30,12,3,0,0,7],   mot:[0,0,0,0,0,0,0], conteudo:[22,13,1,1,0,3,1,3,3,5,52] },
+      nao:   { imp:[36,0,0,0],     parc:[26,8,4,1,0],     canal:[1,9,1,1],       formato:[27,4,3,1,0,0,0],      mot:[0,0,0,0,0,0,0], conteudo:[4,1,0,1,0,0,0,1,1,2,12]   }
+    },
+    lote3: {
+      todos: { imp:[137,668,238,19], parc:[746,210,53,29,24], canal:[73,856,19,114], formato:[882,113,14,1,0,3,19], mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+      tem:   { imp:[0,668,238,19],   parc:[638,184,47,24,24], canal:[64,749,17,95],  formato:[764,99,14,1,0,3,19],  mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+      nao:   { imp:[137,0,0,0],      parc:[108,26,6,5,0],     canal:[9,107,2,19],    formato:[118,14,0,0,0,0,0],    mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0] }
+    }
   },
   impressora: {
-    n: { todos: 666, tem: 280, nao: 386 },
-    todos: { imp:[386,227,49,4], parc:[375,165,41,26,22], canal:[82,489,9,49],   formato:[448,90,29,7,0,5,17], mot:[0,0,0,0,0,0,0] },
-    tem:   { imp:[0,227,49,4],   parc:[163,58,19,13,10],  canal:[30,209,3,21],   formato:[196,34,9,2,0,2,4],  mot:[0,0,0,0,0,0,0] },
-    nao:   { imp:[386,0,0,0],    parc:[212,107,22,13,12], canal:[52,280,6,28],   formato:[252,56,20,5,0,3,13],mot:[0,0,0,0,0,0,0] }
+    lotes: ['lote1','lote2','lote3'],
+    n: { todos: 3342, tem: 1194, nao: 2148, lote1: 666, lote2: 459, lote3: 2217 },
+    todos: { imp:[2148,980,197,17], parc:[2006,856,209,109,88],  canal:[386,2150,64,209],  formato:[2371,415,185,38,0,23,80],  mot:[1,2,0,0,1,0,0], conteudo:[37,16,13,12,1,7,11,4,4,3,159] },
+    tem:   { imp:[0,980,197,17],    parc:[610,307,104,49,38],    canal:[135,798,24,93],    formato:[736,173,71,13,0,9,24],     mot:[1,1,0,0,1,0,0], conteudo:[12,9,5,2,1,4,3,2,0,0,38]  },
+    nao:   { imp:[2148,0,0,0],      parc:[1396,547,105,60,51],   canal:[251,1352,40,116],  formato:[1635,242,114,25,0,14,56],  mot:[0,1,0,0,0,0,0], conteudo:[25,7,8,10,0,3,8,2,4,3,121] },
+    lote1: {
+      todos: { imp:[386,227,49,4],   parc:[375,165,41,26,22],  canal:[82,489,9,49],    formato:[448,90,29,7,0,5,17],   mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0]    },
+      tem:   { imp:[0,227,49,4],     parc:[163,58,19,13,10],   canal:[30,209,3,21],    formato:[196,34,9,2,0,2,4],     mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0]    },
+      nao:   { imp:[386,0,0,0],      parc:[212,107,22,13,12],  canal:[52,280,6,28],    formato:[252,56,20,5,0,3,13],   mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0]    }
+    },
+    lote2: {
+      todos: { imp:[332,100,25,2],   parc:[286,123,26,16,8],   canal:[0,0,0,0],        formato:[341,55,23,8,0,3,10],   mot:[0,0,0,0,0,0,0], conteudo:[37,16,13,12,1,7,11,4,4,3,159] },
+      tem:   { imp:[0,100,25,2],     parc:[78,27,14,5,3],      canal:[0,0,0,0],         formato:[86,19,7,3,0,1,2],      mot:[0,0,0,0,0,0,0], conteudo:[12,9,5,2,1,4,3,2,0,0,38]  },
+      nao:   { imp:[332,0,0,0],      parc:[208,96,12,11,5],    canal:[0,0,0,0],          formato:[255,36,16,5,0,2,8],    mot:[0,0,0,0,0,0,0], conteudo:[25,7,8,10,0,3,8,2,4,3,121] }
+    },
+    lote3: {
+      todos: { imp:[1430,653,123,11], parc:[1345,568,142,67,58], canal:[304,1661,55,160], formato:[1582,270,133,23,0,15,53], mot:[1,2,0,0,1,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+      tem:   { imp:[0,653,123,11],    parc:[447,224,66,31,19],   canal:[105,589,21,72],   formato:[540,120,62,11,0,7,20],   mot:[1,1,0,0,1,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+      nao:   { imp:[1430,0,0,0],      parc:[898,344,76,36,39],   canal:[199,1072,34,88],  formato:[1042,150,71,12,0,8,33],  mot:[0,1,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0] }
+    }
+  },
+  lincoln: {
+    lotes: ['lote2','lote3'],
+    n: { todos: 285, tem: 86, nao: 199, lote2: 131, lote3: 154 },
+    todos: { imp:[199,73,10,3],  parc:[173,67,17,12,16],  canal:[25,156,4,24],   formato:[218,33,0,5,0,2,15],  mot:[0,0,0,0,0,0,0], conteudo:[8,2,1,0,0,1,1,0,0,1,35] },
+    tem:   { imp:[0,73,10,3],    parc:[47,22,6,4,7],      canal:[7,49,2,9],      formato:[60,15,0,1,0,1,4],    mot:[0,0,0,0,0,0,0], conteudo:[3,1,0,0,0,1,0,0,0,0,11] },
+    nao:   { imp:[199,0,0,0],    parc:[126,45,11,8,9],    canal:[18,107,2,15],   formato:[158,18,0,4,0,1,11],  mot:[0,0,0,0,0,0,0], conteudo:[5,1,1,0,0,0,1,0,0,1,24] },
+    lote2: {
+      todos: { imp:[91,36,3,1],  parc:[82,29,8,6,6],   canal:[8,40,2,5],    formato:[95,19,0,1,0,1,7],   mot:[0,0,0,0,0,0,0], conteudo:[8,2,1,0,0,1,1,0,0,1,35] },
+      tem:   { imp:[0,36,3,1],   parc:[22,9,3,2,4],    canal:[2,15,1,3],    formato:[25,9,0,0,0,1,2],    mot:[0,0,0,0,0,0,0], conteudo:[3,1,0,0,0,1,0,0,0,0,11] },
+      nao:   { imp:[91,0,0,0],   parc:[60,20,5,4,2],   canal:[6,25,1,2],    formato:[70,10,0,1,0,0,5],   mot:[0,0,0,0,0,0,0], conteudo:[5,1,1,0,0,0,1,0,0,1,24] }
+    },
+    lote3: {
+      todos: { imp:[108,37,7,2], parc:[91,38,9,6,10],  canal:[17,116,2,19], formato:[123,14,0,4,0,1,8],  mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+      tem:   { imp:[0,37,7,2],   parc:[25,13,3,2,3],   canal:[5,34,1,6],    formato:[35,6,0,1,0,0,2],    mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+      nao:   { imp:[108,0,0,0],  parc:[66,25,6,4,7],   canal:[12,82,1,13],  formato:[88,8,0,3,0,1,6],    mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0] }
+    }
   },
   modelagem: {
-    n: { todos: 39, tem: 22, nao: 17 },
-    todos: { imp:[17,19,2,1],  parc:[5,3,0,0,0],  canal:[1,5,0,2],   formato:[4,3,0,0,0,0,0],  mot:[7,2,0,1,0,0,2]  },
-    tem:   { imp:[0,19,2,1],   parc:[4,2,0,0,0],  canal:[1,3,0,2],   formato:[3,2,0,0,0,0,0],  mot:[5,1,0,1,0,0,1]  },
-    nao:   { imp:[17,0,0,0],   parc:[1,1,0,0,0],  canal:[0,2,0,0],   formato:[1,1,0,0,0,0,0],  mot:[2,1,0,0,0,0,1]  }
+    lotes: ['lote1','lote3'],
+    n: { todos: 94, tem: 55, nao: 39, lote1: 39, lote3: 55 },
+    todos: { imp:[39,47,6,2],  parc:[18,7,1,0,0],  canal:[8,13,0,5],   formato:[17,7,0,0,0,0,0],  mot:[20,5,0,4,1,0,6], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+    tem:   { imp:[0,47,6,2],   parc:[16,5,1,0,0],  canal:[4,10,0,4],   formato:[11,5,0,0,0,0,0],  mot:[14,3,0,3,2,0,3], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+    nao:   { imp:[39,0,0,0],   parc:[2,2,0,0,0],   canal:[4,3,0,1],    formato:[6,2,0,0,0,0,0],   mot:[6,2,0,1,0,0,3],  conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+    lote1: {
+      todos: { imp:[17,19,2,1],  parc:[5,3,0,0,0],  canal:[1,5,0,2],   formato:[4,3,0,0,0,0,0],   mot:[7,2,0,1,0,0,2], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+      tem:   { imp:[0,19,2,1],   parc:[4,2,0,0,0],  canal:[1,3,0,2],   formato:[3,2,0,0,0,0,0],   mot:[5,1,0,1,0,0,1], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+      nao:   { imp:[17,0,0,0],   parc:[1,1,0,0,0],  canal:[0,2,0,0],   formato:[1,1,0,0,0,0,0],   mot:[2,1,0,0,0,0,1], conteudo:[0,0,0,0,0,0,0,0,0,0,0] }
+    },
+    lote3: {
+      todos: { imp:[22,28,4,1],  parc:[13,4,1,0,0], canal:[7,8,0,3],   formato:[13,4,0,0,0,0,0],  mot:[13,3,0,3,1,0,4], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+      tem:   { imp:[0,28,4,1],   parc:[8,3,1,0,0],  canal:[3,5,0,2],   formato:[8,3,0,0,0,0,0],   mot:[9,2,0,2,1,0,2],  conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+      nao:   { imp:[22,0,0,0],   parc:[5,1,0,0,0],  canal:[4,3,0,1],   formato:[5,1,0,0,0,0,0],   mot:[4,1,0,1,0,0,2],  conteudo:[0,0,0,0,0,0,0,0,0,0,0] }
+    }
   },
   live: {
-    n: { todos: 185, tem: 90, nao: 95 },
-    todos: { imp:[95,64,25,1],  parc:[39,15,3,2,3],  canal:[11,48,0,3],   formato:[41,15,0,2,0,0,2],  mot:[17,6,4,0,3,1,10]  },
-    tem:   { imp:[0,64,25,1],   parc:[13,3,2,0,1],   canal:[2,14,0,3],    formato:[11,5,0,1,0,0,1],   mot:[12,3,1,0,2,0,5]   },
-    nao:   { imp:[95,0,0,0],    parc:[26,12,1,2,2],  canal:[9,34,0,0],    formato:[30,10,0,1,0,0,1],  mot:[5,3,3,0,1,1,5]    }
+    lotes: ['lote1','lote2','lote3'],
+    n: { todos: 664, tem: 279, nao: 385, lote1: 185, lote2: 72, lote3: 407 },
+    todos: { imp:[385,207,68,4],  parc:[245,92,34,13,22],  canal:[59,284,9,20],   formato:[275,77,0,10,0,9,19],  mot:[40,15,8,0,7,2,22], conteudo:[7,1,0,0,0,0,0,0,1,1,17] },
+    tem:   { imp:[0,207,68,4],    parc:[89,35,17,5,13],    canal:[17,113,3,11],   formato:[102,37,0,6,0,4,8],    mot:[24,8,3,0,4,0,10],  conteudo:[4,0,0,0,0,0,0,0,0,0,8]  },
+    nao:   { imp:[385,0,0,0],     parc:[156,57,17,8,9],    canal:[42,171,6,9],    formato:[173,40,0,4,0,5,11],   mot:[16,7,5,0,3,2,12],  conteudo:[3,1,0,0,0,0,0,0,1,1,9]  },
+    lote1: {
+      todos: { imp:[95,64,25,1],  parc:[39,15,3,2,3],  canal:[11,48,0,3],    formato:[41,15,0,2,0,0,2],   mot:[17,6,4,0,3,1,10], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+      tem:   { imp:[0,64,25,1],   parc:[13,3,2,0,1],   canal:[2,14,0,3],     formato:[11,5,0,1,0,0,1],    mot:[12,3,1,0,2,0,5],  conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+      nao:   { imp:[95,0,0,0],    parc:[26,12,1,2,2],  canal:[9,34,0,0],     formato:[30,10,0,1,0,0,1],   mot:[5,3,3,0,1,1,5],   conteudo:[0,0,0,0,0,0,0,0,0,0,0] }
+    },
+    lote2: {
+      todos: { imp:[39,25,7,1],   parc:[48,14,4,3,2],  canal:[4,27,1,5],     formato:[44,12,0,1,0,4,6],   mot:[0,0,0,0,0,0,0],   conteudo:[7,1,0,0,0,0,0,0,1,1,17] },
+      tem:   { imp:[0,25,7,1],    parc:[19,6,3,2,2],   canal:[1,12,0,2],     formato:[20,7,0,1,0,2,2],    mot:[0,0,0,0,0,0,0],   conteudo:[4,0,0,0,0,0,0,0,0,0,8]  },
+      nao:   { imp:[39,0,0,0],    parc:[29,8,1,1,0],   canal:[3,15,1,3],     formato:[24,5,0,0,0,2,4],    mot:[0,0,0,0,0,0,0],   conteudo:[3,1,0,0,0,0,0,0,1,1,9]  }
+    },
+    lote3: {
+      todos: { imp:[251,118,36,2], parc:[158,63,27,8,17], canal:[44,209,8,12],  formato:[190,50,0,7,0,5,11], mot:[23,9,4,0,4,1,12], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+      tem:   { imp:[0,118,36,2],   parc:[57,26,12,3,10],  canal:[14,87,3,6],    formato:[71,25,0,4,0,2,5],   mot:[12,5,2,0,2,0,5],  conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+      nao:   { imp:[251,0,0,0],    parc:[101,37,15,5,7],  canal:[30,122,5,6],   formato:[119,25,0,3,0,3,6],  mot:[11,4,2,0,2,1,7],  conteudo:[0,0,0,0,0,0,0,0,0,0,0] }
+    }
   },
   renda: {
-    n: { todos: 138, tem: 63, nao: 75 },
-    todos: { imp:[75,51,10,2],  parc:[73,30,12,5,7],  canal:[10,106,2,9],   formato:[92,16,0,4,0,3,9],  mot:[0,0,0,0,0,0,0] },
-    tem:   { imp:[0,51,10,2],   parc:[34,13,4,3,4],   canal:[1,52,1,4],     formato:[44,6,0,2,0,2,3],   mot:[0,0,0,0,0,0,0] },
-    nao:   { imp:[75,0,0,0],    parc:[39,17,8,2,3],   canal:[9,54,1,5],     formato:[48,10,0,2,0,1,6],  mot:[0,0,0,0,0,0,0] }
+    lotes: ['lote1','lote2','lote3'],
+    n: { todos: 887, tem: 376, nao: 511, lote1: 138, lote2: 106, lote3: 643 },
+    todos: { imp:[511,306,62,8],  parc:[496,215,61,31,62],  canal:[126,597,12,64],   formato:[617,133,0,26,0,13,48],  mot:[0,1,0,0,0,0,1], conteudo:[11,6,0,1,0,3,0,0,0,2,33] },
+    tem:   { imp:[0,306,62,8],    parc:[196,97,27,16,34],   canal:[41,253,5,29],     formato:[222,63,0,12,0,6,17],    mot:[0,1,0,0,0,0,0], conteudo:[7,4,0,0,0,2,0,0,0,1,19]  },
+    nao:   { imp:[511,0,0,0],     parc:[300,118,34,15,25],  canal:[85,344,7,35],     formato:[395,70,0,15,0,7,31],    mot:[0,0,0,0,0,0,1], conteudo:[4,2,0,1,0,1,0,0,0,1,14]  },
+    lote1: {
+      todos: { imp:[75,51,10,2],  parc:[73,30,12,5,7],  canal:[10,106,2,9],   formato:[92,16,0,4,0,3,9],    mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0]    },
+      tem:   { imp:[0,51,10,2],   parc:[34,13,4,3,4],   canal:[1,52,1,4],     formato:[44,6,0,2,0,2,3],     mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0]    },
+      nao:   { imp:[75,0,0,0],    parc:[39,17,8,2,3],   canal:[9,54,1,5],     formato:[48,10,0,2,0,1,6],    mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0]    }
+    },
+    lote2: {
+      todos: { imp:[45,44,15,2],  parc:[64,23,5,3,11],  canal:[10,26,1,3],    formato:[71,19,0,3,0,1,9],    mot:[0,0,0,0,0,0,0], conteudo:[11,6,0,1,0,3,0,0,0,2,33]  },
+      tem:   { imp:[0,44,15,2],   parc:[35,12,3,2,8],   canal:[4,16,0,2],     formato:[39,14,0,2,0,0,4],    mot:[0,0,0,0,0,0,0], conteudo:[7,4,0,0,0,2,0,0,0,1,19]   },
+      nao:   { imp:[45,0,0,0],    parc:[29,11,2,1,3],   canal:[6,10,1,1],     formato:[32,5,0,1,0,1,5],     mot:[0,0,0,0,0,0,0], conteudo:[4,2,0,1,0,1,0,0,0,1,14]   }
+    },
+    lote3: {
+      todos: { imp:[391,211,37,4], parc:[359,162,44,23,44], canal:[106,465,9,52],  formato:[454,98,0,19,0,9,30],  mot:[0,1,0,0,0,0,1], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+      tem:   { imp:[0,211,37,4],   parc:[127,72,20,11,22],  canal:[40,185,4,23],   formato:[178,43,0,8,0,4,10],   mot:[0,1,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+      nao:   { imp:[391,0,0,0],    parc:[232,90,24,12,22],  canal:[66,280,5,29],   formato:[276,55,0,11,0,5,20],  mot:[0,0,0,0,0,0,1], conteudo:[0,0,0,0,0,0,0,0,0,0,0] }
+    }
   },
   programa: {
-    n: { todos: 53, tem: 20, nao: 33 },
-    todos: { imp:[33,17,2,1],  parc:[10,6,2,1,0],  canal:[4,12,1,2],   formato:[16,1,0,1,0,0,1],  mot:[0,0,0,0,0,0,0] },
-    tem:   { imp:[0,17,2,1],   parc:[2,3,1,1,0],   canal:[0,6,1,0],    formato:[4,1,0,1,0,0,1],   mot:[0,0,0,0,0,0,0] },
-    nao:   { imp:[33,0,0,0],   parc:[8,3,1,0,0],   canal:[4,6,0,2],    formato:[12,0,0,0,0,0,0],  mot:[0,0,0,0,0,0,0] }
+    lotes: ['lote1','lote3'],
+    n: { todos: 132, tem: 55, nao: 77, lote1: 53, lote3: 79 },
+    todos: { imp:[77,45,8,2],  parc:[36,18,6,4,0],  canal:[20,35,3,6],   formato:[54,5,0,2,0,0,2],  mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+    tem:   { imp:[0,45,8,2],   parc:[12,9,3,3,0],   canal:[6,18,2,2],    formato:[20,4,0,1,0,0,2],  mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+    nao:   { imp:[77,0,0,0],   parc:[24,9,3,1,0],   canal:[14,17,1,4],   formato:[34,1,0,1,0,0,0],  mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+    lote1: {
+      todos: { imp:[33,17,2,1], parc:[10,6,2,1,0], canal:[4,12,1,2],  formato:[16,1,0,1,0,0,1], mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+      tem:   { imp:[0,17,2,1],  parc:[2,3,1,1,0],  canal:[0,6,1,0],   formato:[4,1,0,1,0,0,1],  mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+      nao:   { imp:[33,0,0,0],  parc:[8,3,1,0,0],  canal:[4,6,0,2],   formato:[12,0,0,0,0,0,0], mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0] }
+    },
+    lote3: {
+      todos: { imp:[44,28,6,1], parc:[26,12,4,3,0], canal:[16,23,2,4], formato:[38,4,0,1,0,0,1], mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+      tem:   { imp:[0,28,6,1],  parc:[10,6,2,2,0],  canal:[6,12,1,2],  formato:[16,3,0,0,0,0,1], mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0] },
+      nao:   { imp:[44,0,0,0],  parc:[16,6,2,1,0],  canal:[10,11,1,2], formato:[22,1,0,1,0,0,0], mot:[0,0,0,0,0,0,0], conteudo:[0,0,0,0,0,0,0,0,0,0,0] }
+    }
   }
 };
 
@@ -2110,13 +2325,20 @@ function setFilterMeta(sid, seg, btn) {
 }
 
 // ── Pesquisa Meta — Comparativo (SNOVA) ─────────────
-const CRIATIVO_CORES = ['#F97316','#3B82F6','#10B981','#F59E0B','#EF4444','#8B5CF6'];
-const CRIATIVO_KEYS  = ['filamento','impressora','modelagem','live','renda','programa'];
-const CRIATIVO_NAMES = ['Sorteio Filamento','Sorteio Impressora','Modelagem','Live','Renda Extra','Programa'];
+const CRIATIVO_CORES = ['#F97316','#3B82F6','#14B8A6','#F59E0B','#EF4444','#8B5CF6','#10B981'];
+const CRIATIVO_KEYS  = ['filamento','impressora','lincoln','live','renda','programa','modelagem'];
+const CRIATIVO_NAMES = ['Sorteio Filamento','Sorteio Impressora','Lincoln','Live','Renda Extra','Programa','Modelagem'];
 
 function pct(arr) {
   const t = arr.reduce((a,b)=>a+b,0);
   return t ? arr.map(v=>Math.round(v/t*100)) : arr.map(()=>0);
+}
+
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${alpha})`;
 }
 
 function buildComparativoChart(id, labels, field, seg) {
@@ -2124,13 +2346,36 @@ function buildComparativoChart(id, labels, field, seg) {
   if (!ctx) return;
   if (CHART_REGISTRY[id]) { CHART_REGISTRY[id].destroy(); delete CHART_REGISTRY[id]; }
 
+  // Build pct data per criativo — null means no data for this lote
+  const pctData = CRIATIVO_KEYS.map(key => {
+    const d = getSegData(key, seg);
+    if (!d) return null; // no data for this lote
+    const raw = d[field] || labels.map(()=>0);
+    return pct(raw);
+  });
+
+  // For each label, find winner among criativos that HAVE data
+  const winners = labels.map((_, li) => {
+    const vals = pctData.map(d => d ? d[li] : -1);
+    const max = Math.max(...vals.filter(v => v >= 0));
+    return max > 0 ? vals.indexOf(max) : -1;
+  });
+
+  // Build datasets — null data criativos get grey zero bars
   const datasets = CRIATIVO_KEYS.map((key, i) => {
-    const d = META_DATA[key];
-    const raw = d ? (d[seg][field] || labels.map(()=>0)) : labels.map(()=>0);
+    const hasData = pctData[i] !== null;
+    const dataVals = hasData ? pctData[i] : labels.map(()=>0);
+    const bgColors = labels.map((_, li) => {
+      if (!hasData) return 'rgba(180,180,180,0.15)'; // grey — no data
+      const isWinner = winners[li] === i;
+      const isTie = winners[li] !== -1 &&
+        pctData.filter(d=>d).map(d=>d[li]).filter(v=>v===pctData[i][li]&&v>0).length>1 && pctData[i][li]>0;
+      return (isWinner || isTie) ? CRIATIVO_CORES[i] : hexToRgba(CRIATIVO_CORES[i], 0.18);
+    });
     return {
-      label: CRIATIVO_NAMES[i],
-      data: pct(raw),
-      backgroundColor: CRIATIVO_CORES[i],
+      label: CRIATIVO_NAMES[i] + (hasData ? '' : ' —'),
+      data: dataVals,
+      backgroundColor: bgColors,
       borderRadius: 4,
       borderWidth: 0,
     };
@@ -2143,11 +2388,17 @@ function buildComparativoChart(id, labels, field, seg) {
       responsive: true, maintainAspectRatio: false,
       layout: { padding: { top: 20 } },
       plugins: {
-        legend: { display: true, position: 'top', labels: { font: { size: 11, family: "'Inter Tight',sans-serif" }, boxWidth: 12, boxHeight: 12, borderRadius: 3, padding: 12 } },
+        legend: {
+          display: true, position: 'top',
+          labels: { font: { size: 11, family: "'Inter Tight',sans-serif" }, boxWidth: 12, boxHeight: 12, borderRadius: 3, padding: 12 }
+        },
         datalabels: {
-          display: c => c.dataset.data[c.dataIndex] >= 8,
+          display: c => {
+            const li = c.dataIndex, i = c.datasetIndex;
+            return winners[li] === i && c.dataset.data[li] >= 8;
+          },
           anchor: 'end', align: 'top', offset: 2,
-          color: '#454549', font: { size: 9, weight: '600', family: "'Inter Tight',sans-serif" },
+          color: '#454549', font: { size: 9, weight: '700', family: "'Inter Tight',sans-serif" },
           formatter: v => v + '%'
         },
         tooltip: { callbacks: { label: c => ' ' + c.dataset.label + ': ' + c.raw + '%' } }
@@ -2163,20 +2414,58 @@ function buildComparativoChart(id, labels, field, seg) {
 
 let compInitialized = false;
 let compSeg = 'todos';
+let compLote = 'todos'; // 'todos' | 'lote1' | 'lote2'
+
+function getSegData(key, seg) {
+  // Returns the right seg data for current lote
+  const d = META_DATA[key];
+  if (!d) return null;
+  if (d.lotes && d.lotes.length === 0) return null; // sem dados ainda — aparece cinza
+  if (compLote === 'todos') return d[seg];
+  if (!d.lotes.includes(compLote)) return null; // no data for this lote
+  return d[compLote][seg];
+}
+
+function getLoteN(key, seg) {
+  const d = META_DATA[key];
+  if (!d) return 0;
+  if (compLote === 'todos') return d.n[seg] || 0;
+  if (!d.lotes.includes(compLote)) return 0;
+  // Approximate: use full n for lote1, lote2 n from impressora only
+  if (compLote === 'lote1') return d.n['lote1'] || 0;
+  if (compLote === 'lote2') return d.n['lote2'] || 0;
+  if (compLote === 'lote3') return d.n['lote3'] || 0;
+  return 0;
+}
+
+function setLoteFilter(lote, btn) {
+  document.querySelectorAll('[id^="lote-"]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  compLote = lote;
+  compInitialized = false;
+  initComparativo();
+  buildConteudoChart(currentDateFilter, compSeg);
+
+  // Update count badge
+  const count = document.getElementById('lote-filter-count');
+  if (count) {
+    if (lote === 'todos') { count.textContent = ''; return; }
+    const total = CRIATIVO_KEYS.reduce((s,k) => s + getLoteN(k,'todos'), 0);
+    count.textContent = total.toLocaleString('pt-BR') + ' leads';
+  }
+}
 
 function initComparativo() {
   if (compInitialized) return;
   compInitialized = true;
-  const IMP_META    = ['Nenhuma','1','2–5','6 ou mais'];
-  const PARC_META   = ['Até R$100','R$100–300','R$300–500','R$500–1k','Acima de R$1k'];
-  const CANAL_META  = ['Facebook','Instagram','TikTok','Youtube'];
-  const FORMATO_META= ['Cursos gravados','Cursos ao vivo','Ebooks/PDFs','Podcasts/Áudio','Comunidades/grupos','Newsletters','Workshops presenciais'];
-  const MOT_META    = ['Aprender','Renda/liberdade','Negócio/empreender','Vender','Mercado/oportunidade','Mudança/carreira','Outros'];
 
   buildComparativoChart('comp-imp',    IMP_META,     'imp',    compSeg);
   buildComparativoChart('comp-parc',   PARC_META,    'parc',   compSeg);
   buildComparativoChart('comp-canal',  CANAL_META,   'canal',  compSeg);
   buildComparativoChart('comp-formato',FORMATO_META, 'formato',compSeg);
+
+  // Conteúdo (só impressora)
+  buildConteudoChart(currentDateFilter, compSeg);
 
   // Motivação: só Modelagem e Live
   const ctxMot = document.getElementById('comp-mot');
@@ -2184,11 +2473,21 @@ function initComparativo() {
     if (CHART_REGISTRY['comp-mot']) { CHART_REGISTRY['comp-mot'].destroy(); delete CHART_REGISTRY['comp-mot']; }
     const mKeys = ['modelagem','live'];
     const mNames = ['Modelagem','Live'];
-    const mCores = [CRIATIVO_CORES[1], CRIATIVO_CORES[2]];
+    const mCores = [CRIATIVO_CORES[2], CRIATIVO_CORES[3]];
+    const mPctData = mKeys.map(key => {
+      const d = getSegData(key, compSeg);
+      return d ? pct(d['mot'] || MOT_META.map(()=>0)) : MOT_META.map(()=>0);
+    });
+    const mWinners = MOT_META.map((_, li) => {
+      const vals = mPctData.map(d => d[li]);
+      const max = Math.max(...vals);
+      return max > 0 ? vals.indexOf(max) : -1;
+    });
     const datasets = mKeys.map((key,i) => ({
       label: mNames[i],
-      data: pct(META_DATA[key][compSeg]['mot'] || MOT_META.map(()=>0)),
-      backgroundColor: mCores[i], borderRadius: 4, borderWidth: 0,
+      data: mPctData[i],
+      backgroundColor: MOT_META.map((_,li) => mWinners[li]===i ? mCores[i] : hexToRgba(mCores[i],0.18)),
+      borderRadius: 4, borderWidth: 0,
     }));
     const chart = new Chart(ctxMot.getContext('2d'), {
       type: 'bar',
@@ -2198,12 +2497,12 @@ function initComparativo() {
         layout: { padding: { top: 20 } },
         plugins: {
           legend: { display: true, position: 'top', labels: { font: { size: 11, family: "'Inter Tight',sans-serif" }, boxWidth: 12, boxHeight: 12, borderRadius: 3, padding: 12 } },
-          datalabels: { display: c => c.dataset.data[c.dataIndex] >= 8, anchor: 'end', align: 'top', offset: 2, color: '#454549', font: { size: 9, weight: '600', family: "'Inter Tight',sans-serif" }, formatter: v => v + '%' },
+          datalabels: { display: c => mWinners[c.dataIndex]===c.datasetIndex && c.dataset.data[c.dataIndex]>=8, anchor:'end', align:'top', offset:2, color:'#454549', font:{size:9,weight:'700',family:"'Inter Tight',sans-serif"}, formatter: v => v+'%' },
           tooltip: { callbacks: { label: c => ' ' + c.dataset.label + ': ' + c.raw + '%' } }
         },
         scales: {
-          x: { grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 30 } },
-          y: { max: 100, grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { font: { size: 11 }, callback: v => v + '%' } }
+          x: { grid:{display:false}, ticks:{font:{size:10},maxRotation:30} },
+          y: { max:100, grid:{color:'rgba(0,0,0,0.04)'}, ticks:{font:{size:11},callback:v=>v+'%'} }
         }
       }
     });
@@ -2217,14 +2516,80 @@ function setFilterComparativo(seg, btn) {
   });
   btn.classList.add('active');
   compSeg = seg;
-  compInitialized = false; // force rebuild
+  compInitialized = false;
   initComparativo();
+  // Also rebuild conteudo with new seg
+  buildConteudoChart(currentDateFilter, seg);
   const count = document.getElementById('comp-filter-count');
   if (count) {
     const n = CRIATIVO_KEYS.reduce((s,k) => s + (META_DATA[k][seg]?.n || 0), 0);
     count.textContent = seg === 'todos' ? '' : n.toLocaleString('pt-BR') + ' respostas';
   }
 }
+
+// ── Modal: Outros/não especificado ──────────────────
+const OUTROS_ESPECIFICO = [
+  'Ensinando a usar a impressora','Novidades e conhecimento','Empreender com impressão 3D',
+  'A forma de divulgação achei incrível','O da chamada para o curso',
+  'Provavelmente a de imprimindo o cabelo 3D haha','Impressão em massa',
+  'Gostei do projeto do gato que fica bravo se não regar.',
+  'As impressoras a diversidade delas','As instruções de como utilizar a impressora 3D',
+  'As vendas de nicho de impressão 3d','Conteúdo atualizado',
+  'Como iniciar na impressão 3d','Os anúncios das maquinas','Sobre impressoras',
+  'Sobre a impressora Creality','Sobre chibi 3d','Sobre curso e prêmios',
+  'Estratégia para aumentar as vendas','Todos com bichinhos','Dos bichinhos q mexem os olhos',
+  'Foram as entrevistas com os afiliados','Sobre impressão em 3D',
+  'Conteúdo de assinantes e reconhecimento sobre vendas',
+  'Eu amo todos — arco, suporte de fone, impressão 3D',
+  'O conteúdo vivendo de impressão 3D no YouTube',
+  'O vídeo sobre como o modelo de um cofre de porquinho ajudou a comprar 3 impressoras',
+  'Com toda certeza a série: como vender impressão 3D','Unboxing de impressoras',
+  'Biblioteca de stl disponibilizadas','I.A. para criação de peças únicas',
+  'Posts de insta','As histórias de transformação','A didática dos vídeos',
+  'Comprei minha impressora V3SE por causa do review do canal',
+  'Do cabelo','Sobre os problemas da A1','Viver de impressão 3D',
+  'Letra caixa','Peças criativas','Como viver de impressão 3D','Modelar',
+  'Lives exclusivas','Anúncios das impressoras 3D',
+];
+
+const OUTROS_NAO_CONHECE = [
+  'Ainda não assisti (×6)','Não sei (×4)','Não conheço ainda (×4)',
+  'Conheci agora (×4)','Não assisti (×4)','Nunca assisti (×2)',
+  'Nunca vi nenhum conteúdo, só vi o sorteio','Acabei de conhecer pelo Instagram',
+  'Cheguei hoje','Sou novo por aqui','Não tenho um favorito ainda',
+  'Não me lembro no momento','Ainda não tive preferido',
+  'Por enquanto não vi nenhum','Primeira vez que vejo o conteúdo',
+  'Estou estudando','Estou assistindo','Estou acompanhando',
+  'Não recordo','Não tenho específico','Nenhum em específico (×2)',
+];
+
+function openOutrosModal() {
+  const especifico = document.getElementById('modal-chips-especifico');
+  const naoConhece = document.getElementById('modal-chips-nao-conhece');
+  if (!especifico.children.length) {
+    OUTROS_ESPECIFICO.forEach(t => {
+      const chip = document.createElement('span');
+      chip.className = 'modal-chip';
+      chip.textContent = t;
+      especifico.appendChild(chip);
+    });
+    OUTROS_NAO_CONHECE.forEach(t => {
+      const chip = document.createElement('span');
+      chip.className = 'modal-chip muted';
+      chip.textContent = t;
+      naoConhece.appendChild(chip);
+    });
+  }
+  document.getElementById('modal-outros').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-outros').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 // ── Tamanho das bases (S8) — ao vivo via planilha ───
 function parseCSVSimple8(text) {
@@ -2316,5 +2681,22 @@ async function initS8() {
 }
 
 </script>
+<!-- Modal: Outros/não especificado -->
+<div class="modal-overlay" id="modal-outros" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">Outros / não especificado<br><span style="font-size:12px;font-weight:400;color:var(--muted);">Respostas brutas do campo "Conteúdo STLFlix que mais marcou" — Sorteio Impressora</span></div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+
+    <div class="modal-section-title">💬 Respostas específicas</div>
+    <div class="modal-chips" id="modal-chips-especifico"></div>
+
+    <div class="modal-section-title" style="margin-top:22px;">👋 Ainda não conhecem a STLFLIX</div>
+    <p style="font-size:12px;color:var(--muted);margin:-4px 0 10px;">Leads captados pelo anúncio do sorteio sem histórico prévio com a marca.</p>
+    <div class="modal-chips" id="modal-chips-nao-conhece"></div>
+  </div>
+</div>
+
 </body>
 </html>
