@@ -297,8 +297,11 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
       Início
     </button>
 
-    <button class="nav-item" onclick="showSurvey('snova', this)" style="margin-bottom:8px; background:rgba(81,102,230,0.06); border:1.5px solid rgba(81,102,230,0.2);">
+    <button class="nav-item" onclick="showSurvey('snova', this)" style="margin-bottom:4px; background:rgba(81,102,230,0.06); border:1.5px solid rgba(81,102,230,0.2);">
       ✦ Pesquisa Meta <span class="nav-badge new">6.833</span>
+    </button>
+    <button class="nav-item" onclick="showSurvey('snova-en', this)" style="margin-bottom:8px; background:rgba(20,184,166,0.06); border:1.5px solid rgba(20,184,166,0.2);">
+      ✦ Pesquisa Meta Global <span class="nav-badge new">2.359</span>
     </button>
 
     <div class="nav-group" id="group-anteriores">
@@ -453,6 +456,73 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
   </div>
 </div>
 
+<!-- ===================== PESQUISA META GLOBAL (SNOVA-EN) ===================== -->
+<div class="survey-panel" id="panel-snova-en">
+  <div class="shell">
+    <div class="page-header">
+      <div class="page-eyebrow">Global survey · Meta Lead Ads · English</div>
+      <h1 class="page-title">Pesquisa Meta Global</h1>
+      <p class="page-sub">2.359 leads · 4 criativos · comparativo por criativo</p>
+    </div>
+
+    <!-- Legenda -->
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;align-items:center;">
+      <span style="font-size:12px;font-weight:600;color:var(--muted2);letter-spacing:0.03em;">CRIATIVOS:</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><span style="width:12px;height:12px;border-radius:3px;background:#3B82F6;display:inline-block;"></span>Sorteio Impressora (1.105)</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><span style="width:12px;height:12px;border-radius:3px;background:#F97316;display:inline-block;"></span>Sorteio Filamento (57)</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><span style="width:12px;height:12px;border-radius:3px;background:#10B981;display:inline-block;"></span>Aberto V1+V2+V3 (1.042)</span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><span style="width:12px;height:12px;border-radius:3px;background:#8B5CF6;display:inline-block;"></span>LAL Site (155)</span>
+    </div>
+
+    <!-- Filtro impressora -->
+    <div class="filter-bar">
+      <span class="filter-label">🖨️ Filter:</span>
+      <button class="filter-btn active" onclick="setFilterGlobal('todos',this)">All</button>
+      <button class="filter-btn" onclick="setFilterGlobal('tem',this)">Has printer</button>
+      <button class="filter-btn" onclick="setFilterGlobal('nao',this)">No printer</button>
+      <span class="filter-count" id="global-filter-count"></span>
+    </div>
+
+    <p style="font-size:11px;color:var(--muted);margin-bottom:20px;">Values shown as % within each creative — comparable regardless of volume.</p>
+
+    <!-- Gráfico 1: Printers -->
+    <div class="chart-card">
+      <div class="chart-header"><div class="chart-title">How many 3D printers do you own?</div><span class="chart-pill">4 criativos · 2.359 leads</span></div>
+      <div style="position:relative;width:100%;height:280px;"><canvas id="en-imp"></canvas></div>
+    </div>
+
+    <!-- Gráfico 2: Investment -->
+    <div class="chart-card">
+      <div class="chart-header"><div class="chart-title">Investment in 3D printing development</div><span class="chart-pill">4 criativos</span></div>
+      <div style="position:relative;width:100%;height:280px;"><canvas id="en-invest"></canvas></div>
+    </div>
+
+    <!-- Gráfico 3: Use -->
+    <div class="chart-card">
+      <div class="chart-header"><div class="chart-title">What do you use 3D printing for?</div><span class="chart-pill">4 criativos</span></div>
+      <div style="position:relative;width:100%;height:220px;"><canvas id="en-use"></canvas></div>
+    </div>
+
+    <!-- Gráfico 4: Messaging (só Sorteio Imp e Aberto) -->
+    <div class="chart-card">
+      <div class="chart-header"><div class="chart-title">Messaging apps / channels (daily)</div><span class="chart-pill">Sorteio Impressora + Aberto</span></div>
+      <div style="font-size:11px;color:var(--muted);margin:-6px 0 14px;">Available only for Sorteio Impressora and Aberto criativos.</div>
+      <div style="position:relative;width:100%;height:260px;"><canvas id="en-msg"></canvas></div>
+    </div>
+
+    <!-- Gráfico 5: Expectation -->
+    <div class="chart-card">
+      <div class="chart-header"><div class="chart-title">What do you most expect from this event?</div><span class="chart-pill">4 criativos · open field</span></div>
+      <div style="position:relative;width:100%;height:300px;"><canvas id="en-expect"></canvas></div>
+    </div>
+
+    <div class="footer">
+      <img src="https://lp.stlflix.com.br/wp-content/uploads/2025/09/logo-stlflix-blank.svg" alt="STLFLIX">
+      <span class="footer-date">Pesquisa Meta Global · 2.359 leads</span>
+    </div>
+  </div>
+</div>
+
 <!-- ===================== HOME ===================== -->
 <div class="survey-panel active" id="panel-home">
   <div class="shell">
@@ -472,6 +542,14 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
         <div class="home-card-number-label">leads · 6 criativos</div>
         <div class="home-card-insight">Sorteio Filamento (1.429) · Sorteio Impressora (3.342) · Live (664) · Renda extra (138) · Programa (132) · Modelagem (94) — com filtro por impressora.</div>
         <span class="home-card-arrow" style="color:var(--primary);">→</span>
+      </button>
+      <button class="home-card" onclick="goTo('snova-en')" style="border-color:rgba(20,184,166,0.3); background:rgba(20,184,166,0.04);">
+        <div class="home-card-eyebrow" style="color:#0d9488;">✦ Pesquisa Meta Global</div>
+        <div class="home-card-title">Pesquisa Meta Global</div>
+        <div class="home-card-number" style="color:#0d9488;">2.359</div>
+        <div class="home-card-number-label">leads · 4 criativos · English</div>
+        <div class="home-card-insight">Sorteio Impressora (1.105) · Aberto V1+V2+V3 (1.042) · LAL Site (155) · Sorteio Filamento (57)</div>
+        <span class="home-card-arrow" style="color:#0d9488;">→</span>
       </button>
     </div>
 
@@ -1278,6 +1356,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter Tight', sa
 // ── Navigation ──────────────────────────────────────
 let s2Initialized = false;
 let snovaInitialized = false;
+let snovaEnInitialized = false;
 let s3Initialized = false;
 let s4Initialized = false;
 let s5Initialized = false;
@@ -1291,6 +1370,7 @@ function showSurvey(id, btn, skipHash) {
   if (btn) btn.classList.add('active');
   if (id === 's2' && !s2Initialized) { initS2Charts(); s2Initialized = true; }
   if (id === 'snova' && !snovaInitialized) { setTimeout(() => initComparativo(), 50); snovaInitialized = true; }
+  if (id === 'snova-en' && !snovaEnInitialized) { setTimeout(() => initGlobal(), 50); snovaEnInitialized = true; }
   if (id === 's3' && !s3Initialized) { initS3(); s3Initialized = true; }
   if (id === 's4' && !s4Initialized) { initS4(); s4Initialized = true; }
   if (id === 's5' && !s5Initialized) { initS5(); s5Initialized = true; }
@@ -1318,7 +1398,7 @@ function goTo(id) {
 // Restaura aba ao carregar pela URL ou ao navegar com back/forward
 function restoreFromHash() {
   const hash = window.location.hash.replace('#', '').trim();
-  const valid = ['home','snova','s1','s2','s3','s4','s5','s6','s7','s8'];
+  const valid = ['home','snova','snova-en','s1','s2','s3','s4','s5','s6','s7','s8'];
   const id = valid.includes(hash) ? hash : 'home';
   let navBtn = null;
   document.querySelectorAll('.nav-item').forEach(b => {
@@ -2590,6 +2670,120 @@ function closeModal() {
 }
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ── Pesquisa Meta Global (SNOVA-EN) ─────────────────
+const EN_CORES  = ['#3B82F6','#F97316','#10B981','#8B5CF6'];
+const EN_KEYS   = ['sorteio_imp','sorteio_fil','aberto','lal'];
+const EN_NAMES  = ['Sorteio Impressora','Sorteio Filamento','Aberto V1+V2+V3','LAL Site'];
+
+const EN_IMP_LABELS    = ['None','1','2','3–5','6–10','11+'];
+const EN_INVEST_LABELS = ['Up to $100','$100–200','$200–400','$400–600','$600–800','Over $800'];
+const EN_USE_LABELS    = ['Hobby','Business','Work'];
+const EN_MSG_LABELS    = ['Facebook Groups','Discord','Reddit','WhatsApp','Telegram','Other'];
+const EN_EXPECT_LABELS = ['Learn / Knowledge','Business strategies','Networking','Win a prize','Fun / Entertainment','New designs / ideas','Not sure','Other'];
+
+const META_DATA_EN = {
+  sorteio_imp: {
+    n: { todos:1105, tem:740, nao:365 },
+    todos: { imp:[365,335,189,161,42,13], invest:[257,213,219,144,52,220], use:[853,219,33], msg:[188,33,11,24,8,0],  expect:[433,85,8,126,35,171,65,177] },
+    tem:   { imp:[0,335,189,161,42,13],   invest:[148,142,150,89,36,175],  use:[572,140,28], msg:[144,24,8,20,6,0],   expect:[301,62,5,50,29,119,43,131]  },
+    nao:   { imp:[365,0,0,0,0,0],         invest:[109,71,69,55,16,45],     use:[281,79,5],   msg:[44,9,3,4,2,0],      expect:[132,23,3,76,6,52,22,46]     }
+  },
+  sorteio_fil: {
+    n: { todos:57, tem:53, nao:4 },
+    todos: { imp:[4,16,15,9,10,3], invest:[16,14,9,5,3,10], use:[37,19,1], msg:[0,0,0,0,0,0], expect:[20,6,0,2,0,8,4,16] },
+    tem:   { imp:[0,16,15,9,10,3], invest:[15,12,9,5,2,10], use:[34,18,1], msg:[0,0,0,0,0,0], expect:[19,6,0,1,0,7,4,16] },
+    nao:   { imp:[4,0,0,0,0,0],    invest:[1,2,0,0,1,0],    use:[3,1,0],   msg:[0,0,0,0,0,0], expect:[1,0,0,1,0,1,0,0]  }
+  },
+  aberto: {
+    n: { todos:1042, tem:887, nao:155 },
+    todos: { imp:[155,383,170,225,58,51], invest:[277,182,182,121,58,222], use:[569,447,26], msg:[21,2,2,3,1,0], expect:[386,266,2,1,7,74,63,230] },
+    tem:   { imp:[0,383,170,225,58,51],   invest:[250,163,150,95,39,190], use:[481,381,25],  msg:[18,2,1,3,1,0], expect:[329,228,1,0,6,63,51,197] },
+    nao:   { imp:[155,0,0,0,0,0],         invest:[27,19,32,26,19,32],     use:[88,66,1],     msg:[3,0,1,0,0,0],  expect:[57,38,1,1,1,11,12,33]   }
+  },
+  lal: {
+    n: { todos:155, tem:139, nao:16 },
+    todos: { imp:[16,71,31,25,6,6], invest:[49,29,27,22,6,22], use:[85,62,8], msg:[0,0,0,0,0,0], expect:[50,53,1,0,1,14,7,27] },
+    tem:   { imp:[0,71,31,25,6,6],  invest:[44,29,25,19,4,18], use:[76,55,8], msg:[0,0,0,0,0,0], expect:[45,49,1,0,1,13,6,24] },
+    nao:   { imp:[16,0,0,0,0,0],    invest:[5,0,2,3,2,4],      use:[9,7,0],   msg:[0,0,0,0,0,0], expect:[5,4,0,0,0,1,1,3]    }
+  }
+};
+
+let globalInitialized = false;
+let globalSeg = 'todos';
+
+function buildGlobalChart(id, labels, field, seg, cores, keys, names, isMsgChart) {
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  if (CHART_REGISTRY[id]) { CHART_REGISTRY[id].destroy(); delete CHART_REGISTRY[id]; }
+
+  const pctData = keys.map(key => {
+    const d = META_DATA_EN[key];
+    if (!d) return null;
+    if (isMsgChart && !['sorteio_imp','aberto'].includes(key)) return null;
+    const raw = d[seg][field] || labels.map(()=>0);
+    return pct(raw);
+  });
+
+  const winners = labels.map((_, li) => {
+    const vals = pctData.map(d => d ? d[li] : -1);
+    const max = Math.max(...vals.filter(v => v >= 0));
+    return max > 0 ? vals.indexOf(max) : -1;
+  });
+
+  const datasets = keys.map((key, i) => {
+    const hasData = pctData[i] !== null;
+    const dataVals = hasData ? pctData[i] : labels.map(()=>0);
+    const bgColors = labels.map((_, li) => {
+      if (!hasData) return 'rgba(180,180,180,0.15)';
+      const isWinner = winners[li] === i;
+      return isWinner ? cores[i] : hexToRgba(cores[i], 0.18);
+    });
+    return { label: names[i] + (hasData ? '' : ' —'), data: dataVals, backgroundColor: bgColors, borderRadius:4, borderWidth:0 };
+  });
+
+  const chart = new Chart(ctx.getContext('2d'), {
+    type: 'bar',
+    data: { labels, datasets },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      layout: { padding: { top: 20 } },
+      plugins: {
+        legend: { display:true, position:'top', labels:{ font:{size:11,family:"'Inter Tight',sans-serif"}, boxWidth:12, boxHeight:12, borderRadius:3, padding:12 } },
+        datalabels: { display: c => { const li=c.dataIndex,i=c.datasetIndex; return winners[li]===i && c.dataset.data[li]>=8; }, anchor:'end', align:'top', offset:2, color:'#454549', font:{size:9,weight:'700',family:"'Inter Tight',sans-serif"}, formatter:v=>v+'%' },
+        tooltip: { callbacks: { label: c => ' '+c.dataset.label+': '+c.raw+'%' } }
+      },
+      scales: {
+        x: { grid:{display:false}, ticks:{font:{size:11},maxRotation:30} },
+        y: { max:100, grid:{color:'rgba(0,0,0,0.04)'}, ticks:{font:{size:11},callback:v=>v+'%'} }
+      }
+    }
+  });
+  CHART_REGISTRY[id] = chart;
+}
+
+function initGlobal() {
+  if (globalInitialized) return;
+  globalInitialized = true;
+  buildGlobalChart('en-imp',    EN_IMP_LABELS,     'imp',    globalSeg, EN_CORES, EN_KEYS, EN_NAMES, false);
+  buildGlobalChart('en-invest', EN_INVEST_LABELS,  'invest', globalSeg, EN_CORES, EN_KEYS, EN_NAMES, false);
+  buildGlobalChart('en-use',    EN_USE_LABELS,      'use',   globalSeg, EN_CORES, EN_KEYS, EN_NAMES, false);
+  buildGlobalChart('en-msg',    EN_MSG_LABELS,      'msg',   globalSeg, EN_CORES, EN_KEYS, EN_NAMES, true);
+  buildGlobalChart('en-expect', EN_EXPECT_LABELS,   'expect',globalSeg, EN_CORES, EN_KEYS, EN_NAMES, false);
+}
+
+function setFilterGlobal(seg, btn) {
+  document.querySelectorAll('#panel-snova-en .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  globalSeg = seg;
+  globalInitialized = false;
+  initGlobal();
+  const count = document.getElementById('global-filter-count');
+  if (count) {
+    const n = EN_KEYS.reduce((s,k) => s + (META_DATA_EN[k][seg]?.n || 0), 0);
+    count.textContent = seg === 'todos' ? '' : n.toLocaleString('pt-BR') + ' leads';
+  }
+}
 
 // ── Tamanho das bases (S8) — ao vivo via planilha ───
 function parseCSVSimple8(text) {
